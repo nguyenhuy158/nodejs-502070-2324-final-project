@@ -1,9 +1,11 @@
-const express = require('express');
+const express = require('express')
+const morgan = require('morgan')
+const bodyParser = require('body-parser')
+const expressValidator = require('express-validator')
+const routes = require('./routes/routes')
+const mongoose = require('mongoose')
+
 const app = express();
-// const bootstrap = require('bootstrap');
-const { JSDOM } = require( "jsdom" );
-const { window } = new JSDOM( "" );
-const $ = require( "jquery" )( window );
 
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
