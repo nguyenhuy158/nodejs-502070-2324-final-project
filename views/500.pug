@@ -1,10 +1,10 @@
-extends layout
+include ./includes/html
 
-block content
-  .container
+.container.mt-5
     .row.justify-content-center
-      .col-md-6.mt-5
-        .alert.alert-danger
-          h2 Error 500
-          p Something went wrong on our server. Please try again later.
-        a.btn.btn-primary(href="/") Go back to the homepage
+        .col-md-6
+            .text-center
+                h1.display-1.text-danger 500
+                h2.display-4 Internal Server Error
+                p Oops! Something went wrong on our end. We&apos;re working to fix the issue.
+                a.btn.btn-primary(href='/') Go Back to Homepage
