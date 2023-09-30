@@ -31,7 +31,7 @@ app.use('', router);
 
 app.use('/user', userRouter);
 
-app.use('/product', productRouter);
+app.use('/products', productRouter);
 
 app.use(errorHandler.logErrors);
 app.use(errorHandler.errorNotFound);

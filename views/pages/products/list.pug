@@ -26,3 +26,17 @@ block content
                         td= product.category
                         td= product.creationDate
                         td= product.lastUpdateDate
+
+
+    // Pagination
+    ul.justify-content-center.pagination
+        li.page-item(class= current === 1 ? 'disabled' : '')
+            a.page-link(href= current === 1 ? '#' : '/products?page=' + (current - 1)) Previous
+
+        - for (let i = 1; i <= Math.ceil(count / perPage); i++) 
+            li.page-item(class= i === current ? 'active' : '')
+                a.page-link(href= i === current ? '#' : '/products?page=' + i)= i
+
+        li.page-item(class= nextPage ? '' : 'disabled')
+            a.page-link(href= nextPage ? '/products?page=' + nextPage : '#') Next
+

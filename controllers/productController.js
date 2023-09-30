@@ -1,18 +1,36 @@
 const Product = require('../models/productModel');
 const { faker } = require('@faker-js/faker');
 
-exports.gets = async (req, res) => {
+exports.gets = async (req, res, next) => {
     const perPage = 10;
-    let page = req.query.page || 1;
+    let page = parseInt(req.query.page) || 1;
 
     try {
-        const products = await Product.find();
-        console.log("🚀 ~ file: productController.js:7 ~ exports.gets= ~ products:", products);
 
-        res.render('pages/products/list', { products });
+        const products = await Product
+            .aggregate([{ $sort: { creationDate: -1 } }])
+            .skip(perPage * page - perPage)
+            .limit(perPage)
+            .exec();
+
+        const count = await Product.count();
+        const nextPage = parseInt(page) + 1;
+        const hasNextPage = nextPage <= Math.ceil(count / perPage);
+
+        const output = {
+            products,
+            current: page,
+            count,
+            perPage,
+            nextPage: hasNextPage ? nextPage : null
+        };
+        res.render('pages/products/list', output);
+
+        // console.log("🚀 ~ file: productController.js:25 ~ exports.gets= ~ output:", output);
+        console.log("🚀 ~ file: productController.js:7 ~ exports.gets= ~ products:", products.length);
     } catch (error) {
         console.error('Error fetching products:', error);
-        res.status(500).send('Internal Server Error');
+        next(error);
     }
 };
 
