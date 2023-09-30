@@ -9,9 +9,7 @@ router
         console.log('Time: ', Date.now());
         next();
     })
-    .get('/', (req, res) => {
-        res.render('pages/products/product-home');
-    })
+    .get('/', productController.gets)
     .get('/about', (req, res) => {
         res.render('pages/about');
     });

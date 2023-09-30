@@ -1,0 +1,28 @@
+extends ..\layout.pug
+
+block content
+    div.container
+        h2 Product List
+        table.table
+            thead
+                tr
+                    th STT
+                    th Barcode
+                    th Product Name
+                    th Import Price
+                    th Retail Price
+                    th Category
+                    th Creation Date
+                    th Last Update Date
+            tbody
+            if products
+                each product, index in products
+                    tr
+                        td= index
+                        td= product.barcode
+                        td= product.productName
+                        td= product.importPrice
+                        td= product.retailPrice
+                        td= product.category
+                        td= product.creationDate
+                        td= product.lastUpdateDate
