@@ -27,6 +27,7 @@ block content
                     th Category
                     th Creation Date
                     th Last Update Date
+                    th Image
                     th Handle
 
             tbody
@@ -41,6 +42,8 @@ block content
                         td= product.category
                         td= product.creationDate
                         td= product.lastUpdateDate
+                        td
+                            img(src=product.imageUrls[0], alt='Product Image', height='100', width='100')
                         td
                             a.btn.btn-primary(href=`/products/${product._id}`) View
                             a.btn.btn-success(href=`/products/${product._id}/edit`) Update

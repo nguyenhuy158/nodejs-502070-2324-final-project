@@ -1,6 +1,22 @@
 const Product = require('../models/productModel');
 const { faker } = require('@faker-js/faker');
 
+
+exports.get = async (req, res, next) => {
+
+    try {
+        const id = req.params.id;
+
+        const product = await Product.findById({ _id: id });
+        console.log("🚀 ~ file: productController.js:11 ~ exports.get= ~ product:", product);
+        res.render('pages/products/detail', { product });
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        next(error);
+    }
+};
+
+
 exports.gets = async (req, res, next) => {
     const perPage = parseInt(req.query.perPage) || 10;
     let page = parseInt(req.query.page) || 1;
@@ -44,6 +60,7 @@ exports.seedDatabase = async function () {
             productName: faker.commerce.productName(),
             importPrice: faker.number.int({ min: 1000, max: 10000 }),
             retailPrice: faker.number.int({ min: 1000, max: 10000 }),
+            imageUrls: [faker.image.url()],
             category: faker.helpers.arrayElements(['phone', 'accessories'])[0],
             creationDate: faker.date.past(),
             lastUpdateDate: faker.date.recent(),

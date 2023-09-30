@@ -10,6 +10,7 @@ router
         next();
     })
     .get('/', productController.gets)
+    .get('/:id', productController.get)
     .get('/about', (req, res) => {
         res.render('pages/about');
     });
