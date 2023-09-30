@@ -125,7 +125,6 @@
     "terminal.integrated.fontWeight": "normal",
     "terminal.integrated.scrollback": 10000,
     "terminal.integrated.smoothScrolling": true,
-    "window.commandCenter": true,
     "window.zoomLevel": 1,
     "workbench.activityBar.iconClickBehavior": "toggle",
     "workbench.activityBar.visible": true,

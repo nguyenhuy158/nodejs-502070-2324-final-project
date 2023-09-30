@@ -19,10 +19,13 @@ const app_name = process.env.APP_NAME;
 connectDb();
 
 function insertUser() {
+    const a = true;
+    log
     User.insertMany(
         {
-            email: "1231231231231",
-            username: "123123123123",
+            email: "123",
+            username: "view123123123123",
+            fullName: "123123123123",
             role: "admin",
             password: "123123123123",
             password_confirm: "123123123123",
@@ -31,7 +34,7 @@ function insertUser() {
 }
 
 // Sử dụng Pug làm template engine
-app.set('view engine', 'pug');
+app.set(' engine', 'pug');
 
 // Sử dụng các tệp tĩnh từ thư mục public
 app.use(express.static('public'));
@@ -44,6 +47,5 @@ app.get('/', (req, res) => {
 
 // Khởi động máy chủ
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port http://localhost:${PORT}`);
 });
-
