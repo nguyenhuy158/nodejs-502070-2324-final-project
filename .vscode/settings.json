@@ -150,4 +150,5 @@
     "workbench.settings.openDefaultKeybindings": false,
     "zenMode.hideLineNumbers": false,
     "workbench.settings.useSplitJSON": false,
+    "terminal.integrated.fontSize": 12,
 }
