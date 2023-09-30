@@ -145,9 +145,9 @@
     "zenMode.restore": true,
     "zenMode.silentNotifications": true,
     "zenMode.hideTabs": true,
-    "zenMode.hideLineNumbers": true,
     "zenMode.hideActivityBar": false,
     "window.autoDetectColorScheme": true,
     "workbench.settings.openDefaultKeybindings": false,
+    "zenMode.hideLineNumbers": false,
     "workbench.settings.useSplitJSON": false,
 }
