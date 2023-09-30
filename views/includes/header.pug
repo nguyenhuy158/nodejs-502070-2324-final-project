@@ -1,9 +1,15 @@
-header 
+header
     a(href="/") #{title} - #{app_name}
 
-    nav
-        ul.nav.navbar-nav
-            li(class=(title == 'Home') ? 'active' : null)
-                a(href='/') Home
-            li(class=(title == 'About') ? 'active' : null)
-                a(href='/about') About
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light
+        .container
+            a.navbar-brand(href="/") Your Website
+            button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
+                span.navbar-toggler-icon
+            .collapse.navbar-collapse#navbarNav
+                ul.navbar-nav.ml-auto
+                    li.nav-item
+                        a.nav-link(href="/") Home
+                    li.nav-item
+                        a.nav-link(href="/about") About
+                    // Add more navigation items as needed
