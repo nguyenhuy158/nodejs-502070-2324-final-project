@@ -1,6 +1,13 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 
+exports.createUser = function (req, res, next) {
+
+    const newData = req.body;
+    // dataModel.addData(newData);
+    // res.status(201).json(newData);
+};
+
 exports.register = function (req, res, next) {
     User.findOne({ email: req.body.email }, (err, user) => {
         if (user == null) { //Kiểm tra xem email đã được sử dụng chưa
