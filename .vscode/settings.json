@@ -150,4 +150,5 @@
     "zenMode.hideLineNumbers": false,
     "workbench.settings.useSplitJSON": false,
     "terminal.integrated.fontSize": 12,
+    "explorer.sortOrder": "mixed"
 }
