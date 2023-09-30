@@ -27,6 +27,8 @@ block content
                     th Category
                     th Creation Date
                     th Last Update Date
+                    th Handle
+
             tbody
             if products
                 each product, index in products
@@ -39,6 +41,11 @@ block content
                         td= product.category
                         td= product.creationDate
                         td= product.lastUpdateDate
+                        td
+                            a.btn.btn-primary(href=`/products/${product._id}`) View
+                            a.btn.btn-success(href=`/products/${product._id}/edit`) Update
+                            a.btn.btn-danger(href=`/products/${product._id}/delete`) Delete
+
 
 
     // Display the message
