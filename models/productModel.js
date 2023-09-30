@@ -1,0 +1,14 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const productSchema = new Schema({
+    barcode: { type: String, unique: true, required: true, trim: true },
+    productName: { type: String, required: true, trim: true, minlength: 6 },
+    importPrice: { type: Number, min: 1000 },
+    retailPrice: { type: Number, min: 1000 },
+    category: { type: String, enum: ['phone', 'accessories'] },
+    creationDate: { type: Date },
+    lastUpdateDate: { type: Date },
+});
+// barcode, product name, import price, retail price, category, creation date
+module.exports = mongoose.model('Product', productSchema);
