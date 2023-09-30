@@ -1,6 +1,19 @@
 extends ..\layout.pug
 
 block content
+
+    .row
+        .col
+        .col-2.form-floating
+            select#floatingSelect.form-select(onchange='updatePerPage(this)')
+                option(selected='' value='10') 10
+                option(value='20') 20
+                option(value='30') 30
+                option(value='40') 40
+                option(value='50') 50
+            label(for='floatingSelect') Product per page
+
+
     div.container
         h2 Product List
         table.table
@@ -28,15 +41,17 @@ block content
                         td= product.lastUpdateDate
 
 
+    // Display the message
+    p Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
+
     // Pagination
-    ul.justify-content-center.pagination
-        li.page-item(class= current === 1 ? 'disabled' : '')
-            a.page-link(href= current === 1 ? '#' : '/products?page=' + (current - 1)) Previous
+    include ../../partials/pagination
 
-        - for (let i = 1; i <= Math.ceil(count / perPage); i++) 
-            li.page-item(class= i === current ? 'active' : '')
-                a.page-link(href= i === current ? '#' : '/products?page=' + i)= i
+    script.
+        function updatePerPage(select) {
+            const selectedValue = select.value;
+            // Update the URL with the selected product per page value
+            window.location.href = `/products?page=#{current}&perPage=${selectedValue}`;
+        }
 
-        li.page-item(class= nextPage ? '' : 'disabled')
-            a.page-link(href= nextPage ? '/products?page=' + nextPage : '#') Next
 

@@ -1,0 +1,48 @@
+ul.justify-content-center.pagination
+    li.page-item(class= current === 1 ? 'disabled' : '')
+        a.page-link(href= current === 1 ? '#' : `/products?page=1&perPage=${perPage}`) First
+
+    li.page-item(class= current === 1 ? 'disabled' : '')
+        a.page-link(href= current === 1 ? '#' : `/products?page=${current - 1}&perPage=${perPage}`) Previous
+
+    - const totalPages = Math.ceil(count / perPage);
+    - const maxPagesToShow = 5; 
+    - const halfMaxPages = Math.floor(maxPagesToShow / 2);
+
+    - let startPage = Math.max(current - halfMaxPages, 1);
+    - let endPage = Math.min(current + halfMaxPages, totalPages);
+
+    - if (startPage === 1) {
+        - endPage = Math.min(startPage + maxPagesToShow - 1, totalPages);
+    - }
+    - if (endPage === totalPages) {
+        - startPage = Math.max(endPage - maxPagesToShow + 1, 1);
+    - }
+
+    - if (startPage > 1) 
+        li.page-item
+            a.page-link(href= `/products?page=1&perPage=${perPage}`) 1
+        - if (startPage > 2) 
+            li.page-item.disabled
+                span.page-link … 
+        - if (startPage > 3) 
+            li.page-item
+                a.page-link(href= `/products?page=${startPage - 1}&perPage=${perPage}`) #{startPage - 1}
+        - if (startPage > 2) 
+            li.page-item
+                a.page-link(href= `/products?page=${startPage}&perPage=${perPage}`) #{startPage}
+        - if (startPage < totalPages - 1) 
+            li.page-item
+                a.page-link(href= `/products?page=${endPage + 1}&perPage=${perPage}`) #{endPage + 1}
+        - if (startPage < totalPages - 2) 
+            li.page-item.disabled
+                span.page-link … 
+    - for (let i = startPage; i <= endPage; i++) 
+        li.page-item(class= i === current ? 'active' : '')
+            a.page-link(href= i === current ? '#' : `/products?page=${i}&perPage=${perPage}`)= i
+
+    li.page-item(class= nextPage ? '' : 'disabled')
+        a.page-link(href= nextPage ? `/products?page=${nextPage}&perPage=${perPage}` : '#') Next
+
+    li.page-item(class= current === totalPages ? 'disabled' : '')
+        a.page-link(href= current === totalPages ? '#' : `/products?page=${totalPages}&perPage=${perPage}`) Last

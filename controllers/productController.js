@@ -2,7 +2,7 @@ const Product = require('../models/productModel');
 const { faker } = require('@faker-js/faker');
 
 exports.gets = async (req, res, next) => {
-    const perPage = 10;
+    const perPage = parseInt(req.query.perPage) || 10;
     let page = parseInt(req.query.page) || 1;
 
     try {
