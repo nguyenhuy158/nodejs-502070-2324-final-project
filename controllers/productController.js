@@ -2,6 +2,21 @@ const Product = require('../models/productModel');
 const { faker } = require('@faker-js/faker');
 
 
+exports.edit = async (req, res, next) => {
+
+    try {
+        const id = req.params.id;
+
+        const product = await Product.findById({ _id: id });
+
+        console.log("🚀 ~ file: productController.js:11 ~ exports.get= ~ product:", product);
+        res.render('pages/products/form', { product });
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        next(error);
+    }
+};
+
 exports.get = async (req, res, next) => {
 
     try {

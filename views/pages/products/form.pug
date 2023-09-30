@@ -1,0 +1,43 @@
+extends ../layout
+
+block content
+    .container
+        h2 Edit Product
+        form(method='POST', action=`/products/${product._id}`)
+            .mb-3
+                label(for='barcode', class='form-label') Barcode:
+                input#barcode.form-control(type='text', name='barcode', value=product.barcode, required)
+            
+            .mb-3
+                label(for='productName', class='form-label') Product Name:
+                input#productName.form-control(type='text', name='productName', value=product.productName, required)
+            
+            .mb-3
+                label(for='importPrice', class='form-label') Import Price:
+                input#importPrice.form-control(type='number', name='importPrice', value=product.importPrice, min='1000', required)
+            
+            .mb-3
+                label(for='retailPrice', class='form-label') Retail Price:
+                input#retailPrice.form-control(type='number', name='retailPrice', value=product.retailPrice, min='1000', required)
+            
+            .mb-3
+                label(for='imageUrls', class='form-label') Image URLs:
+                input#imageUrls.form-control(type='text', name='imageUrls', value=product.imageUrls.join('\n'), required)
+                p.text-muted Enter image URLs separated by line breaks.
+            
+            .mb-3
+                label(for='category', class='form-label') Category:
+                select#category.form-select(name='category', required)
+                    option(value='phone', selected=product.category === 'phone') Phone
+                    option(value='accessories', selected=product.category === 'accessories') Accessories
+            
+            .mb-3
+                label(for='creationDate', class='form-label') Creation Date:
+                input#creationDate.form-control(type='date', name='creationDate', value=product.creationDate, required)
+            
+            .mb-3
+                label(for='lastUpdateDate', class='form-label') Last Update Date:
+                input#lastUpdateDate.form-control(type='date', name='lastUpdateDate', value=product.lastUpdateDate, required)
+
+            button.btn.btn-primary(type='submit') Save
+            a.btn.btn-secondary(href='/products') Cancel

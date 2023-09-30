@@ -11,6 +11,7 @@ router
     })
     .get('/', productController.gets)
     .get('/:id', productController.get)
+    .get('/edit/:id', productController.edit)
     .get('/about', (req, res) => {
         res.render('pages/about');
     });
