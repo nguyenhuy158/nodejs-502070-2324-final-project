@@ -14,9 +14,9 @@ exports.clientErrorHandler = function (err, req, res, next) {
 
 exports.errorHandler = function (err, req, res, next) {
     console.error(err.stack);
-    res.status(500).render('500', { error: err });
+    res.status(500).render('pages/500', { error: err });
 };
 
 exports.errorNotFound = function (req, res, next) {
-    res.status(404).render('404');
+    res.status(404).render('pages/404');
 };

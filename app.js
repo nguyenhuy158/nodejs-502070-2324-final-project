@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const routes = require('./routes/routes');
 const userRouter = require('./routes/user');
+const productRouter = require('./routes/product');
 const router = require('./routes/routes');
 const mongoose = require('mongoose');
 const connectDb = require('./server/config/db');
@@ -29,6 +30,8 @@ app.use(express.static('public'));
 app.use('', router);
 
 app.use('/user', userRouter);
+
+app.use('/product', productRouter);
 
 app.use(errorHandler.logErrors);
 app.use(errorHandler.errorNotFound);
