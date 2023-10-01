@@ -7,6 +7,8 @@ module.exports = {
         password: process.env.DB_PASSWORD || 'password',
     },
     email: {
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
         service: process.env.EMAIL_SERVICE,
         username: process.env.EMAIL_USERNAME,
         password: process.env.EMAIL_PASSWORD

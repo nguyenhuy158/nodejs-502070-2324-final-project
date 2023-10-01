@@ -5,6 +5,14 @@ const { UserValidator } = require('../validators/validator');
 const { seedDatabase } = require('../controllers/productController');
 const flash = require('../utils/flash');
 const { transporter } = require('../config/email');
+const pug = require('pug');
+const path = require('path');
+
+const compiledFunction = pug.compileFile('./views/email/email-template.pug');
+const emailData = {
+    username: 'Tech Hut',
+    password: 'Tech Hut',
+};
 
 router.post('/register', UserValidator, register);
 
@@ -13,7 +21,10 @@ router.get('/sent-mail', (req, res) => {
         from: process.env.FROM_EMAIL,
         to: process.env.TO_EMAIL,
         subject: 'TEST MESSAGE',
-        text: `This is mail auto sent from website when you are salespeople.Please don't replay`,
+        // html: `
+        // This is mail auto sent from website when you are salespeople.Please don't replay
+        // `,
+        html: compiledFunction(emailData)
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
