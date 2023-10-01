@@ -1,0 +1,66 @@
+.
+|-- .env
+|-- .gitignore
+|-- .vscode/
+|   `-- settings.json
+|-- README.md
+|-- app.js
+|-- controllers/
+|   |-- index.js
+|   |-- mainController.js
+|   |-- productController.js
+|   `-- userController.js
+|-- docs/
+|   |-- DS-nhom.txt
+|   `-- how-to-use-gitlab.duthu.net.md
+|-- error/
+|   `-- handler.js
+|-- log/
+|   `-- handler.js
+|-- models/
+|   |-- productModel.js
+|   `-- userModel.js
+|-- package.json
+|-- public/
+|   |-- css/
+|   |   |-- 400.css
+|   |   |-- 500.css
+|   |   |-- home.css
+|   |   |-- product.css
+|   |   `-- user.css
+|   |-- images/
+|   |   `-- TechHut.png
+|   `-- js/
+|-- routes/
+|   |-- product.js
+|   |-- routes.js
+|   `-- user.js
+|-- server/
+|   `-- config/
+|       `-- db.js
+|-- tree-full.txt
+|-- tree.txt
+|-- validators/
+|   `-- validator.js
+|-- views/
+|   |-- pages/
+|   |   |-- 404.pug
+|   |   |-- 500.pug
+|   |   |-- about.pug
+|   |   |-- home.pug
+|   |   |-- index.pug
+|   |   |-- layout.pug
+|   |   |-- products/
+|   |   |   |-- detail.pug
+|   |   |   |-- form.pug
+|   |   |   `-- list.pug
+|   |   `-- user.pug
+|   `-- partials/
+|       |-- footer.pug
+|       |-- header.pug
+|       |-- html.pug
+|       |-- nav.pug
+|       `-- pagination.pug
+`-- yarn.lock
+
+18 directories, 45 files

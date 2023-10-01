@@ -1,0 +1,21 @@
+.
+|-- .vscode
+|-- controllers
+|-- docs
+|-- error
+|-- log
+|-- models
+|-- public
+|   |-- css
+|   |-- images
+|   `-- js
+|-- routes
+|-- server
+|   `-- config
+|-- validators
+`-- views
+    |-- pages
+    |   `-- products
+    `-- partials
+
+18 directories
