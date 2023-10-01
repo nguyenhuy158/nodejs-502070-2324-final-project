@@ -2,11 +2,14 @@ extends ../layout
 
 block content
     .container
+        a.btn.btn-primary(href="/products") Back to product list
+
         h2 #{product ? 'Edit Product' : 'Create Product'}
         form(method='POST', action=product ? `/products/${product._id}` : '/products')
-            .mb-3
+
+            .mb-3(class=product ? 'd-none': '')
                 label(for='barcode' class='form-label') Barcode:
-                input#barcode.form-control(type='text' name='barcode', value=product ? product.barcode : '', required)
+                input#barcode.form-control(type='text' name='barcode', value=product ? product.barcode : '',readonly=product ? true: false, required)
 
             .mb-3
                 label(for='productName' class='form-label') Product Name:
@@ -23,7 +26,14 @@ block content
             .mb-3
                 label(for='imageUrls' class='form-label') Image URLs:
                 input#imageUrls.form-control(type='text' name='imageUrls', value=product ? product.imageUrls.join('\n') : '', required)
-                p.text-muted Enter image URLs separated by line breaks.
+                p.text-muted Enter image URLs separated by ;.
+
+            // Add image preview for editing
+            if product && product.imageUrls.length > 0
+                .mb-3
+                    label(class='form-label') Current Image:
+                    each imageUrl in product.imageUrls
+                        img(src=imageUrl, alt='Current Image' height='100' width='100' class='img-preview')
 
             .mb-3
                 label(for='category' class='form-label') Category:

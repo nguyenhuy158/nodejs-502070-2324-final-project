@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
@@ -26,6 +27,19 @@ connectDb();
 app.set('view engine', 'pug');
 
 app.use(express.static('public'));
+
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true
+}));
+
+app.use((req, res, next) => {
+    res.locals.flash_messages = req.session.flash_messages || [];
+    req.session.flash_messages = [];
+    next();
+});
+
 
 app.use('', router);
 

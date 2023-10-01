@@ -4,6 +4,8 @@ block content
 
     .row
         .col
+            a.btn.btn-primary(href="/products/add") Add product
+
         .col-2.form-floating
             select#floatingSelect.form-select(onchange='updatePerPage(this)')
                 option(selected='' value='10') 10
@@ -43,10 +45,10 @@ block content
                         td= product.creationDate
                         td= product.lastUpdateDate
                         td
-                            img(src=product.imageUrls[0], alt='Product Image', height='100', width='100')
+                            img(src=product.imageUrls[0], alt='Product Image' height='100' width='100')
                         td
                             a.btn.btn-primary(href=`/products/${product._id}`) View
-                            a.btn.btn-success(href=`/products/edit/${product._id}`) Update
+                            a.btn.btn-success(href=`/products/${product._id}/edit`) Update
                             a.btn.btn-danger(href=`/products/delete/${product._id}`) Delete
 
 

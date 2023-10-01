@@ -20,5 +20,5 @@ const productSchema = new Schema({
     creationDate: { type: Date },
     lastUpdateDate: { type: Date },
 });
-// barcode, product name, import price, retail price, category, creation date
+
 module.exports = mongoose.model('Product', productSchema);

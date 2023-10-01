@@ -1,15 +1,86 @@
 const Product = require('../models/productModel');
 const { faker } = require('@faker-js/faker');
+const moment = require('moment');
 
 
-exports.edit = async (req, res, next) => {
+async function logger(req, res, next) {
+    const timestamp = moment().format('DD/MM/yyyy HH:mm');
+    console.log('Timestamp: ', timestamp);
+    next();
+};
+
+async function add(req, res, next) {
+    res.render('pages/products/form');
+};
+
+async function about(req, res, next) {
+    res.render('pages/about');
+};
+
+async function create(req, res, next) {
+    const productId = req.params.id;
+    const {
+        barcode,
+        productName,
+        importPrice,
+        retailPrice,
+        imageUrls,
+        category,
+        creationDate,
+        lastUpdateDate,
+    } = req.body;
+
+    let product;
 
     try {
+
+        if (productId) {
+            // Editing an existing product
+            product = await Product.findByIdAndUpdate(
+                productId,
+                {
+                    barcode,
+                    productName,
+                    importPrice,
+                    retailPrice,
+                    imageUrls: imageUrls.split('\n'), // Split image URLs by line breaks
+                    category,
+                    creationDate,
+                    lastUpdateDate,
+                },
+                { new: true }
+            );
+        } else {
+            // Creating a new product
+            product = new Product({
+                barcode,
+                productName,
+                importPrice,
+                retailPrice,
+                imageUrls: imageUrls.split('\n'), // Split image URLs by line breaks
+                category,
+                creationDate,
+                lastUpdateDate,
+            });
+            await product.save();
+        }
+
+        res.redirect('/products'); // Redirect to the product list page after submission
+    } catch (error) {
+        // console.error('Error:', error);
+        res.render('pages/products/form', { product });
+        next(error);
+        // res.status(500).send('Internal Server Error');
+    }
+};
+
+async function edit(req, res, next) {
+    try {
+
         const id = req.params.id;
 
         const product = await Product.findById({ _id: id });
 
-        console.log("🚀 ~ file: productController.js:11 ~ exports.get= ~ product:", product);
         res.render('pages/products/form', { product });
     } catch (error) {
         console.error('Error fetching products:', error);
@@ -17,13 +88,12 @@ exports.edit = async (req, res, next) => {
     }
 };
 
-exports.get = async (req, res, next) => {
+async function get(req, res, next) {
 
     try {
         const id = req.params.id;
 
         const product = await Product.findById({ _id: id });
-        console.log("🚀 ~ file: productController.js:11 ~ exports.get= ~ product:", product);
         res.render('pages/products/detail', { product });
     } catch (error) {
         console.error('Error fetching products:', error);
@@ -32,7 +102,7 @@ exports.get = async (req, res, next) => {
 };
 
 
-exports.gets = async (req, res, next) => {
+async function gets(req, res, next) {
     const perPage = parseInt(req.query.perPage) || 10;
     let page = parseInt(req.query.page) || 1;
 
@@ -57,15 +127,13 @@ exports.gets = async (req, res, next) => {
         };
         res.render('pages/products/list', output);
 
-        // console.log("🚀 ~ file: productController.js:25 ~ exports.gets= ~ output:", output);
-        console.log("🚀 ~ file: productController.js:7 ~ exports.gets= ~ products:", products.length);
     } catch (error) {
         console.error('Error fetching products:', error);
         next(error);
     }
 };
 
-exports.seedDatabase = async function () {
+async function seedDatabase() {
     const products = [];
 
     // Generate 50 sample products
@@ -75,7 +143,7 @@ exports.seedDatabase = async function () {
             productName: faker.commerce.productName(),
             importPrice: faker.number.int({ min: 1000, max: 10000 }),
             retailPrice: faker.number.int({ min: 1000, max: 10000 }),
-            imageUrls: [faker.image.url()],
+            imageUrls: [faker.image.url(), faker.image.url(), faker.image.url()],
             category: faker.helpers.arrayElements(['phone', 'accessories'])[0],
             creationDate: faker.date.past(),
             lastUpdateDate: faker.date.recent(),
@@ -93,4 +161,16 @@ exports.seedDatabase = async function () {
         console.error('Error inserting sample products:', err);
     } finally {
     }
+};
+
+
+module.exports = {
+    create,
+    logger,
+    add,
+    about,
+    add,
+    edit,
+    get,
+    gets,
 };

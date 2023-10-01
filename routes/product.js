@@ -5,15 +5,14 @@ const productController = require('../controllers/productController');
 
 // middleware that is specific to this router
 router
-    .use((req, res, next) => {
-        console.log('Time: ', Date.now());
-        next();
-    })
+    .use(productController.logger)
     .get('/', productController.gets)
+    .post('/', productController.create)
+    .get('/add', productController.add)
     .get('/:id', productController.get)
-    .get('/edit/:id', productController.edit)
-    .get('/about', (req, res) => {
-        res.render('pages/about');
-    });
+    .get('/:id/edit', productController.edit)
+    .put('/:id/edit', productController.logger)
+    .delete('/delete/:id', productController.logger)
+    .get('/about', productController.about);
 
 module.exports = router;
