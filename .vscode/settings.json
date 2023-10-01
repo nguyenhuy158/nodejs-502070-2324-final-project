@@ -151,4 +151,5 @@
     "editor.tabCompletion": "on",
     "terminal.integrated.tabFocusMode": false,
     "editor.tabFocusMode": false,
+    "emmet.triggerExpansionOnTab": true,
 }
