@@ -19,3 +19,5 @@ npm install -g yarn && yarn install && yarn start
 
 ## convert html to pug
 [html2pug](https://html-to-pug.com/)
+
+<!-- Member information -->
