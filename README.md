@@ -26,3 +26,9 @@ npm install -g yarn && yarn install && yarn start
     3. in 'Security tab' select 'Network Access'
     4. click 'add current ip address'
     5. done
+
+<!-- Member information -->
+## Member information
+1. 52000630 - Luong Gia Bao
+2. 52000626 - Pham Quoc Anh
+3. 52000668 - Nguyen Tran Quang Huy
