@@ -1,19 +1,51 @@
+//- nav.navbar.navbar-expand-lg.navbar-light.bg-light
+//-     .container
+//-         a.navbar-brand(href="/") TechHut
+//-         button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
+//-             span.navbar-toggler-icon
+//-         .collapse.navbar-collapse#navbarNav
+//-             ul.navbar-nav.ml-auto
+//-                 li.nav-item
+//-                     a.nav-link(href="/") Home
+//-                 li.nav-item
+//-                     a.nav-link(href="/about") About
+//-                 li.nav-item
+//-                     a.nav-link(href="/users") User
+//-                 li.nav-item
+//-                     a.nav-link(href="/products") Product
+//-                 li.nav-item
+//-                     a.nav-link(href="/random-product") random data
+//-                 li.nav-item
+//-                     a.nav-link(href="/sent-mail") sent mail
+
 nav.navbar.navbar-expand-lg.navbar-light.bg-light
     .container
-        a.navbar-brand(href="/") TechHut
-        button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
+        a.navbar-brand(href='/')
+            img(src='/images/TechHut.png' height='70' alt='' loading='lazy')x
+        button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation')
             span.navbar-toggler-icon
-        .collapse.navbar-collapse#navbarNav
-            ul.navbar-nav.ml-auto
+        #navbarNav.collapse.navbar-collapse
+            ul.navbar-nav.ms-auto.mb-2.mb-lg-0
+                li.nav-item.active
+                    a.nav-link(aria-current='page' href='/') Home
                 li.nav-item
-                    a.nav-link(href="/") Home
+                    a.nav-link(href='/about') About
                 li.nav-item
-                    a.nav-link(href="/about") About
+                    a.nav-link(href='/users') User
                 li.nav-item
-                    a.nav-link(href="/users") User
+                    a.nav-link(href='products') Product
                 li.nav-item
-                    a.nav-link(href="/products") Product
+                    a.nav-link(href='/random-product') random data
                 li.nav-item
-                    a.nav-link(href="/random-product") random data
+                    a.nav-link(href='/sent-mail') sent mail
+            ul.navbar-nav
                 li.nav-item
-                    a.nav-link(href="/sent-mail") sent mail
+                    a.nav-link(href='/')
+                        i.fab.fa-facebook-square
+                li.nav-item
+                    a.nav-link(href='/')
+                        i.fab.fa-instagram
+                li.nav-item
+                    a.nav-link(href='/')
+                        i.fab.fa-youtube
+
