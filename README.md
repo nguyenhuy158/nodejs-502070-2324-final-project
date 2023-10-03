@@ -16,3 +16,6 @@ tree -d -F -a -I 'node_modules|.git' -o tree-only-directory.txt
 // cmd && git bash
 npm install -g yarn && yarn install && yarn start
 ```
+
+## convert html to pug
+[html2pug](https://html-to-pug.com/)
