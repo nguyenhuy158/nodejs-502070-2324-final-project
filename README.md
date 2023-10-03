@@ -9,3 +9,10 @@
 tree -F -a -I 'node_modules|.git' -o tree-full.txt
 tree -d -F -a -I 'node_modules|.git' -o tree-only-directory.txt
 ```
+
+
+```
+npm install -g yarn &&
+yarn install &&
+yarn start
+```
