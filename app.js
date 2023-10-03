@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const routes = require('./routes/routes');
 const userRouter = require('./routes/user');
+const cors = require("cors");
+const cookieSession = require("cookie-session");
 const productRouter = require('./routes/product');
 const router = require('./routes/routes');
 const mongoose = require('mongoose');
@@ -16,9 +18,16 @@ const logger = require('./log/handler');
 const { insertUser } = require('./controllers/index');
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+    cookieSession({
+        name: process.env.COOKIE_NAME,
+        keys: [process.env.COOKIE_SECRET],
+        httpOnly: true,
+    })
+);
 
 app.locals.moment = require('moment');
 
@@ -52,4 +61,4 @@ app.use(errorHandler.errorNotFound);
 app.use(errorHandler.clientErrorHandler);
 app.use(errorHandler.errorHandler);
 
-app.listen(process.env.PORT || 3000, logger.listen);
+app.listen(process.env.PORT || 8080, logger.listen);
