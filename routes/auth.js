@@ -15,8 +15,7 @@ router
     .post('/register', async (req, res) => {
     })
     .get('/login', authController.get)
-    .post('/login', async (req, res) => {
-    })
+    .post('/login', authController.checkUser)
     .get('/get-age', (req, res) => {
     })
     .use(authController.checkAuth);
