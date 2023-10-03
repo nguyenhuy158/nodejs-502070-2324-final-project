@@ -20,12 +20,16 @@ npm install -g yarn && yarn install && yarn start
 ## convert html to pug
 [html2pug](https://html-to-pug.com/)
 
-    ## how to fix ip address don't access
-    1. enter url [mongodb.com](https://mongodb.com/)
-    2. copy DB_USERNAME and DB_PASSWORD in '.env' use to sign in
-    3. in 'Security tab' select 'Network Access'
-    4. click 'add current ip address'
-    5. done
+## Securing MongoDB Access by IP
+To secure your MongoDB database and restrict access to specific IP addresses:
+
+1. Visit mongodb.com.
+2. Log in using the credentials from your .env file (DB_USERNAME and DB_PASSWORD).
+3. In the 'Security' tab, choose 'Network Access'.
+4. Click 'Add IP Address' to specify allowed IP addresses.
+5. Enter the desired IPs or CIDR blocks and save.
+
+Now, only approved IP addresses can access your MongoDB database, enhancing its security.
 
 <!-- Member information -->
 ## Member information
