@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const routes = require('./routes/routes');
+const authRoutes = require('./routes/auth');
 const userRouter = require('./routes/user');
 const cors = require("cors");
 const cookieSession = require("cookie-session");
@@ -34,6 +35,7 @@ app.locals.moment = require('moment');
 connectDb();
 
 app.set('view engine', 'pug');
+app.set('views', __dirname + '/views');
 
 app.use(express.static('public'));
 
@@ -49,6 +51,8 @@ app.use((req, res, next) => {
     next();
 });
 
+
+app.use('', authRoutes);
 
 app.use('', router);
 

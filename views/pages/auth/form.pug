@@ -1,0 +1,19 @@
+.container.mt-5
+    .row.justify-content-center
+        .col-md-6
+            .card
+                .card-header
+                    h3 Register/Login
+                .card-body
+                    form(method='post')
+                        .mb-3
+                            label.form-label(for='username') Email:
+                            input#username.form-control(name='email' type='email' placeholder='Nhập email' required='')
+                        .mb-3
+                            label.form-label(for='password') Password:
+                            input#password.form-control(name='pwd' type='password' placeholder='Nhập password' required='')
+                        if error
+                            .text-danger.mb-3.alert.alert-danger
+                                span=error
+
+                        button.btn.btn-success(type='submit') Login
