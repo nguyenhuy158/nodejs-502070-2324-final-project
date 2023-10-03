@@ -173,4 +173,5 @@ module.exports = {
     edit,
     get,
     gets,
+    seedDatabase,
 };

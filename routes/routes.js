@@ -19,7 +19,7 @@ router.post('/register', UserValidator, register);
 router.get('/sent-mail', (req, res) => {
     const mailOptions = {
         from: process.env.FROM_EMAIL,
-        to: process.env.TO_EMAIL,
+        to: 'quocanh01062002@gmail.com',
         subject: 'TEST MESSAGE',
         // html: `
         // This is mail auto sent from website when you are salespeople.Please don't replay

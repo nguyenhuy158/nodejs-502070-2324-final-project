@@ -19,3 +19,10 @@ npm install -g yarn && yarn install && yarn start
 
 ## convert html to pug
 [html2pug](https://html-to-pug.com/)
+
+    ## how to fix ip address don't access
+    1. enter url [mongodb.com](https://mongodb.com/)
+    2. copy DB_USERNAME and DB_PASSWORD in '.env' use to sign in
+    3. in 'Security tab' select 'Network Access'
+    4. click 'add current ip address'
+    5. done
