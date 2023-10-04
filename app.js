@@ -20,6 +20,7 @@ const { insertUser } = require('./controllers/index');
 
 const app = express();
 app.use(cors());
+app.disable('x-powered-by');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
