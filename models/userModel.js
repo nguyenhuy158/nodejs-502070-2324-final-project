@@ -6,9 +6,11 @@ const userSchema = new Schema({
     email: { type: String, unique: true, required: true, trim: true },
     username: { type: String, required: true, trim: true, minlength: 1 },
     fullName: { type: String, trim: true, minlength: 2 },
-    role: { type: String, enum: ['admin', 'salespeople'] },
-    password: { type: String, required: true, trim: true, minlength: 1 },
+    role: { type: String, enum: ['admin', 'salespeople'], default: 'salespeople', lowercase: true },
+    password: { type: String, required: true, trim: true, minlength: 1, select: false },
     password_confirm: { type: String, trim: true, minlength: 1 },
+}, {
+    timestamps: true
 });
 
 userSchema.pre('save', function (next) {
