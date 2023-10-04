@@ -12,6 +12,7 @@ const cookieSession = require("cookie-session");
 const productRouter = require('./routes/product');
 const router = require('./routes/routes');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 const connectDb = require('./server/config/db');
 const User = require('./models/userModel');
 const errorHandler = require('./error/handler');
@@ -21,6 +22,7 @@ const { insertUser } = require('./controllers/index');
 const app = express();
 app.use(cors());
 app.disable('x-powered-by');
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(

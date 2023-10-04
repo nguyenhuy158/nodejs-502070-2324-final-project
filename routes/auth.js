@@ -10,15 +10,11 @@ router
         console.log('Time: ', dateFormat(new Date(), " hh:MM:ss dd/mm/yyyy"));
         next();
     })
-    .get('/register', (req, res) => {
-        res.render('register');
-    })
-    .post('/register', async (req, res) => {
-    })
+    .get('/register', authController.getRegister)
+    .post('/register', authController.createUser)
     .get('/login', authController.get)
     .post('/login', authController.checkUser)
-    .get('/get-age', (req, res) => {
-    })
+    .get('/logout', authController.logout)
     .use(authController.checkAuth);
 
 

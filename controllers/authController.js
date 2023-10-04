@@ -18,17 +18,38 @@ async function get(req, res, next) {
 };
 
 async function createUser(req, res, next) {
-    const { username, password } = req.body;
+    const { email } = req.body;
+    try {
+        const newUser = new User({
+            email,
+            username: req.body.username,
+            password: req.body.password,
+            role: 'salespeople'
+        });
 
-    // Check if the username and password match a user in your database
-    const user = users.find(u => u.username === username && u.password === password);
+        const existingUser = await User.findOne({ email });
 
-    if (user) {
-        req.session.loggedIn = true;
-        return res.redirect('/dashboard');
+        if (existingUser) {
+            return res.render('pages/auth/form', {
+                isRegister: true,
+                status: 'failed',
+                data: [],
+                message: 'It seems you already have an account, please log in instead.',
+            });
+        }
+
+        const savedUser = await newUser.save();
+        const { password, role, ...user_data } = savedUser._doc;
+        // return res.render('pages/auth/form', {
+        //     isRegister: true,
+        //     status: 'success',
+        //     data: [user_data],
+        //     message: 'Thank you for registering with us. Your account has been successfully created.',
+        // });
+        return res.redirect('/login');
+    } catch (err) {
+        next(err);
     }
-
-    res.redirect('/login');
 };
 
 function checkAuth(req, res, next) {
@@ -42,13 +63,9 @@ function checkAuth(req, res, next) {
 
 async function checkUser(req, res, next) {
     const { username, password } = req.body;
-    console.log("🚀 ~ file: authController.js:39 ~ checkUser ~ password:", password);
-    console.log("🚀 ~ file: authController.js:39 ~ checkUser ~ username:", username);
-
     try {
         const user = await User.findOne({ username });
-        console.log("🚀 ~ file: authController.js:42 ~ checkUser ~ user:", user);
-
+        console.log("🚀 ~ file: authController.js:68 ~ checkUser ~ user:", user)
         if (user && await bcrypt.compare(password, user.password)) {
             req.session.loggedIn = true;
             return res.redirect('/');
@@ -61,10 +78,28 @@ async function checkUser(req, res, next) {
     }
 }
 
+function logout(req, res, next) {
+    if (req.session) {
+        req.session.loggedIn = false;
+        // req.session.destroy((err) => {
+        //     if (err) {
+        //         console.error('Error destroying session:', err);
+        //     }
+        // });
+    }
+    res.redirect('/login');
+}
+
+async function getRegister(req, res, next) {
+    res.render('pages/auth/form', { isRegister: true });
+}
+
 module.exports = {
     logger: login,
     get,
     createUser,
     checkAuth,
-    checkUser
+    checkUser,
+    logout,
+    getRegister
 };

@@ -5,13 +5,16 @@
                 .card-header
                     h3 Register/Login
                 .card-body
-                    form(method='post')
+                    form(method='post' action= isRegister ? '/register' : '/login')
                         .mb-3
-                            label.form-label(for='username') Email:
-                            input#username.form-control(name='username' type='text' placeholder='Nhập email' required='')
+                            label.form-label(for='username') Username:
+                            input#username.form-control(name='username' type='text' placeholder='Nhập ')
+                        if isRegister
+                            label.form-label(for='password') Email:
+                            input#email.form-control(name='email' type='email' placeholder='Nhập ')
                         .mb-3
                             label.form-label(for='password') Password:
-                            input#password.form-control(name='password' type='password' placeholder='Nhập password' required='')
+                            input#password.form-control(name='password' type='password' placeholder='Nhập ')
                         if error
                             .text-danger.mb-3.alert.alert-danger
                                 span=error
