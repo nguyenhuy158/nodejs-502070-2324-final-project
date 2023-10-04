@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
+const dateFormat = require('dateformat');
 
 
 // middleware that is specific to this router
 router
     .use((req, res, next) => {
-        console.log('Time: ', Date.now());
+        console.log('Time: ', dateFormat(new Date(), " hh:MM:ss dd/mm/yyyy"));
         next();
     })
     .get('/register', (req, res) => {
