@@ -40,7 +40,7 @@ async function createUser(req, res, next) {
 
         const savedUser = await newUser.save();
         const { password, role, ...user_data } = savedUser._doc;
-        console.log("🚀 ~ file: authController.js:43 ~ createUser ~ user_data:", user_data)
+        console.log("🚀 ~ file: authController.js:43 ~ createUser ~ user_data:", user_data);
         // return res.render('pages/auth/form', {
         //     isRegister: true,
         //     status: 'success',
@@ -65,13 +65,23 @@ function checkAuth(req, res, next) {
 async function checkUser(req, res, next) {
     const { username, password } = req.body;
     console.log("🚀 ~ file: authController.js:67 ~ checkUser ~ password:", password);
-    console.log("🚀 ~ file: authController.js:67 ~ checkUser ~ username:", username)
+    console.log("🚀 ~ file: authController.js:67 ~ checkUser ~ username:", username);
     try {
         const user = await User.findOne({ username }).select('+password');
-        console.log("🚀 ~ file: authController.js:68 ~ checkUser ~ user:", user)
-        console.log("🚀 ~ file: authController.js:68 ~ checkUser ~ user:", user.password)
+        console.log("🚀 ~ file: authController.js:68 ~ checkUser ~ user:", user);
+        console.log("🚀 ~ file: authController.js:68 ~ checkUser ~ user:", user.password);
+
         if (user && await bcrypt.compare(password, user.password)) {
             req.session.loggedIn = true;
+            let options = {
+                maxAge: 20 * 60 * 1000,
+                httpOnly: true,
+                secure: true,
+                sameSite: 'None',
+            };
+            const token = user.generateAccessJWT();
+            res.cookie('SessionID', token, options);
+
             return res.redirect('/');
         }
 

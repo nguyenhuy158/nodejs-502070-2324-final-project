@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
+import jwt from 'jsonwebtoken';
+require('dotenv').config();
+
+const SECRET_ACCESS_TOKEN = process.env.SECRET_ACCESS_TOKEN;
 
 const userSchema = new Schema({
     email: { type: String, unique: true, required: true, trim: true },
@@ -29,5 +33,14 @@ userSchema.pre('save', function (next) {
         });
     });
 });
+
+userSchema.methods.generateAccessJWT = function () {
+    let payload = {
+        id: this._id,
+    };
+    return jwt.sign(payload, SECRET_ACCESS_TOKEN, {
+        expiresIn: '20m',
+    });
+};
 
 module.exports = mongoose.model('User', userSchema);
