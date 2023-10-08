@@ -20,9 +20,28 @@ const logger = require('./log/handler');
 const { insertUser } = require('./controllers/index');
 const sassMiddleware = require('node-sass-middleware');
 const path = require('path');
+const winstonLogger = require('./config/logger');
+
+
+process.on('uncaughtException', (error) => {
+    winstonLogger.error('Uncaught Exception:', error);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    winstonLogger.error('Unhandled Rejection:', reason);
+});
 
 
 const app = express();
+const accessLogStream = require('fs').createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+// app.use(morgan('combined', { stream: accessLogStream }));
+app.use(morgan('tiny', { stream: accessLogStream }));
+app.use((req, res, next) => {
+    winstonLogger.info(`${req.method} ${req.url}`);
+    next();
+});
+
 app.use(cors());
 app.disable('x-powered-by');
 app.use(cookieParser());
@@ -66,7 +85,7 @@ app.use((req, res, next) => {
     req.session.flash_messages = [];
     next();
 });
-
+app.get('/log', logger.morganLog);
 
 app.use('', authRoutes);
 

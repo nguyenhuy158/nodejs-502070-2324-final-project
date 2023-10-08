@@ -28,7 +28,6 @@
     "jquery": "^3.7.1",
     "jsdom": "^22.1.0",
     "jsonwebtoken": "^9.0.2",
-    "less-middleware": "^3.1.0",
     "method-override": "^3.0.0",
     "mjml": "^4.14.1",
     "moment": "^2.29.4",
