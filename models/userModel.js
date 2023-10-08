@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const SECRET_ACCESS_TOKEN = process.env.SECRET_ACCESS_TOKEN;

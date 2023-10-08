@@ -18,6 +18,9 @@ const User = require('./models/userModel');
 const errorHandler = require('./error/handler');
 const logger = require('./log/handler');
 const { insertUser } = require('./controllers/index');
+const sassMiddleware = require('node-sass-middleware');
+const path = require('path');
+
 
 const app = express();
 app.use(cors());
@@ -40,7 +43,20 @@ connectDb();
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
 
-app.use(express.static('public'));
+console.log("🚀 ~ file: app.js:49 ~ path.join(__dirname, 'source', 'sass'):", path.join(__dirname, 'source', 'sass'));
+console.log("🚀 ~ file: app.js:51 ~ path.join(__dirname, 'public'):", path.join(__dirname, 'public'));
+app.use(sassMiddleware({
+    /* Options */
+    src: path.join('source', 'sass'),
+    dest: path.join('public', 'css'),
+    debug: true,
+    outputStyle: 'compressed',
+    force: true,
+    root: __dirname,
+    indentedSyntax: false,
+    prefix: '/css'  // Where prefix is at <link rel="stylesheets" href="prefix/style.css"/>
+}));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use(session({
     secret: 'your-secret-key',
