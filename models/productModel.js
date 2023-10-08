@@ -19,6 +19,8 @@ const productSchema = new Schema({
     category: { type: String, enum: ['phone', 'accessories'] },
     creationDate: { type: Date },
     lastUpdateDate: { type: Date },
+}, {
+    timestamps: true,
 });
 
 module.exports = mongoose.model('Product', productSchema);

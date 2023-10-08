@@ -22,16 +22,14 @@ async function checkAndCreateAdminUser() {
         const adminUser = await User.findOne({ username: 'admin' });
 
         if (!adminUser) {
-            const saltRounds = 10;
-            const hashedPassword = await bcrypt.hash('admin', saltRounds);
 
             const newUser = new User({
                 email: 'noreplay.nodejs.502070@gmail.com',
                 username: 'admin',
                 fullName: 'Admin User',
                 role: 'admin',
-                password: hashedPassword,
-                password_confirm: hashedPassword,
+                password: 'admin',
+                password_confirm: 'admin',
             });
 
             await newUser.save();

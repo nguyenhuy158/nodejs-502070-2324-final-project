@@ -4,7 +4,6 @@
   },
   "nodemonConfig": {
     "verbose": true,
-    "ext": "js,mjs,cjs,json,pug,css,html,env,sass,scss",
     "ignore": "**/node_module/**"
   },
   "dependencies": {

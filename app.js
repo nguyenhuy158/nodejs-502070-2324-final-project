@@ -43,10 +43,7 @@ connectDb();
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
 
-console.log("🚀 ~ file: app.js:49 ~ path.join(__dirname, 'source', 'sass'):", path.join(__dirname, 'source', 'sass'));
-console.log("🚀 ~ file: app.js:51 ~ path.join(__dirname, 'public'):", path.join(__dirname, 'public'));
 app.use(sassMiddleware({
-    /* Options */
     src: path.join('source', 'sass'),
     dest: path.join('public', 'css'),
     debug: true,
@@ -54,12 +51,12 @@ app.use(sassMiddleware({
     force: true,
     root: __dirname,
     indentedSyntax: false,
-    prefix: '/css'  // Where prefix is at <link rel="stylesheets" href="prefix/style.css"/>
+    prefix: '/css'
 }));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-    secret: 'your-secret-key',
+    secret: process.env.SECRET_SESSION_KEY,
     resave: false,
     saveUninitialized: true
 }));

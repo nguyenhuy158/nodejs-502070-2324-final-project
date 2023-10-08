@@ -64,12 +64,8 @@ function checkAuth(req, res, next) {
 
 async function checkUser(req, res, next) {
     const { username, password } = req.body;
-    console.log("🚀 ~ file: authController.js:67 ~ checkUser ~ password:", password);
-    console.log("🚀 ~ file: authController.js:67 ~ checkUser ~ username:", username);
     try {
         const user = await User.findOne({ username }).select('+password');
-        console.log("🚀 ~ file: authController.js:68 ~ checkUser ~ user:", user);
-        console.log("🚀 ~ file: authController.js:68 ~ checkUser ~ user:", user.password);
 
         if (user && await bcrypt.compare(password, user.password)) {
             req.session.loggedIn = true;
