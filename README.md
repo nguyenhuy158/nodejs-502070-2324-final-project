@@ -46,3 +46,7 @@ Now, only approved IP addresses can access your MongoDB database, enhancing its 
         "ignore": "**/node_module/**"
     },
 ```
+
+
+## place holder image
+`https://placehold.co/200?text=Empty&font=roboto`

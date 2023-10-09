@@ -5,6 +5,16 @@ const { transporter } = require('../config/email');
 const flash = require('../utils/flash');
 const moment = require('moment');
 
+
+exports.viewProfile = async (req, res, next) => {
+    try {
+        res.render('pages/users/profile', { user: req.session.user });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+};
+
 exports.createUser = function (req, res, next) {
 
     const newData = req.body;

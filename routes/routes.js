@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { register } = require('../controllers/userController');
+const userController = require('../controllers/userController');
 const { UserValidator } = require('../validators/validator');
 const { seedDatabase } = require('../controllers/productController');
 const flash = require('../utils/flash');
@@ -59,6 +60,9 @@ router.get('/about', (req, res) => {
     console.log('go /about');
     res.render('pages/about', { title: 'About' });
 });
+
+router.get('/profile', userController.viewProfile);
+
 
 router.get('/random-product', (req, res) => {
     // insertUser();

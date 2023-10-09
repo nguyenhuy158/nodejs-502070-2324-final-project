@@ -1,0 +1,14 @@
+extends ..\layout.pug
+
+block content
+    h1 User Information
+    .card
+        .card-body
+            .row
+                .col-md-4
+                    img.img-fluid(src=user.profilePicture ? user.profilePicture : 'https://placehold.co/200?text=Empty&font=roboto' alt='Profile Picture')
+                .col-md-8
+                    p Email: #{user.email}
+                    p Username: #{user.username}
+                    p Full Name: #{user.fullName}
+                    p Role: #{user.role}
