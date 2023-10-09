@@ -2,7 +2,8 @@ const User = require('../models/userModel');
 const { faker } = require('@faker-js/faker');
 const moment = require('moment');
 const bcrypt = require('bcryptjs');
-
+const flash = require('../utils/flash');
+const session = require('express-session');
 
 async function login(req, res, next) {
     const timestamp = moment().format('DD/MM/yyyy HH:mm');
@@ -69,6 +70,8 @@ async function checkUser(req, res, next) {
 
         if (user && await bcrypt.compare(password, user.password)) {
             req.session.loggedIn = true;
+            req.session.user = user;
+            req.session.userId = user._id;
             let options = {
                 maxAge: 20 * 60 * 1000,
                 httpOnly: true,
@@ -89,19 +92,48 @@ async function checkUser(req, res, next) {
 }
 
 function logout(req, res, next) {
-    if (req.session) {
-        req.session.loggedIn = false;
-        // req.session.destroy((err) => {
-        //     if (err) {
-        //         console.error('Error destroying session:', err);
-        //     }
-        // });
-    }
-    res.redirect('/login');
+    req.session.loggedIn = undefined;
+    req.session.user = undefined;
+    req.session.userId = undefined;
+    res.redirect('/');
 }
 
 async function getRegister(req, res, next) {
     res.render('pages/auth/form', { isRegister: true });
+}
+
+async function changePassword(req, res, next) {
+    res.render('pages/auth/change_password');
+}
+
+async function postChangePassword(req, res, next) {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    const userId = req.session.userId;
+
+    try {
+        const user = await User.findById(userId).select('+password');
+
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+
+        if (!isPasswordValid) {
+            flash.addFlashMessage(req, 'warning', 'Change password fail: ', 'Password is not correct');
+            return res.status(401).redirect('/change-password');
+        }
+
+        if (newPassword !== confirmPassword) {
+            flash.addFlashMessage(req, 'warning', 'Change password fail: ', 'Password not match');
+            return res.status(400).redirect('/change-password');
+        }
+
+        user.password = newPassword;
+        await user.save();
+
+        flash.addFlashMessage(req, 'success', 'Change password success: ', 'Password changed');
+        res.redirect('/');
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
 }
 
 module.exports = {
@@ -111,5 +143,7 @@ module.exports = {
     checkAuth,
     checkUser,
     logout,
-    getRegister
+    changePassword,
+    getRegister,
+    postChangePassword
 };

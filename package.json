@@ -2,10 +2,6 @@
   "scripts": {
     "start": "nodemon app.js"
   },
-  "nodemonConfig": {
-    "verbose": true,
-    "ignore": "**/node_module/**"
-  },
   "dependencies": {
     "@faker-js/faker": "^8.1.0",
     "@popperjs/core": "^2.11.8",

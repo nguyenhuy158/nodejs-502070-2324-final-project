@@ -40,7 +40,7 @@ router.get('/sent-mail', (req, res) => {
 router.get('/', (req, res) => {
     // insertUser();
     console.log('go /');
-    flash.addFlashMessage(req, 'success', 'Messgeeee success flash message');
+    flash.addFlashMessage(req, 'success', 'Success', 'Messgeeee success flash message');
     res.render('pages/index', { title: 'Home', app_name: process.env.APP_NAME });
 });
 

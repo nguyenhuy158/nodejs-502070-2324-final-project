@@ -1,6 +1,6 @@
-if flash_messages
-    each message in flash_messages
-        .alert.alert-dismissible.fade.show(id=message.type, class=`alert-${message.type}`, role='alert')
-            strong= message.text
-            button.btn-close(data-bs-dismiss='alert' aria-label='Close')
+if flash
+    .alert.alert-dismissible.fade.show(id=flash.type, class=`alert-${flash.type}`, role='alert')
+        strong= flash.info
+            span= ` ${flash.message}`
+        button.btn-close(data-bs-dismiss='alert' aria-label='Close')
 

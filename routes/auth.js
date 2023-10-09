@@ -15,6 +15,8 @@ router
     .get('/login', authController.get)
     .post('/login', authController.checkUser)
     .get('/logout', authController.logout)
+    .get('/change-password', authController.changePassword)
+    .post('/change-password', authController.postChangePassword)
     .use(authController.checkAuth);
 
 

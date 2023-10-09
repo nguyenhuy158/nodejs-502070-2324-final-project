@@ -1,10 +1,10 @@
 
-function addFlashMessage(req, type, text) {
-    if (!req.session.flash_messages) {
-        req.session.flash_messages = [];
-    }
-
-    req.session.flash_messages.push({ type, text });
+function addFlashMessage(req, type, info = '', message = '') {
+    req.session.flash = {
+        type: type,
+        info: info,
+        message: message
+    };
 }
 
 module.exports = {

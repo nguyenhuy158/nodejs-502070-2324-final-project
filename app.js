@@ -74,17 +74,14 @@ app.use(sassMiddleware({
 }));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-app.use(session({
-    secret: process.env.SECRET_SESSION_KEY,
-    resave: false,
-    saveUninitialized: true
-}));
+app.use(session({ secret: process.env.SESSION_SECRECT_KEY, resave: false, saveUninitialized: true }));
 
 app.use((req, res, next) => {
-    res.locals.flash_messages = req.session.flash_messages || [];
-    req.session.flash_messages = [];
+    res.locals.flash = req.session.flash;
+    delete req.session.flash;
     next();
 });
+
 app.get('/log', logger.morganLog);
 
 app.use('', authRoutes);
