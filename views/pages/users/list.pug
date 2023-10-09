@@ -1,7 +1,6 @@
 extends ..\layout.pug
 
 block content
-    include ..\..\partials\fn
     .row
         .col
             a.btn.btn-primary(href="/users/add") Add user
@@ -46,10 +45,8 @@ block content
                         td= user.username
                         td= user.fullName
                         td= user.role
-                        td
-                            +formatDate(user.createdAt, 'hh:mm:ss dd/MM/yyyy ')
-                        td
-                            +formatDate(user.updatedAt, 'hh:mm:ss dd/MM/yyyy')
+                        td= user.createdAtFormatted
+                        td= user.updatedAtFormatted
                         td= user.isFirstLogin
                         td= user.inactivateStatus
                         td= user.lockedStatus

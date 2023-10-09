@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
-// import jwt from 'jsonwebtoken';
 const jwt = require('jsonwebtoken');
+const { formatTimestamp } = require('../utils/format');
 require('dotenv').config();
 
 const SECRET_ACCESS_TOKEN = process.env.SECRET_ACCESS_TOKEN;
@@ -54,6 +54,15 @@ userSchema.pre('save', function (next) {
             next();
         });
     });
+});
+
+
+userSchema.virtual('createdAtFormatted').get(function () {
+    return formatTimestamp(this.createdAt);
+});
+
+userSchema.virtual('updatedAtFormatted').get(function () {
+    return formatTimestamp(this.updatedAt);
 });
 
 userSchema.methods.generateAccessJWT = function () {

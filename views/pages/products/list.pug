@@ -29,6 +29,8 @@ block content
                     th Category
                     th Creation Date
                     th Last Update Date
+                    th Creation Date
+                    th Last Update Date
                     th Image
                     th Handle
 
@@ -42,8 +44,10 @@ block content
                         td= product.importPrice
                         td= product.retailPrice
                         td= product.category
-                        td= product.creationDate
-                        td= product.lastUpdateDate
+                        td= product.creationDateFormatted
+                        td= product.lastUpdateDateFormatted
+                        td= product.createdAtFormatted
+                        td= product.updatedAtFormatted
                         td
                             img(src=product.imageUrls[0], alt='Product Image' height='100' width='100')
                         td

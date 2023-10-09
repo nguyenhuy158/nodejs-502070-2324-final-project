@@ -9,6 +9,7 @@ router
         next();
     })
     .get('/', userController.getUsers)
+    .get('/:id', userController.getUser)
     .get('/about', (req, res) => {
         res.render('pages/about');
     })

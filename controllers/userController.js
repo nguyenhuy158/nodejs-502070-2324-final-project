@@ -54,6 +54,14 @@ exports.createUser = function (req, res, next) {
     // res.status(201).json(newData);
 };
 
+exports.getUser = async (req, res, next) => {
+    const userId = req.params.id;
+
+    const user = await User.findById(userId);
+
+    res.render('pages/users/detail', { user });
+};
+
 exports.getUsers = async function (req, res, next) {
     const perPage = parseInt(req.query.perPage) || 10;
     let page = parseInt(req.query.page) || 1;
