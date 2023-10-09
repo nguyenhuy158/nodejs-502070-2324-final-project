@@ -50,3 +50,10 @@ Now, only approved IP addresses can access your MongoDB database, enhancing its 
 
 ## place holder image
 `https://placehold.co/200?text=Empty&font=roboto`
+
+
+## default account admin login
+```
+username: admin
+password: admin
+```
