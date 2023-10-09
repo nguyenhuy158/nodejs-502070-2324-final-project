@@ -14,20 +14,26 @@ exports.changeProfilePicture = async (req, res, next) => {
         const user = await User.findById(req.session.user._id);
 
         await sharp(pathFile)
-            .resize(200, 200)
-            .toFile(path.join(__dirname, '..', 'public', `uploads/${user._id}-profile.jpg`));
+            .resize(200, 200, {
+                fit: sharp.fit.cover,
+                withoutEnlargement: true
+            })
+            .webp({ quality: 80 })
+            .toFile(path.join(__dirname, '..', 'public', `uploads/${user._id}-profile.webp`));
 
-        user.profilePicture = `uploads/${user._id}-profile.jpg`;
+        user.profilePicture = `uploads/${user._id}-profile.webp`;
         await user.save();
         req.session.user = user;
         fs.unlinkSync(pathFile);
 
         flash.addFlashMessage(req, 'success', 'Change picture success', '');
-        console.log("🚀 ~ file: userController.js:24 ~ exports.changeProfilePicture= ~ user:", user);
-
         res.redirect('/profile');
     } catch (error) {
-        console.error(error);
+        console.log("🚀 ~ file: userController.js:31 ~ exports.changeProfilePicture= ~ error:", error);
+        user.profilePicture = `uploads/${req.file.filename}`;
+        await user.save();
+        req.session.user = user;
+
         next(error);
     }
 };

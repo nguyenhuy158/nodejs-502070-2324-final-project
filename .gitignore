@@ -135,9 +135,10 @@ public/css/*.css
 
 # upload profile folder
 public/uploads/*.png
+public/uploads/*.webp
 public/uploads/*.jpg
 public/uploads/*.jpeg
 public/uploads/*.gif
 public/uploads/*.bmp
 public/uploads/*.svg
-!public/uploads/*-profile.jpg
+!public/uploads/*-profile.webp
