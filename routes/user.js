@@ -8,9 +8,7 @@ router
         console.log('Time: ', require('dateformat')(new Date(), " hh:MM:ss dd/mm/yyyy"));
         next();
     })
-    .get('/', (req, res) => {
-        res.render('pages/home');
-    })
+    .get('/', userController.getUsers)
     .get('/about', (req, res) => {
         res.render('pages/about');
     })
@@ -20,6 +18,7 @@ router
     })
     .post('/register', async (req, res) => {
     })
+    .get('/resend/:id', userController.resendEmail)
     .get('/login', (req, res) => {
         res.render('pages/auth/form');
     })

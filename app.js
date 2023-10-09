@@ -88,7 +88,7 @@ app.use('', authRoutes);
 
 app.use('', router);
 
-app.use('/user', userRouter);
+app.use('/users', userRouter);
 
 app.use('/products', productRouter);
 

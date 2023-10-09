@@ -2,13 +2,44 @@ const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const { transporter } = require('../config/email');
-const flash = require('../utils/flash')
+const flash = require('../utils/flash');
+const moment = require('moment');
 
 exports.createUser = function (req, res, next) {
 
     const newData = req.body;
     // dataModel.addData(newData);
     // res.status(201).json(newData);
+};
+
+exports.getUsers = async function (req, res, next) {
+    const perPage = parseInt(req.query.perPage) || 10;
+    let page = parseInt(req.query.page) || 1;
+
+    try {
+        const users = await User
+            .find()
+            .skip(perPage * page - perPage)
+            .limit(perPage)
+            .exec();
+
+        const count = await User.countDocuments();
+        const nextPage = parseInt(page) + 1;
+        const hasNextPage = nextPage <= Math.ceil(count / perPage);
+
+        const output = {
+            users,
+            current: page,
+            count,
+            perPage,
+            nextPage: hasNextPage ? nextPage : null
+        };
+
+        res.render('pages/users/list', output);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        next(error);
+    }
 };
 
 exports.register = function (req, res, next) {
@@ -31,6 +62,43 @@ exports.register = function (req, res, next) {
     });
 };
 
+exports.resendEmail = async function resendEmail(req, res, next) {
+    const id = req.params.id;
+
+    try {
+        const user = await User.findById(id);
+
+        if (!user) {
+            // return res.render('pages/auth/form', {
+            //     isRegister: false,
+            //     status: 'failed',
+            //     message: 'No user found with the provided email address.',
+            // });
+            flash.addFlashMessage(req, 'warning', '', `No user found with the provided ${id}.`);
+            return res.redirect('/users');
+        }
+
+        user.token = generateToken();
+        user.tokenExpiration = moment().add(1, 'minutes');
+        await user.save();
+
+        await sendEmail(user.email, user.token);
+
+
+        flash.addFlashMessage(req, 'success', 'Email has been resent.', 'Please check your email for further instructions.');
+        res.redirect('/users');
+
+        // res.render('pages/auth/form', {
+        //     isRegister: false,
+        //     status: 'success',
+        //     message: 'Email has been resent. Please check your email for further instructions.',
+        // });
+    } catch (error) {
+        console.error('Error resending email:', error);
+        next(error);
+    }
+};
+
 exports.createAccount = async (req, res, next) => {
     const { fullName, email } = req.body;
 
@@ -43,7 +111,7 @@ exports.createAccount = async (req, res, next) => {
         }
 
         const token = generateToken();
-        const tokenExpiration = new Date(Date.now() + 1 * 60 * 1000);
+        const tokenExpiration = moment().add(1, 'minutes');
 
         const salesperson = new User({
             fullName,
@@ -126,4 +194,4 @@ exports.loginSubmit = async (req, res, next) => {
         flash.addFlashMessage(req, 'warning', '', 'An error occurred while logging in.');
         next(error);
     }
-};;
+};

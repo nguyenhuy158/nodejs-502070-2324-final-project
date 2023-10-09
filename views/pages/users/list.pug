@@ -1,0 +1,66 @@
+extends ..\layout.pug
+
+block content
+
+    .row
+        .col
+            a.btn.btn-primary(href="/users/add") Add user
+
+        .col-2.form-floating
+            select#floatingSelect.form-select(onchange='updatePerPage(this)')
+                option(selected='' value='0') select
+                option(value='1') 1
+                option(value='2') 2
+                option(value='3') 3
+                option(value='4') 4
+                option(value='5') 5
+            label(for='floatingSelect') Users per page
+
+
+    div.container
+        h2 User List
+        table.table
+            thead
+                tr
+                    th STT
+                    th Email
+                    th Username
+                    th Full Name
+                    th Role
+                    th Creation Date
+                    th Last Update Date
+                    th Handle
+
+            tbody
+            if users && users.length > 0
+                each user, index in users
+                    tr
+                        td= index
+                        td= user.email
+                        td= user.username
+                        td= user.fullName
+                        td= user.role
+                        td= user.createdAt
+                        td= user.updatedAt
+                        td
+                            a.btn.btn-primary(href=`/users/${user._id}`) View
+                            a.btn.btn-success(href=`/users/${user._id}/edit`) Update
+                            a.btn.btn-danger(href=`/users/delete/${user._id}`) Delete
+                            a.btn.btn-secondary(href=`/users/resend/${user._id}`) Resend Email
+            else
+                tr
+                    td(colspan='8') No users found.
+
+
+    // Display the message
+    p Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
+
+    // Pagination
+    include ../../partials/pagination
+
+    script.
+        function updatePerPage(select) {
+            const selectedValue = select.value;
+            // Update the URL with the selected users per page value
+            window.location.href = `/users?page=#{current}&perPage=${selectedValue}`;
+        }

@@ -82,35 +82,72 @@ function checkAuth(req, res, next) {
 }
 
 async function checkUser(req, res, next) {
-    const { username, password } = req.body;
-    try {
-        const user = await User.findOne({ username }).select('+password');
 
-        if (user && await bcrypt.compare(password, user.password)) {
-            req.session.loggedIn = true;
-            req.session.user = user;
-            req.session.userId = user._id;
-            let options = {
-                maxAge: 20 * 60 * 1000,
-                httpOnly: true,
-                secure: true,
-                sameSite: 'None',
-            };
-            const token = user.generateAccessJWT();
-            res.cookie('SessionID', token, options);
+    const { username, password, token } = req.body;
+    if (token) {
 
-            return res.redirect('/');
+        try {
+            const salesperson = await User.findOne({ token });
+
+            if (!salesperson || salesperson.tokenExpiration < Date.now()) {
+                flash.addFlashMessage(req, 'warning', '', 'Please login by clicking on the link in your email.');
+                return res.redirect('/login');
+            }
+
+            salesperson.password = password;
+            salesperson.token = undefined;
+            salesperson.tokenExpiration = undefined;
+            await salesperson.save();
+
+            flash.addFlashMessage(req, 'sucess', 'Password updated.', 'You can now log in using your credentials.');
+            res.redirect('/login');
+        } catch (error) {
+            flash.addFlashMessage(req, 'warning', '', 'An error occurred while logging in.');
+            next(error);
         }
+    } else {
+        try {
+            const user = await User.findOne({ username }).select('+password');
 
-        res.render('pages/auth/form', { username, password, error: 'Username or Password is not correct' });
-    } catch (err) {
-        console.error('Error finding user:', err);
-        next(err);
+            if (user) {
+                if (user.token) {
+                    if (moment(user.tokenExpiration).isBefore(moment())) {
+                        flash.addFlashMessage(req, 'warning', '', `You can ask the administrator's support to resend another email with another link.`);
+                    } else {
+                        flash.addFlashMessage(req, 'warning', '', 'Please login by clicking on the link in your email.');
+                    }
+
+                    return res.redirect('/login');
+                } else if (await bcrypt.compare(password, user.password)) {
+
+                    req.session.loggedIn = true;
+                    req.session.user = user;
+                    req.session.userId = user._id;
+                    res.locals.user = user;
+                    let options = {
+                        maxAge: 20 * 60 * 1000,
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: 'None',
+                    };
+                    const token = user.generateAccessJWT();
+                    res.cookie('SessionID', token, options);
+
+                    return res.redirect('/');
+                }
+            }
+
+            res.render('pages/auth/form', { username, password, error: 'Username or Password is not correct' });
+        } catch (err) {
+            console.error('Error finding user:', err);
+            next(err);
+        }
     }
 }
 
 function logout(req, res, next) {
     req.session = null;
+    res.locals = null;
     res.redirect('/login');
 }
 
