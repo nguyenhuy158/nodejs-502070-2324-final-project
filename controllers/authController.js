@@ -95,8 +95,6 @@ function checkAuth(req, res, next) {
 async function checkUser(req, res, next) {
 
     const { username, password } = req.body;
-    console.log("🚀 ~ file: authController.js:98 ~ checkUser ~ password:", password);
-    console.log("🚀 ~ file: authController.js:98 ~ checkUser ~ username:", username);
     try {
         const user = await User.findOne({ username }).select('+password');
         console.log("🚀 ~ file: authController.js:102 ~ checkUser ~ user:", user)
@@ -116,7 +114,6 @@ async function checkUser(req, res, next) {
                 req.session.loggedIn = true;
                 req.session.user = user;
                 req.session.userId = user._id;
-                res.locals.user = user;
 
                 let options = {
                     maxAge: 20 * 60 * 1000,
@@ -149,8 +146,6 @@ async function getRegister(req, res, next) {
 }
 
 async function changePassword(req, res, next) {
-    console.log("🚀 ~ file: authController.js:153 ~ changePassword ~ req.session.user:", req.session.user);
-    console.log("🚀 ~ file: authController.js:153 ~ changePassword ~ req.session.user:", req.session.user.name);
     res.render('pages/auth/change_password', { user: req.session.user, userName: req.session.user.name });
 }
 

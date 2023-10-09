@@ -16,10 +16,16 @@ const userSchema = new Schema({
     password_confirm: { type: String, trim: true, minlength: 1 },
     token: { type: String },
     tokenExpiration: { type: Date },
-    isFirstLogin: { type: Boolean, default: true }
+    isFirstLogin: { type: Boolean, default: true },
+    profilePicture: { type: String }
 }, {
     timestamps: true
 });
+
+userSchema.methods.updateProfilePicture = function (newProfilePicture) {
+    this.profilePicture = newProfilePicture;
+    return this.save();
+};
 
 userSchema.pre('save', function (next) {
     const user = this;

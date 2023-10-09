@@ -78,6 +78,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use(session({ secret: process.env.SESSION_SECRECT_KEY, resave: false, saveUninitialized: true }));
 
 app.use((req, res, next) => {
+    res.locals.user = req.session.user;
+
     res.locals.flash = req.session.flash;
     delete req.session.flash;
     next();
