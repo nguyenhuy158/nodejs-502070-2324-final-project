@@ -2,11 +2,10 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 
-
-// middleware that is specific to this router
 router
     .use((req, res, next) => {
-        console.log('Time: ', Date.now());
+        console.log('[controller] user controller');
+        console.log('Time: ', require('dateformat')(new Date(), " hh:MM:ss dd/mm/yyyy"));
         next();
     })
     .get('/', (req, res) => {
@@ -24,10 +23,13 @@ router
     .get('/login', (req, res) => {
         res.render('pages/auth/form');
     })
-    .post('/login', async (req, res) => {
+    .get('/create-account', (req, res) => {
+        res.render('pages/auth/createAccount');
     })
-    .get('/get-age', (req, res) => {
-    })
+    .post('/create-account', userController.createAccount)
+    .get('/login', userController.login)
+    .post('/login', userController.loginSubmit);
+
 
 
 module.exports = router;

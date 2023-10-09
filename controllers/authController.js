@@ -92,10 +92,8 @@ async function checkUser(req, res, next) {
 }
 
 function logout(req, res, next) {
-    req.session.loggedIn = undefined;
-    req.session.user = undefined;
-    req.session.userId = undefined;
-    res.redirect('/');
+    req.session = null;
+    res.redirect('/login');
 }
 
 async function getRegister(req, res, next) {

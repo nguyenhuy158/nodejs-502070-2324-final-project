@@ -5,14 +5,18 @@ const productController = require('../controllers/productController');
 
 // middleware that is specific to this router
 router
-    .use(productController.logger)
+    .use((req, res, next) => {
+        console.log('[controller] product controller');
+        console.log('Time: ', require('dateformat')(new Date(), " hh:MM:ss dd/mm/yyyy"));
+        next();
+    })
     .get('/', productController.gets)
     .post('/', productController.create)
     .get('/add', productController.add)
     .get('/:id', productController.get)
     .get('/:id/edit', productController.edit)
-    .put('/:id/edit', productController.logger)
-    .delete('/delete/:id', productController.logger)
-    .get('/about', productController.about);
+// .put('/:id/edit', productController.logger)
+// .delete('/delete/:id', productController.logger)
+// .get('/about', productController.about);
 
 module.exports = router;

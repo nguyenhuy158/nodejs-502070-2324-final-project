@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  .container
+    .row
+      .col-md-6.offset-md-3
+        h1 Create Account
+        form(action='/user/create-account', method='POST')
+          .form-group
+            label(for='fullName') Full Name:
+            input.form-control(type='text', name='fullName', required)
+          .form-group
+            label(for='email') Email:
+            input.form-control(type='email', name='email', required)
+          .form-group
+            input.btn.btn-primary(type='submit', value='Create Account')

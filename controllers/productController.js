@@ -3,19 +3,10 @@ const { faker } = require('@faker-js/faker');
 const moment = require('moment');
 
 
-async function logger(req, res, next) {
-    const timestamp = moment().format('DD/MM/yyyy HH:mm');
-    console.log('Timestamp: ', timestamp);
-    next();
-};
-
 async function add(req, res, next) {
     res.render('pages/products/form');
 };
 
-async function about(req, res, next) {
-    res.render('pages/about');
-};
 
 async function create(req, res, next) {
     const productId = req.params.id;
@@ -166,9 +157,7 @@ async function seedDatabase() {
 
 module.exports = {
     create,
-    logger,
     add,
-    about,
     add,
     edit,
     get,
