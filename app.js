@@ -73,6 +73,7 @@ app.use(sassMiddleware({
     prefix: '/css'
 }));
 app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use(session({ secret: process.env.SESSION_SECRECT_KEY, resave: false, saveUninitialized: true }));
 

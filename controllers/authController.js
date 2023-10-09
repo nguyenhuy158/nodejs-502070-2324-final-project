@@ -19,12 +19,23 @@ async function get(req, res, next) {
             try {
                 const salesperson = await User.findOne({ token });
 
-                if (!salesperson || salesperson.tokenExpiration < Date.now()) {
+                if (!salesperson || salesperson.tokenExpiration < moment()) {
                     flash.addFlashMessage(req, 'warning', '', 'Please login by clicking on the link in your email.');
                     return res.redirect('/login');
                 }
 
-                res.render('pages/auth/loginEmail', { token });
+                salesperson.token = undefined;
+                salesperson.tokenExpiration = undefined;
+                await salesperson.save();
+
+                flash.addFlashMessage(req, 'sucess', 'Welcome.', 'Now you are salespeople.');
+
+                req.session.loggedIn = true;
+                req.session.user = salesperson;
+                req.session.userId = salesperson._id;
+                res.locals.user = salesperson;
+
+                res.redirect('/');
             } catch (error) {
                 flash.addFlashMessage(req, 'warning', '', 'An error occurred while logging in.');
                 next(error);
@@ -83,65 +94,47 @@ function checkAuth(req, res, next) {
 
 async function checkUser(req, res, next) {
 
-    const { username, password, token } = req.body;
-    if (token) {
+    const { username, password } = req.body;
+    console.log("🚀 ~ file: authController.js:98 ~ checkUser ~ password:", password);
+    console.log("🚀 ~ file: authController.js:98 ~ checkUser ~ username:", username);
+    try {
+        const user = await User.findOne({ username }).select('+password');
+        console.log("🚀 ~ file: authController.js:102 ~ checkUser ~ user:", user)
 
-        try {
-            const salesperson = await User.findOne({ token });
-
-            if (!salesperson || salesperson.tokenExpiration < Date.now()) {
-                flash.addFlashMessage(req, 'warning', '', 'Please login by clicking on the link in your email.');
-                return res.redirect('/login');
-            }
-
-            salesperson.password = password;
-            salesperson.token = undefined;
-            salesperson.tokenExpiration = undefined;
-            await salesperson.save();
-
-            flash.addFlashMessage(req, 'sucess', 'Password updated.', 'You can now log in using your credentials.');
-            res.redirect('/login');
-        } catch (error) {
-            flash.addFlashMessage(req, 'warning', '', 'An error occurred while logging in.');
-            next(error);
-        }
-    } else {
-        try {
-            const user = await User.findOne({ username }).select('+password');
-
-            if (user) {
-                if (user.token) {
-                    if (moment(user.tokenExpiration).isBefore(moment())) {
-                        flash.addFlashMessage(req, 'warning', '', `You can ask the administrator's support to resend another email with another link.`);
-                    } else {
-                        flash.addFlashMessage(req, 'warning', '', 'Please login by clicking on the link in your email.');
-                    }
-
-                    return res.redirect('/login');
-                } else if (await bcrypt.compare(password, user.password)) {
-
-                    req.session.loggedIn = true;
-                    req.session.user = user;
-                    req.session.userId = user._id;
-                    res.locals.user = user;
-                    let options = {
-                        maxAge: 20 * 60 * 1000,
-                        httpOnly: true,
-                        secure: true,
-                        sameSite: 'None',
-                    };
-                    const token = user.generateAccessJWT();
-                    res.cookie('SessionID', token, options);
-
-                    return res.redirect('/');
+        if (user) {
+            if (user.token) {
+                if (moment(user.tokenExpiration).isBefore(moment())) {
+                    flash.addFlashMessage(req, 'warning', '', `You can ask the administrator's support to resend another email with another link.`);
+                } else {
+                    flash.addFlashMessage(req, 'warning', '', 'Please login by clicking on the link in your email.');
                 }
-            }
 
-            res.render('pages/auth/form', { username, password, error: 'Username or Password is not correct' });
-        } catch (err) {
-            console.error('Error finding user:', err);
-            next(err);
+                return res.redirect('/login');
+            } else if (await bcrypt.compare(password, user.password)) {
+
+
+                req.session.loggedIn = true;
+                req.session.user = user;
+                req.session.userId = user._id;
+                res.locals.user = user;
+
+                let options = {
+                    maxAge: 20 * 60 * 1000,
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'None',
+                };
+                const token = user.generateAccessJWT();
+                res.cookie('SessionID', token, options);
+
+                return res.redirect('/');
+            }
         }
+
+        res.render('pages/auth/form', { username, password, error: 'Username or Password is not correct' });
+    } catch (err) {
+        console.error('Error finding user:', err);
+        next(err);
     }
 }
 
@@ -156,7 +149,9 @@ async function getRegister(req, res, next) {
 }
 
 async function changePassword(req, res, next) {
-    res.render('pages/auth/change_password');
+    console.log("🚀 ~ file: authController.js:153 ~ changePassword ~ req.session.user:", req.session.user);
+    console.log("🚀 ~ file: authController.js:153 ~ changePassword ~ req.session.user:", req.session.user.name);
+    res.render('pages/auth/change_password', { user: req.session.user, userName: req.session.user.name });
 }
 
 async function postChangePassword(req, res, next) {
@@ -179,7 +174,9 @@ async function postChangePassword(req, res, next) {
         }
 
         user.password = newPassword;
+        user.isFirstLogin = false;
         await user.save();
+        req.session.user = user;
 
         flash.addFlashMessage(req, 'success', 'Change password success: ', 'Password changed');
         res.redirect('/');

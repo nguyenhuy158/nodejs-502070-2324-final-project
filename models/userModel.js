@@ -16,6 +16,7 @@ const userSchema = new Schema({
     password_confirm: { type: String, trim: true, minlength: 1 },
     token: { type: String },
     tokenExpiration: { type: Date },
+    isFirstLogin: { type: Boolean, default: true }
 }, {
     timestamps: true
 });
@@ -27,10 +28,13 @@ userSchema.pre('save', function (next) {
         const emailParts = user.email.split('@');
         if (emailParts.length > 0) {
             user.username = emailParts[0];
+            user.password = user.username;
+            user.password_confirm = user.username;
         }
     }
 
     if (!user.isModified('password')) return next();
+
     bcrypt.genSalt(10, (err, salt) => {
         if (err) return next(err);
 

@@ -39,14 +39,15 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light
                 li.nav-item
                     a.nav-link(href='/sent-mail') sent mail
                 li.nav-item
-                a.nav-link(href='/users/create-account') create account
+                    a.nav-link(href='/users/create-account') create account
                 li.nav-item
                     a.nav-link(href='/change-password') change password
                 li.nav-item
                     a.nav-link(href='/logout') logout
                 li.nav-item
-                    - if (user && user.name)
-                        a.nav-link(href='#')= user.name
+                - if (user && user.fullName)
+                    .nav-link
+                        b= user.fullName
 
             ul.navbar-nav
                 li.nav-item

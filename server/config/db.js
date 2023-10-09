@@ -30,6 +30,8 @@ async function checkAndCreateAdminUser() {
                 role: 'admin',
                 password: 'admin',
                 password_confirm: 'admin',
+                token: undefined,
+                tokenExpiration: undefined,
             });
 
             await newUser.save();

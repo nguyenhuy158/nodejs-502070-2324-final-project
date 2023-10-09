@@ -29,6 +29,7 @@ block content
                     th Role
                     th Creation Date
                     th Last Update Date
+                    th First Login
                     th Handle
 
             tbody
@@ -42,6 +43,7 @@ block content
                         td= user.role
                         td= user.createdAt
                         td= user.updatedAt
+                        td= user.isFirstLogin
                         td
                             a.btn.btn-primary(href=`/users/${user._id}`) View
                             a.btn.btn-success(href=`/users/${user._id}/edit`) Update

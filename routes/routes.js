@@ -14,6 +14,16 @@ const emailData = {
     password: 'Tech Hut',
 };
 
+router.use(function checkAuth(req, res, next) {
+    const { user } = req.session;
+
+    if (user && user.isFirstLogin) {
+        return res.redirect('/change-password');
+    }
+
+    next();
+});
+
 router.post('/register', UserValidator, register);
 
 router.get('/sent-mail', (req, res) => {
