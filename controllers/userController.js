@@ -4,7 +4,33 @@ const nodemailer = require('nodemailer');
 const { transporter } = require('../config/email');
 const flash = require('../utils/flash');
 const moment = require('moment');
+const sharp = require('sharp');
+const path = require('path');
+const fs = require('fs');
 
+exports.changeProfilePicture = async (req, res, next) => {
+    try {
+        const { path: pathFile } = req.file;
+        const user = await User.findById(req.session.user._id);
+
+        await sharp(pathFile)
+            .resize(200, 200)
+            .toFile(path.join(__dirname, '..', 'public', `uploads/${user._id}-profile.jpg`));
+
+        user.profilePicture = `uploads/${user._id}-profile.jpg`;
+        await user.save();
+        req.session.user = user;
+        fs.unlinkSync(pathFile);
+
+        flash.addFlashMessage(req, 'success', 'Change picture success', '');
+        console.log("🚀 ~ file: userController.js:24 ~ exports.changeProfilePicture= ~ user:", user);
+
+        res.redirect('/profile');
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+};
 
 exports.viewProfile = async (req, res, next) => {
     try {

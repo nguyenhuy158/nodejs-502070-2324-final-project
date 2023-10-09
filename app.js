@@ -21,7 +21,9 @@ const { insertUser } = require('./controllers/index');
 const sassMiddleware = require('node-sass-middleware');
 const path = require('path');
 const winstonLogger = require('./config/logger');
-
+const multer = require('multer');
+const sharp = require('sharp');
+const fs = require('fs');
 
 process.on('uncaughtException', (error) => {
     winstonLogger.error('Uncaught Exception:', error);

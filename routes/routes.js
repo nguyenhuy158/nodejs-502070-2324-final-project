@@ -8,6 +8,7 @@ const flash = require('../utils/flash');
 const { transporter } = require('../config/email');
 const pug = require('pug');
 const path = require('path');
+const { upload } = require('../config/upload');
 
 const compiledFunction = pug.compileFile('./views/email/email-template.pug');
 const emailData = {
@@ -62,6 +63,8 @@ router.get('/about', (req, res) => {
 });
 
 router.get('/profile', userController.viewProfile);
+
+router.post('/upload-profile-pic', upload.single('profilePic'), userController.changeProfilePicture);
 
 
 router.get('/random-product', (req, res) => {
