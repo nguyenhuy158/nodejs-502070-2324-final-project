@@ -13,7 +13,25 @@ async function login(req, res, next) {
 
 async function get(req, res, next) {
     if (!req.session.loggedIn) {
-        return res.render('pages/auth/form');
+        const { token } = req.query;
+
+        if (token) {
+            try {
+                const salesperson = await User.findOne({ token });
+
+                if (!salesperson || salesperson.tokenExpiration < Date.now()) {
+                    flash.addFlashMessage(req, 'warning', '', 'Please login by clicking on the link in your email.');
+                    return res.redirect('/login');
+                }
+
+                res.render('pages/auth/loginEmail', { token });
+            } catch (error) {
+                flash.addFlashMessage(req, 'warning', '', 'An error occurred while logging in.');
+                next(error);
+            }
+        } else {
+            return res.render('pages/auth/form');
+        }
     }
     res.redirect('/');
 };
