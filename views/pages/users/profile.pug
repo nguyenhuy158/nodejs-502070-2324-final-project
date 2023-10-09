@@ -1,12 +1,14 @@
-extends ..\layout.pug
+
+extends ../layout.pug
 
 block content
+    include ../../partials/fn
     h1 User Information
     .card
         .card-body
             .row.mb-4
                 .col-md-4
-                    img.img-fluid(src=user.profilePicture ? user.profilePicture : 'https://placehold.co/200?text=Empty&font=roboto' alt='Profile Picture' onerror="this.src='https://placehold.co/200?text=Not+available&font=roboto'")
+                    +renderProfilePicture(user.profilePicture)
 
                 .col-md-8
                     p Email: #{user.email}

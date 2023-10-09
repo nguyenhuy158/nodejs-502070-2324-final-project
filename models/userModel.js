@@ -17,7 +17,9 @@ const userSchema = new Schema({
     token: { type: String },
     tokenExpiration: { type: Date },
     isFirstLogin: { type: Boolean, default: true },
-    profilePicture: { type: String }
+    profilePicture: { type: String },
+    inactivateStatus: { type: Boolean, default: false },
+    lockedStatus: { type: Boolean, default: false }
 }, {
     timestamps: true
 });
