@@ -1,5 +1,4 @@
 exports.formatTimestamp = function (timestamp) {
-    console.log("🚀 ~ file: format.js:2 ~ timestamp:", timestamp);
     const hours = timestamp.getHours().toString().padStart(2, '0');
     const minutes = timestamp.getMinutes().toString().padStart(2, '0');
     const seconds = timestamp.getSeconds().toString().padStart(2, '0');
@@ -8,4 +7,8 @@ exports.formatTimestamp = function (timestamp) {
     const year = timestamp.getFullYear();
 
     return `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
+};
+
+exports.currentTime = function () {
+    return require('dateformat')(new Date(), process.env.DATETIME_FORMAT_FULL);
 };

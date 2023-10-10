@@ -1,46 +1,41 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('../../models/userModel');
-const bcrypt = require('bcryptjs'); // Import bcryptjs
-
 
 const connectDB = async () => {
     try {
         mongoose.set('strictQuery', false);
         const connect = await mongoose.connect(process.env.MONGODB_URI);
-        console.log(`Database connected ${connect.connection.host}`);
+        console.log(`[db] Database connected ${connect.connection.host}`);
         checkAndCreateAdminUser();
-
     } catch (error) {
-        console.log("🚀 ~ file: db.js:12 ~ connectDB ~ error:", error);
+        console.log("[db] error:", error);
     }
 };
 
-
-// Function to check and create the admin user
 async function checkAndCreateAdminUser() {
     try {
-        const adminUser = await User.findOne({ username: 'admin' });
-
+        const adminUser = await User.findOne({ username: process.env.DEFAULT_ACCOUNT_USERNAME_ADMIN });
         if (!adminUser) {
-
             const newUser = new User({
-                email: 'noreplay.nodejs.502070@gmail.com',
-                username: 'admin',
-                fullName: 'Admin User',
-                role: 'admin',
-                password: 'admin',
-                password_confirm: 'admin',
+                email: process.env.EMAIL_USERNAME,
+                username: process.env.DEFAULT_ACCOUNT_USERNAME_ADMIN,
+                fullName: process.env.APP_NAME,
+                role: process.env.ROLE_ADMIN,
+                isFirstLogin: false,
+                password: process.env.DEFAULT_ACCOUNT_PASSWORD_ADMIN,
+                password_confirm: process.env.DEFAULT_ACCOUNT_PASSWORD_ADMIN,
                 token: undefined,
                 tokenExpiration: undefined,
             });
 
             await newUser.save();
-            console.log('Admin user created.');
+            console.log('[db] Admin user created.');
         } else {
-            console.log('Admin user already exists.');
+            console.log('[db] Admin user already exists.');
         }
     } catch (err) {
-        console.error('Error checking/creating admin user:', err);
+        console.error('[db] Error checking/creating admin user:', err);
     } finally {
     }
 }

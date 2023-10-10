@@ -7,6 +7,7 @@ const moment = require('moment');
 const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
+const { ObjectId } = require('mongodb');
 
 exports.changeProfilePicture = async (req, res, next) => {
     try {
@@ -48,7 +49,6 @@ exports.viewProfile = async (req, res, next) => {
 };
 
 exports.createUser = function (req, res, next) {
-
     const newData = req.body;
     // dataModel.addData(newData);
     // res.status(201).json(newData);
@@ -56,10 +56,11 @@ exports.createUser = function (req, res, next) {
 
 exports.getUser = async (req, res, next) => {
     const userId = req.params.id;
-
-    const user = await User.findById(userId);
-
-    res.render('pages/users/detail', { user });
+    if (ObjectId.isValid(userId)) {
+        const user = await User.findById(userId);
+        return res.render('pages/users/detail', { user });
+    }
+    next();
 };
 
 exports.getUsers = async function (req, res, next) {
@@ -147,6 +148,10 @@ exports.resendEmail = async function resendEmail(req, res, next) {
         console.error('Error resending email:', error);
         next(error);
     }
+};
+
+exports.getCreateAccount = (req, res) => {
+    res.render('pages/auth/createAccount');
 };
 
 exports.createAccount = async (req, res, next) => {

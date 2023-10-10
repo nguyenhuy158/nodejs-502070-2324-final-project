@@ -3,7 +3,6 @@ const { faker } = require('@faker-js/faker');
 const moment = require('moment');
 const bcrypt = require('bcryptjs');
 const flash = require('../utils/flash');
-const session = require('express-session');
 require('dotenv').config();
 
 exports.checkAdmin = async function (req, res, next) {
@@ -94,29 +93,22 @@ exports.checkAuth = function (req, res, next) {
     }
     next();
 };
-
 exports.checkUser = async function (req, res, next) {
-
     const { username, password } = req.body;
     try {
         const user = await User.findOne({ username }).select('+password');
-        console.log("🚀 ~ file: authController.js:102 ~ checkUser ~ user:", user);
 
         if (user) {
-            console.log("🚀 ~ file: authController.js:104 ~ checkUser ~ user.lockedStatus == process.env.SALE_UNLOCK:", user.lockedStatus == process.env.SALE_UNLOCK);
-            console.log(typeof (user.lockedStatus));
-            console.log(typeof (process.env.SALE_UNLOCK));
             if (!user.lockedStatus) {
                 if (user.token) {
                     if (moment(user.tokenExpiration).isBefore(moment())) {
                         flash.addFlashMessage(req, 'warning', '', `You can ask the administrator's support to resend another email with another link.`);
+                        return res.redirect('/login');
                     } else {
                         flash.addFlashMessage(req, 'warning', '', 'Please login by clicking on the link in your email.');
+                        return res.redirect('/login');
                     }
-
-                    return res.redirect('/login');
                 } else if (await bcrypt.compare(password, user.password)) {
-
                     req.session.loggedIn = true;
                     req.session.user = user;
                     req.session.userId = user._id;
@@ -129,7 +121,6 @@ exports.checkUser = async function (req, res, next) {
                     };
                     const token = user.generateAccessJWT();
                     res.cookie('SessionID', token, options);
-
                     return res.redirect('/');
                 }
             } else {
@@ -137,7 +128,7 @@ exports.checkUser = async function (req, res, next) {
             }
         }
 
-        res.render('pages/auth/form', { username, password, error: 'Username or Password is not correct' });
+        return res.render('pages/auth/form', { username, password, error: 'Username or Password is not correct' });
     } catch (err) {
         console.error('Error finding user:', err);
         next(err);

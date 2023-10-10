@@ -1,4 +1,7 @@
 
+const cookieSession = require("cookie-session");
+
+
 module.exports = {
     port: process.env.PORT || 3000,
     database: {
@@ -14,4 +17,9 @@ module.exports = {
         password: process.env.EMAIL_PASSWORD
     },
     jwtSecret: process.env.JWT_SECRET || 'your-secret-key',
+    cookieSessinonConfig: cookieSession({
+        name: process.env.COOKIE_NAME,
+        keys: [process.env.COOKIE_SECRET],
+        httpOnly: true,
+    })
 };

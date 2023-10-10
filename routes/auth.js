@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
+const { currentTime } = require('../utils/format');
 
-
-// middleware that is specific to this router
 router
     .use((req, res, next) => {
         console.log('[controller] auth controller');
-        console.log('Time: ', require('dateformat')(new Date(), " hh:MM:ss dd/mm/yyyy"));
+        console.log('[controller] Time: ', currentTime());
         next();
     })
     .get('/register', authController.getRegister)
@@ -18,6 +17,5 @@ router
     .get('/change-password', authController.changePassword)
     .post('/change-password', authController.postChangePassword)
     .use(authController.checkAuth);
-
 
 module.exports = router;

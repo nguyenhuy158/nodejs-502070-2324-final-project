@@ -127,7 +127,6 @@ async function gets(req, res, next) {
 async function seedDatabase() {
     const products = [];
 
-    // Generate 50 sample products
     for (let i = 0; i < 50; i++) {
         const product = {
             barcode: faker.string.uuid(),
@@ -142,10 +141,7 @@ async function seedDatabase() {
         products.push(product);
     }
 
-    console.log("🚀 ~ file: productController.js:19 ~ product:", products[0]);
-
     try {
-        // Insert the generated products into the database
         await Product.insertMany(products);
         console.log('Sample products inserted successfully.');
     } catch (err) {

@@ -57,3 +57,9 @@ Now, only approved IP addresses can access your MongoDB database, enhancing its 
 username: admin
 password: admin
 ```
+
+## simple flash message
+```
+flash.addFlashMessage(req, 'success', 'Success', 'message success flash');
+flash.addFlashMessage(req, 'warning', 'Error', 'message error flash');
+```

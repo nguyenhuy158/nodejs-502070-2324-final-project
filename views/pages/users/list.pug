@@ -18,7 +18,7 @@ block content
 
     div.container
         h2 User List
-        table.table
+        table.table.table-striped.table-bordered
             thead
                 tr
                     th STT
@@ -52,9 +52,13 @@ block content
                         td= user.lockedStatus
                         td
                             a.btn.btn-primary(href=`/users/${user._id}`) View
+                            br
                             a.btn.btn-success(href=`/users/${user._id}/edit`) Update
+                            br
                             a.btn.btn-danger(href=`/users/delete/${user._id}`) Delete
+                            br
                             a.btn.btn-secondary(href=`/users/resend/${user._id}`) Resend Email
+                            br
                             if user.lockedStatus
                                 a.btn.btn-warning(href=`/users/unlock/${user._id}`) Unlock Account
                             else

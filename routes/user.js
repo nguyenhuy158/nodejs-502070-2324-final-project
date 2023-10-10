@@ -1,30 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const { currentTime } = require('../utils/format');
 
 router
     .use((req, res, next) => {
         console.log('[controller] user controller');
-        console.log('Time: ', require('dateformat')(new Date(), " hh:MM:ss dd/mm/yyyy"));
+        console.log('[controller] Time: ', currentTime);
         next();
     })
     .get('/', userController.getUsers)
-    .get('/about', (req, res) => {
-        res.render('pages/about');
-    })
     .post('/', userController.createUser)
-    .get('/register', (req, res) => {
-        res.render('register');
-    })
-    .post('/register', async (req, res) => {
-    })
     .get('/resend/:id', userController.resendEmail)
-    .get('/login', (req, res) => {
-        res.render('pages/auth/form');
-    })
-    .get('/create-account', (req, res) => {
-        res.render('pages/auth/createAccount');
-    })
+    .get('/create-account', userController.getCreateAccount)
     .post('/create-account', userController.createAccount)
     .get('/:id', userController.getUser)
     .get('/login', userController.login)
