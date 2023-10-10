@@ -6,7 +6,7 @@ const flash = require('../utils/flash');
 const session = require('express-session');
 require('dotenv').config();
 
-function checkAdmin(req, res, next) {
+exports.checkAdmin = async function (req, res, next) {
     const currentRole = req.session.user.role;
     if (currentRole != process.env.ROLE_ADMIN) {
         return res.redirect('/permission-denied');
@@ -14,13 +14,13 @@ function checkAdmin(req, res, next) {
     next();
 };
 
-async function login(req, res, next) {
+exports.logger = async function (req, res, next) {
     const timestamp = moment().format('DD/MM/yyyy HH:mm');
     console.log('Timestamp: ', timestamp);
     next();
 };
 
-async function get(req, res, next) {
+exports.get = async function (req, res, next) {
     if (!req.session.loggedIn) {
         const { token } = req.query;
 
@@ -56,7 +56,7 @@ async function get(req, res, next) {
     res.redirect('/');
 };
 
-async function createUser(req, res, next) {
+exports.createUser = async function (req, res, next) {
     const { email } = req.body;
     try {
         const newUser = new User({
@@ -86,16 +86,16 @@ async function createUser(req, res, next) {
     }
 };
 
-function checkAuth(req, res, next) {
+exports.checkAuth = function (req, res, next) {
     console.log('go check auth');
 
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
     next();
-}
+};
 
-async function checkUser(req, res, next) {
+exports.checkUser = async function (req, res, next) {
 
     const { username, password } = req.body;
     try {
@@ -142,24 +142,24 @@ async function checkUser(req, res, next) {
         console.error('Error finding user:', err);
         next(err);
     }
-}
+};
 
 
-function logout(req, res, next) {
+exports.logout = function (req, res, next) {
     req.session = null;
     res.locals = null;
     res.redirect('/login');
-}
+};
 
-async function getRegister(req, res, next) {
+exports.getRegister = async function (req, res, next) {
     res.render('pages/auth/form', { isRegister: true });
-}
+};
 
-async function changePassword(req, res, next) {
+exports.changePassword = async function (req, res, next) {
     res.render('pages/auth/change_password', { user: req.session.user, userName: req.session.user.name });
-}
+};
 
-async function postChangePassword(req, res, next) {
+exports.postChangePassword = async function (req, res, next) {
     const { currentPassword, newPassword, confirmPassword } = req.body;
     const userId = req.session.userId;
 
@@ -189,17 +189,5 @@ async function postChangePassword(req, res, next) {
         console.error(error);
         next(error);
     }
-}
-
-module.exports = {
-    logger: login,
-    get,
-    createUser,
-    checkAuth,
-    checkUser,
-    logout,
-    changePassword,
-    getRegister,
-    postChangePassword,
-    checkAdmin
 };
+

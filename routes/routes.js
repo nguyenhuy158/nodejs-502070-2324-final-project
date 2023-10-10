@@ -59,7 +59,7 @@ router.get('/', (req, res) => {
 router.get('/about', (req, res) => {
     // insertUser();
     console.log('go /about');
-    res.render('pages/about', { title: 'About' });
+    res.render('pages/about', { navLink: 'About' });
 });
 
 router.get('/profile', userController.viewProfile);
