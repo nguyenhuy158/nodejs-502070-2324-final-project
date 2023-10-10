@@ -29,20 +29,31 @@ nav.navbar.navbar-expand-lg.bg-body-tertiary.bg-light
                         - if (user && user.fullName)
                             b= user.fullName
                         - else 
-                            b= Unknow
-                    ul.dropdown-menu
+                            b= 'Unknow'
+                    ul.dropdown-menu 
                         li
                             a.dropdown-item(href='/profile') Profile
                         li
-                            a.dropdown-item(href='/change-password') change password
+                            a.dropdown-item(href='/change-password') Change Password
                         li
                             hr.dropdown-divider
                         li
-                            a.dropdown-item(href='/logout') logout
+                            a.dropdown-item(href='/logout') Logout
                 li.nav-item
-                    a.nav-link.disabled(aria-disabled='true') Comming soon
+                    a.nav-link.disabled(aria-disabled='true') Coming soon
 
             form.d-flex(role='search')
                 input.form-control.me-2(type='search' placeholder='Search' aria-label='Search')
                 button.btn.btn-outline-success(type='submit') Search
 
+    script.
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    event.target.classList.add('active');
+                });
+            });
+        });

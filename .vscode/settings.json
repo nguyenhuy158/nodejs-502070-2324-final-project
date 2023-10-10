@@ -119,7 +119,7 @@
     "terminal.integrated.fontWeight": "normal",
     "terminal.integrated.scrollback": 10000,
     "terminal.integrated.smoothScrolling": true,
-    "window.zoomLevel": -1,
+    "window.zoomLevel": -2,
     "workbench.activityBar.iconClickBehavior": "toggle",
     "workbench.activityBar.visible": true,
     "workbench.colorTheme": "Tokyo Night Moon",
