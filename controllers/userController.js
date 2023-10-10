@@ -245,3 +245,37 @@ exports.loginSubmit = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.lockAccount = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findById(userId);
+
+        if (user) {
+            user.lockedStatus = true;
+            await user.save();
+            flash.addFlashMessage(req, 'warning', '', 'Change locked account.');
+            res.redirect('/users');
+        }
+    } catch (error) {
+        console.error('Error locking account:', error);
+        next(error);
+    }
+};
+
+exports.unlockAccount = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findById(userId);
+
+        if (user) {
+            user.lockedStatus = false;
+            await user.save();
+            flash.addFlashMessage(req, 'success', '', 'Change unlocked account.');
+            res.redirect('/users');
+        }
+    } catch (error) {
+        console.error('Error unlocking account:', error);
+        next(error);
+    }
+};

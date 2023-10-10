@@ -97,33 +97,40 @@ async function checkUser(req, res, next) {
     const { username, password } = req.body;
     try {
         const user = await User.findOne({ username }).select('+password');
-        console.log("🚀 ~ file: authController.js:102 ~ checkUser ~ user:", user)
+        console.log("🚀 ~ file: authController.js:102 ~ checkUser ~ user:", user);
 
         if (user) {
-            if (user.token) {
-                if (moment(user.tokenExpiration).isBefore(moment())) {
-                    flash.addFlashMessage(req, 'warning', '', `You can ask the administrator's support to resend another email with another link.`);
-                } else {
-                    flash.addFlashMessage(req, 'warning', '', 'Please login by clicking on the link in your email.');
+            console.log("🚀 ~ file: authController.js:104 ~ checkUser ~ user.lockedStatus == process.env.SALE_UNLOCK:", user.lockedStatus == process.env.SALE_UNLOCK);
+            console.log(typeof (user.lockedStatus));
+            console.log(typeof (process.env.SALE_UNLOCK));
+            if (!user.lockedStatus) {
+                if (user.token) {
+                    if (moment(user.tokenExpiration).isBefore(moment())) {
+                        flash.addFlashMessage(req, 'warning', '', `You can ask the administrator's support to resend another email with another link.`);
+                    } else {
+                        flash.addFlashMessage(req, 'warning', '', 'Please login by clicking on the link in your email.');
+                    }
+
+                    return res.redirect('/login');
+                } else if (await bcrypt.compare(password, user.password)) {
+
+                    req.session.loggedIn = true;
+                    req.session.user = user;
+                    req.session.userId = user._id;
+
+                    let options = {
+                        maxAge: 20 * 60 * 1000,
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: 'None',
+                    };
+                    const token = user.generateAccessJWT();
+                    res.cookie('SessionID', token, options);
+
+                    return res.redirect('/');
                 }
-
-                return res.redirect('/login');
-            } else if (await bcrypt.compare(password, user.password)) {
-
-
-                req.session.loggedIn = true;
-                req.session.user = user;
-                req.session.userId = user._id;
-
-                let options = {
-                    maxAge: 20 * 60 * 1000,
-                    httpOnly: true,
-                    secure: true,
-                    sameSite: 'None',
-                };
-                const token = user.generateAccessJWT();
-                res.cookie('SessionID', token, options);
-
+            } else {
+                flash.addFlashMessage(req, 'warning', '', `You can contact the administrator's support unlock account link.`);
                 return res.redirect('/');
             }
         }
