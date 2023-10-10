@@ -11,7 +11,7 @@ const userSchema = new Schema({
     email: { type: String, unique: true, required: true, trim: true },
     username: { type: String, trim: true, minlength: 1 },
     fullName: { type: String, trim: true, minlength: 2 },
-    role: { type: String, enum: ['admin', 'salespeople'], default: 'salespeople', lowercase: true },
+    role: { type: String, enum: [process.env.ROLE_ADMIN, process.env.ROLE_SALE], default: process.env.ROLE_SALE, lowercase: true },
     password: { type: String, trim: true, minlength: 1, select: false },
     password_confirm: { type: String, trim: true, minlength: 1 },
     token: { type: String },

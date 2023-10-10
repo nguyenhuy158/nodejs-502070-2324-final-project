@@ -4,6 +4,15 @@ const moment = require('moment');
 const bcrypt = require('bcryptjs');
 const flash = require('../utils/flash');
 const session = require('express-session');
+require('dotenv').config();
+
+function checkAdmin(req, res, next) {
+    const currentRole = req.session.user.role;
+    if (currentRole != process.env.ROLE_ADMIN) {
+        return res.redirect('/permission-denied');
+    }
+    next();
+};
 
 async function login(req, res, next) {
     const timestamp = moment().format('DD/MM/yyyy HH:mm');
@@ -71,12 +80,6 @@ async function createUser(req, res, next) {
         const savedUser = await newUser.save();
         const { password, role, ...user_data } = savedUser._doc;
         console.log("🚀 ~ file: authController.js:43 ~ createUser ~ user_data:", user_data);
-        // return res.render('pages/auth/form', {
-        //     isRegister: true,
-        //     status: 'success',
-        //     data: [user_data],
-        //     message: 'Thank you for registering with us. Your account has been successfully created.',
-        // });
         return res.redirect('/login');
     } catch (err) {
         next(err);
@@ -130,8 +133,7 @@ async function checkUser(req, res, next) {
                     return res.redirect('/');
                 }
             } else {
-                flash.addFlashMessage(req, 'warning', '', `You can contact the administrator's support unlock account link.`);
-                return res.redirect('/');
+                return res.render('pages/auth/form', { username, password, error: `You can contact the administrator's support unlock account link.` });
             }
         }
 
@@ -141,6 +143,7 @@ async function checkUser(req, res, next) {
         next(err);
     }
 }
+
 
 function logout(req, res, next) {
     req.session = null;
@@ -197,5 +200,6 @@ module.exports = {
     logout,
     changePassword,
     getRegister,
-    postChangePassword
+    postChangePassword,
+    checkAdmin
 };
