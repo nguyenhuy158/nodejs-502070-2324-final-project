@@ -48,7 +48,7 @@
     "editor.columnSelection": false,
     "editor.cursorBlinking": "expand",
     "editor.cursorSmoothCaretAnimation": "on",
-    "editor.cursorStyle": "line",
+    "editor.cursorStyle": "block",
     "editor.cursorWidth": 0,
     "editor.detectIndentation": true,
     "editor.fastScrollSensitivity": 10,
