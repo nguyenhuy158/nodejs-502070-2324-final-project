@@ -9,7 +9,6 @@ router
         next();
     })
     .get('/', userController.getUsers)
-    .get('/:id', userController.getUser)
     .get('/about', (req, res) => {
         res.render('pages/about');
     })
@@ -27,6 +26,7 @@ router
         res.render('pages/auth/createAccount');
     })
     .post('/create-account', userController.createAccount)
+    .get('/:id', userController.getUser)
     .get('/login', userController.login)
     .post('/login', userController.loginSubmit);
 
