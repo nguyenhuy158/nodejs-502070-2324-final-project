@@ -7,6 +7,7 @@ const moment = require('moment');
 const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
+require('dotenv').config();
 
 exports.changeProfilePicture = async (req, res, next) => {
     try {
@@ -84,8 +85,8 @@ exports.getUsers = async function (req, res, next) {
             perPage,
             nextPage: hasNextPage ? nextPage : null
         };
-
-        res.render('pages/users/list', output);
+        console.log("🚀 ~ file: userController.js:88 ~ output:", output);
+        res.render('pages/users/list', { ...output, navLink: process.env.NAVBAR_USER });
     } catch (error) {
         console.error('Error fetching users:', error);
         next(error);

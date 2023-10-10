@@ -116,7 +116,7 @@ async function gets(req, res, next) {
             perPage,
             nextPage: hasNextPage ? nextPage : null
         };
-        res.render('pages/products/list', output);
+        res.render('pages/products/list', { ...output, navLink: process.env.NAVBAR_PRODUCT });
 
     } catch (error) {
         console.error('Error fetching products:', error);

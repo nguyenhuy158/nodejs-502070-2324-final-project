@@ -9,6 +9,7 @@ const { transporter } = require('../config/email');
 const pug = require('pug');
 const path = require('path');
 const { upload } = require('../config/upload');
+require('dotenv').config();
 
 const compiledFunction = pug.compileFile('./views/email/email-template.pug');
 const emailData = {
@@ -52,8 +53,8 @@ router.get('/sent-mail', (req, res) => {
 router.get('/', (req, res) => {
     // insertUser();
     console.log('go /');
-    flash.addFlashMessage(req, 'success', 'Success', 'Messgeeee success flash message');
-    res.render('pages/index', { title: 'Home', app_name: process.env.APP_NAME });
+    flash.addFlashMessage(req, 'success', 'Success', 'Message success flash message');
+    res.render('pages/home', { navLink: process.env.NAVBAR_HOME, app_name: process.env.APP_NAME });
 });
 
 router.get('/about', (req, res) => {
