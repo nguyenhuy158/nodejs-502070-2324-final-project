@@ -28,8 +28,9 @@ router
     .post('/create-account', userController.createAccount)
     .get('/:id', userController.getUser)
     .get('/login', userController.login)
-    .post('/login', userController.loginSubmit);
-
+    .post('/login', userController.loginSubmit)
+    .get('/lock/:id', userController.lockAccount)
+    .get('/unlock/:id', userController.unlockAccount);
 
 
 module.exports = router;

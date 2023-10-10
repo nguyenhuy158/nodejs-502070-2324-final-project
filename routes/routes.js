@@ -59,12 +59,16 @@ router.get('/', (req, res) => {
 router.get('/about', (req, res) => {
     // insertUser();
     console.log('go /about');
-    res.render('pages/about', { title: 'About' });
+    res.render('pages/about', { navLink: 'About' });
 });
 
 router.get('/profile', userController.viewProfile);
 
 router.post('/upload-profile-pic', upload.single('profilePic'), userController.changeProfilePicture);
+
+router.get('/permission-denied', (req, res) => {
+    res.render('pages/permission-denied');
+});
 
 
 router.get('/random-product', (req, res) => {

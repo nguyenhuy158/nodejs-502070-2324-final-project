@@ -4,14 +4,23 @@ const moment = require('moment');
 const bcrypt = require('bcryptjs');
 const flash = require('../utils/flash');
 const session = require('express-session');
+require('dotenv').config();
 
-async function login(req, res, next) {
+exports.checkAdmin = async function (req, res, next) {
+    const currentRole = req.session.user.role;
+    if (currentRole != process.env.ROLE_ADMIN) {
+        return res.redirect('/permission-denied');
+    }
+    next();
+};
+
+exports.logger = async function (req, res, next) {
     const timestamp = moment().format('DD/MM/yyyy HH:mm');
     console.log('Timestamp: ', timestamp);
     next();
 };
 
-async function get(req, res, next) {
+exports.get = async function (req, res, next) {
     if (!req.session.loggedIn) {
         const { token } = req.query;
 
@@ -47,7 +56,7 @@ async function get(req, res, next) {
     res.redirect('/');
 };
 
-async function createUser(req, res, next) {
+exports.createUser = async function (req, res, next) {
     const { email } = req.body;
     try {
         const newUser = new User({
@@ -71,60 +80,60 @@ async function createUser(req, res, next) {
         const savedUser = await newUser.save();
         const { password, role, ...user_data } = savedUser._doc;
         console.log("🚀 ~ file: authController.js:43 ~ createUser ~ user_data:", user_data);
-        // return res.render('pages/auth/form', {
-        //     isRegister: true,
-        //     status: 'success',
-        //     data: [user_data],
-        //     message: 'Thank you for registering with us. Your account has been successfully created.',
-        // });
         return res.redirect('/login');
     } catch (err) {
         next(err);
     }
 };
 
-function checkAuth(req, res, next) {
+exports.checkAuth = function (req, res, next) {
     console.log('go check auth');
 
     if (!req.session.loggedIn) {
         return res.redirect('/login');
     }
     next();
-}
+};
 
-async function checkUser(req, res, next) {
+exports.checkUser = async function (req, res, next) {
 
     const { username, password } = req.body;
     try {
         const user = await User.findOne({ username }).select('+password');
-        console.log("🚀 ~ file: authController.js:102 ~ checkUser ~ user:", user)
+        console.log("🚀 ~ file: authController.js:102 ~ checkUser ~ user:", user);
 
         if (user) {
-            if (user.token) {
-                if (moment(user.tokenExpiration).isBefore(moment())) {
-                    flash.addFlashMessage(req, 'warning', '', `You can ask the administrator's support to resend another email with another link.`);
-                } else {
-                    flash.addFlashMessage(req, 'warning', '', 'Please login by clicking on the link in your email.');
+            console.log("🚀 ~ file: authController.js:104 ~ checkUser ~ user.lockedStatus == process.env.SALE_UNLOCK:", user.lockedStatus == process.env.SALE_UNLOCK);
+            console.log(typeof (user.lockedStatus));
+            console.log(typeof (process.env.SALE_UNLOCK));
+            if (!user.lockedStatus) {
+                if (user.token) {
+                    if (moment(user.tokenExpiration).isBefore(moment())) {
+                        flash.addFlashMessage(req, 'warning', '', `You can ask the administrator's support to resend another email with another link.`);
+                    } else {
+                        flash.addFlashMessage(req, 'warning', '', 'Please login by clicking on the link in your email.');
+                    }
+
+                    return res.redirect('/login');
+                } else if (await bcrypt.compare(password, user.password)) {
+
+                    req.session.loggedIn = true;
+                    req.session.user = user;
+                    req.session.userId = user._id;
+
+                    let options = {
+                        maxAge: 20 * 60 * 1000,
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: 'None',
+                    };
+                    const token = user.generateAccessJWT();
+                    res.cookie('SessionID', token, options);
+
+                    return res.redirect('/');
                 }
-
-                return res.redirect('/login');
-            } else if (await bcrypt.compare(password, user.password)) {
-
-
-                req.session.loggedIn = true;
-                req.session.user = user;
-                req.session.userId = user._id;
-
-                let options = {
-                    maxAge: 20 * 60 * 1000,
-                    httpOnly: true,
-                    secure: true,
-                    sameSite: 'None',
-                };
-                const token = user.generateAccessJWT();
-                res.cookie('SessionID', token, options);
-
-                return res.redirect('/');
+            } else {
+                return res.render('pages/auth/form', { username, password, error: `You can contact the administrator's support unlock account link.` });
             }
         }
 
@@ -133,23 +142,24 @@ async function checkUser(req, res, next) {
         console.error('Error finding user:', err);
         next(err);
     }
-}
+};
 
-function logout(req, res, next) {
+
+exports.logout = function (req, res, next) {
     req.session = null;
     res.locals = null;
     res.redirect('/login');
-}
+};
 
-async function getRegister(req, res, next) {
+exports.getRegister = async function (req, res, next) {
     res.render('pages/auth/form', { isRegister: true });
-}
+};
 
-async function changePassword(req, res, next) {
+exports.changePassword = async function (req, res, next) {
     res.render('pages/auth/change_password', { user: req.session.user, userName: req.session.user.name });
-}
+};
 
-async function postChangePassword(req, res, next) {
+exports.postChangePassword = async function (req, res, next) {
     const { currentPassword, newPassword, confirmPassword } = req.body;
     const userId = req.session.userId;
 
@@ -179,16 +189,5 @@ async function postChangePassword(req, res, next) {
         console.error(error);
         next(error);
     }
-}
-
-module.exports = {
-    logger: login,
-    get,
-    createUser,
-    checkAuth,
-    checkUser,
-    logout,
-    changePassword,
-    getRegister,
-    postChangePassword
 };
+

@@ -55,6 +55,10 @@ block content
                             a.btn.btn-success(href=`/users/${user._id}/edit`) Update
                             a.btn.btn-danger(href=`/users/delete/${user._id}`) Delete
                             a.btn.btn-secondary(href=`/users/resend/${user._id}`) Resend Email
+                            if user.lockedStatus
+                                a.btn.btn-warning(href=`/users/unlock/${user._id}`) Unlock Account
+                            else
+                                a.btn.btn-info(href=`/users/lock/${user._id}`) Lock Account
             else
                 tr
                     td(colspan='11') No users found.
