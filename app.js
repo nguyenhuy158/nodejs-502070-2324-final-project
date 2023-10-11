@@ -13,8 +13,8 @@ const path = require("path");
 const appController = require("./controllers/appController");
 const config = require("./config/config");
 const winstonLogger = require("./config/logger");
-const { logRequestDetails } = require("./utils/access-log");
-
+const { logRequestDetails } = require("./middlewares/access-log");
+const { flashMiddleWare } = require("./middlewares/flash");
 
 process.on("uncaughtException", (error) => {
     winstonLogger.error("Uncaught Exception:", error);
@@ -60,7 +60,7 @@ app.use(sassMiddleware({
 app.use("/public", express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(appController.flashMiddleWare);
+app.use(flashMiddleWare);
 
 app.get("/log", logger.morganLog);
 

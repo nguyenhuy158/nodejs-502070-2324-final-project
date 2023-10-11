@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { formatTimestamp } = require('../utils/format');
+const { formatTimestamp } = require('../middlewares/format');
 require('dotenv').config();
 
 const SECRET_ACCESS_TOKEN = process.env.SECRET_ACCESS_TOKEN;

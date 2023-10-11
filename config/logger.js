@@ -11,7 +11,7 @@ const logger = winston.createLogger({
         printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
     ),
     transports: [
-        new winston.transports.Console(),
+        // new winston.transports.Console(),
         new winston.transports.File({ filename: 'app.log' }),
         new winston.transports.File({ filename: 'combined.log' }),
         new winston.transports.File({ filename: 'app-error.log', level: 'error', }),
