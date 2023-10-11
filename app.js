@@ -15,6 +15,7 @@ const config = require("./config/config");
 const winstonLogger = require("./config/logger");
 const { logRequestDetails } = require("./middlewares/access-log");
 const { flashMiddleWare } = require("./middlewares/flash");
+const { autoViews } = require("./middlewares/auto-views");
 
 process.on("uncaughtException", (error) => {
     winstonLogger.error("Uncaught Exception:", error);
@@ -61,6 +62,7 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(flashMiddleWare);
+app.use(autoViews);
 
 app.get("/log", logger.morganLog);
 
