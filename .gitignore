@@ -142,3 +142,4 @@ public/uploads/*.gif
 public/uploads/*.bmp
 public/uploads/*.svg
 !public/uploads/*-profile.webp
+/.idea/
