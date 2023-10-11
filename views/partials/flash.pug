@@ -1,6 +1,20 @@
-if flash
-    .alert.alert-dismissible.fade.show(id=flash.type, class=`alert-${flash.type}`, role='alert')
-        strong= flash.info
-            span= ` ${flash.message}`
-        button.btn-close(data-bs-dismiss='alert' aria-label='Close')
+
+
+.toast-container.top-0.end-0.p-3
+    each flashMessage in getFlashMessages()
+        //div(id='flash-alert'
+        //    class=`z-3 alert alert-${flashMessage.type}
+        //    alert-dismissible fade show position-fixed top-0 end-0 m-3`
+        //    role="alert")
+        //    button(type='button' class="btn-close" data-bs-dismiss="alert" aria-label="Close")
+        //    strong= flashMessage.message
+        .toast-container.position-fixed.p-3.top-0.end-0
+            #liveToast.toast(role='alert', aria-live='assertive', aria-atomic='true')
+                .toast-header
+                    img.rounded.me-3(src='/images/TechHut.png', width='20', height=20 alt='')
+                    strong.me-auto TechHut
+                    small
+                    button.btn-close(data-bs-dismiss='toast', aria-label='Close')
+                .toast-body
+                    =flashMessage.message
 
