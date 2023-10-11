@@ -1,14 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const { currentTime } = require('../utils/format');
 
 router
-    .use((req, res, next) => {
-        console.log('[controller] user controller');
-        console.log('[controller] Time: ', currentTime);
-        next();
-    })
     .get('/', userController.getUsers)
     .post('/', userController.createUser)
     .get('/resend/:id', userController.resendEmail)

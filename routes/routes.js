@@ -4,14 +4,8 @@ const userController = require('../controllers/userController');
 const routerController = require('../controllers/routerController');
 const { UserValidator } = require('../validators/validator');
 const { upload } = require('../config/upload');
-const { currentTime } = require('../utils/format');
 
 router
-    .use((req, res, next) => {
-        console.log('[controller] routers controller');
-        console.log('[controller] Time: ', currentTime());
-        next();
-    })
     .use(routerController.checkFirstLogin)
     .post('/register', UserValidator, userController.register)
     .get('/sent-mail', routerController.sentMail)

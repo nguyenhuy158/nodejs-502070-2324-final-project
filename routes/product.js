@@ -2,14 +2,8 @@ const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productController');
 const authController = require('../controllers/authController');
-const { currentTime } = require('../utils/format');
 
 router
-    .use((req, res, next) => {
-        console.log('[controller] product controller');
-        console.log('[controller] Time: ', currentTime);
-        next();
-    })
     .get('/', authController.checkAdmin, productController.gets)
     .post('/', productController.create)
     .get('/add', productController.add)
