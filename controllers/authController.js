@@ -111,6 +111,8 @@ exports.checkUser = async function (req, res, next) {
                     req.session.user = user;
                     req.session.userId = user._id;
                     
+                    req.app.locals.user = user;
+                    
                     let options = {
                         maxAge: 20 * 60 * 1000,
                         httpOnly: true,

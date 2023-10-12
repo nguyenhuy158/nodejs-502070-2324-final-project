@@ -41,6 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(config.cookieSessinonConfig);
 
 app.locals.moment = require("moment");
+app.locals.title = process.env.APP_NAME;
 
 connectDb();
 
@@ -63,11 +64,6 @@ app.use(express.static(path.join(__dirname, "public"), config.staticOptions));
 
 app.use(flashMiddleWare);
 app.use(autoViews);
-
-app.use((req, res, next) => {
-    app.locals.user = req.session.user || null;
-    next();
-});
 
 app.get("/log", logger.morganLog);
 
