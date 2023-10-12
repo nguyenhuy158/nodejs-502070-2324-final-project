@@ -58,11 +58,16 @@ app.use(sassMiddleware({
     prefix: "/css"
 }));
 
-app.use("/public", express.static(path.join(__dirname, "public")));
-app.use(express.static(path.join(__dirname, "public")));
+app.use("/public", express.static(path.join(__dirname, "public"), config.staticOptions));
+app.use(express.static(path.join(__dirname, "public"), config.staticOptions));
 
 app.use(flashMiddleWare);
 app.use(autoViews);
+
+app.use((req, res, next) => {
+    app.locals.user = req.session.user || null;
+    next();
+});
 
 app.get("/log", logger.morganLog);
 
