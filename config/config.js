@@ -1,5 +1,6 @@
 const cookieSession = require("cookie-session");
-
+const path = require("path");
+const fs = require("fs");
 
 module.exports = {
     port: process.env.PORT || 3000,
@@ -16,11 +17,17 @@ module.exports = {
         password: process.env.EMAIL_PASSWORD
     },
     jwtSecret: process.env.JWT_SECRET || "your-secret-key",
-    cookieSessinonConfig: cookieSession({
-        name: process.env.COOKIE_NAME,
-        keys: [process.env.COOKIE_SECRET],
+    cookieSessionConfig: cookieSession({
+        name: process.env.COOKIE_SESSION_NAME,
+        keys: [process.env.COOKIE_SESSION_SECRET],
         httpOnly: true,
     }),
+    cookieOptions: {
+        maxAge: 20 * 60 * 1000,
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+    },
     staticOptions: {
         dotfiles: "ignore",
         etag: false,
@@ -31,5 +38,19 @@ module.exports = {
         setHeaders(res, path, stat) {
             res.set("x-timestamp", Date.now());
         }
+    },
+    sassOptions: {
+        src: path.join("source", "sass"),
+        dest: path.join("public", "css"),
+        debug: false,
+        outputStyle: "compressed",
+        force: true,
+        root: __dirname,
+        indentedSyntax: false,
+        prefix: "/css"
+    },
+    morganOptions: {
+        stream: fs.createWriteStream(path.join(__dirname, process.env.MORGAN_LOG),
+            { flags: "a" })
     }
 };

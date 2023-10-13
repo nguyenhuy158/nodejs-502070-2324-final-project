@@ -3,6 +3,7 @@ const { faker } = require("@faker-js/faker");
 const moment = require("moment");
 const bcrypt = require("bcryptjs");
 const flash = require("../middlewares/flash");
+const { cookieOptions } = require("../config/config");
 require("dotenv").config();
 
 exports.checkAdmin = async function (req, res, next) {
@@ -20,39 +21,72 @@ exports.logger = async function (req, res, next) {
 };
 
 exports.get = async function (req, res, next) {
-    if (!req.session.loggedIn) {
-        const { token } = req.query;
-        
-        if (token) {
-            try {
-                const salesperson = await User.findOne({ token });
-                
-                if (!salesperson || salesperson.tokenExpiration < moment()) {
-                    flash.addFlash(req, "warning", "Please login by clicking on the link in your email.");
-                    return res.redirect("/login");
-                }
-                
-                salesperson.token = undefined;
-                salesperson.tokenExpiration = undefined;
-                await salesperson.save();
-                
-                flash.addFlash(req, "sucess", "Welcome Now you are salespeople.");
-                
-                req.session.loggedIn = true;
-                req.session.user = salesperson;
-                req.session.userId = salesperson._id;
-                res.locals.user = salesperson;
-                
-                res.redirect("/");
-            } catch (error) {
-                flash.addFlash(req, "warning", "An error occurred while logging in.");
-                next(error);
+    // console.log("=>(authController.js:23) req.session.loggedIn", req.session.loggedIn);
+    // if (!req.session.loggedIn) {
+    //     const { token } = req.query;
+    //
+    //     if (token) {
+    //         try {
+    //             const salesperson = await User.findOne({ token });
+    //
+    //             if (!salesperson || salesperson.tokenExpiration < moment()) {
+    //                 flash.addFlash(req, "warning", "Please login by clicking on the link in your email.");
+    //                 return res.redirect("/login");
+    //             }
+    //
+    //             salesperson.token = undefined;
+    //             salesperson.tokenExpiration = undefined;
+    //             await salesperson.save();
+    //
+    //             flash.addFlash(req, "sucess", "Welcome Now you are salespeople.");
+    //
+    //             req.session.loggedIn = true;
+    //             req.session.user = salesperson;
+    //             req.session.userId = salesperson._id;
+    //             res.locals.user = salesperson;
+    //
+    //             res.redirect("/");
+    //         } catch (error) {
+    //             flash.addFlash(req, "warning", "An error occurred while logging in.");
+    //             next(error);
+    //         }
+    //     } else {
+    //         return res.render("pages/auth/form");
+    //     }
+    // }
+    const { token } = req.query;
+    
+    if (token) {
+        try {
+            const salesperson = await User.findOne({ token });
+            
+            if (!salesperson || salesperson.tokenExpiration < moment()) {
+                flash.addFlash(req, "warning", "Please login by clicking on the link in your email.");
+                return res.redirect("/login");
             }
-        } else {
-            return res.render("pages/auth/form");
+            
+            salesperson.token = undefined;
+            salesperson.tokenExpiration = undefined;
+            await salesperson.save();
+            
+            flash.addFlash(req, "success", "Welcome Now you are salespeople.");
+            
+            // req.session.loggedIn = true;
+            // req.session.user = salesperson;
+            // req.session.userId = salesperson._id;
+            // res.locals.user = salesperson;
+            
+            const token = salesperson.generateAccessJWT();
+            res.cookie(process.env.COOKIE_NAME, token, cookieOptions);
+            
+            res.redirect("/");
+        } catch (error) {
+            flash.addFlash(req, "warning", "An error occurred while logging in.");
+            next(error);
         }
+    } else {
+        return res.render("pages/auth/form");
     }
-    res.redirect("/");
 };
 
 exports.createUser = async function (req, res, next) {
@@ -86,10 +120,10 @@ exports.createUser = async function (req, res, next) {
 };
 
 exports.checkAuth = function (req, res, next) {
-    if (!req.session.loggedIn) {
-        return res.redirect("/login");
-    }
-    next();
+    // if (!req.session.loggedIn) {
+    //     return res.redirect("/login");
+    // }
+    // next();
 };
 exports.checkUser = async function (req, res, next) {
     const { username, password } = req.body;
@@ -107,20 +141,17 @@ exports.checkUser = async function (req, res, next) {
                         return res.redirect("/login");
                     }
                 } else if (await bcrypt.compare(password, user.password)) {
-                    req.session.loggedIn = true;
-                    req.session.user = user;
-                    req.session.userId = user._id;
-                    
-                    req.app.locals.user = user;
-                    
-                    let options = {
-                        maxAge: 20 * 60 * 1000,
-                        httpOnly: true,
-                        secure: true,
-                        sameSite: "None",
-                    };
+                    // req.session.loggedIn = true;
+                    // req.session.user = user;
+                    // req.session.userId = user._id;
+                    //
+                    // req.app.locals.user = user;
+                    //
                     const token = user.generateAccessJWT();
-                    res.cookie("SessionID", token, options);
+                    console.log("=>(authController.js:123) token", token);
+                    console.log("=>(authController.js:155) res.cookie", res.cookies);
+                    res.cookie(process.env.COOKIE_NAME, token, cookieOptions);
+                    console.log("=>(authController.js:155) res.cookie", res.cookies);
                     return res.redirect("/");
                 }
             } else {
@@ -141,8 +172,11 @@ exports.checkUser = async function (req, res, next) {
 
 
 exports.logout = function (req, res, next) {
+    req.logout();
     req.session = null;
     res.locals = null;
+    res.clearCookie(process.env.COOKIE_NAME);
+    res.cookies = null;
     res.redirect("/login");
 };
 

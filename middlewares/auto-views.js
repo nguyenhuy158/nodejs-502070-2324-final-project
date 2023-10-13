@@ -10,7 +10,7 @@ exports.autoViews = (req, res, next) => {
     if (autoViews[queryPath]) return res.render(autoViews[queryPath]);
     
     if (fs.existsSync(path)) {
-        autoViews[queryPath] = "pages/" + queryPath.replace(/^\//, "") + "-auto";
+        autoViews[queryPath] = "pages/auto/" + queryPath.replace(/^\//, "");
         console.log("=>(auto-views.js:14) autoViews", autoViews);
         return res.render(autoViews[queryPath]);
     }

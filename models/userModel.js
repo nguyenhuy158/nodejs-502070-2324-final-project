@@ -5,8 +5,6 @@ const jwt = require('jsonwebtoken');
 const { formatTimestamp } = require('../middlewares/format');
 require('dotenv').config();
 
-const SECRET_ACCESS_TOKEN = process.env.SECRET_ACCESS_TOKEN;
-
 const userSchema = new Schema({
     email: { type: String, unique: true, required: true, trim: true },
     username: { type: String, trim: true, minlength: 1 },
@@ -69,7 +67,7 @@ userSchema.methods.generateAccessJWT = function () {
     let payload = {
         id: this._id,
     };
-    return jwt.sign(payload, SECRET_ACCESS_TOKEN, {
+    return jwt.sign(payload, process.env.SECRET_ACCESS_TOKEN, {
         expiresIn: '20m',
     });
 };

@@ -63,3 +63,5 @@ password: admin
 flash.addFlashMessage(req, 'success', 'Success', 'message success flash');
 flash.addFlashMessage(req, 'warning', 'Error', 'message error flash');
 ```
+
+[//]: # (https://chat.openai.com/share/f4645e84-8141-44bd-b9a5-aa4235dd2bab)

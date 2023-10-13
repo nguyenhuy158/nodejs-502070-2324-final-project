@@ -14,9 +14,9 @@
 |   |-- DS-nhom.txt
 |   `-- how-to-use-gitlab.duthu.net.md
 |-- error/
-|   `-- handler.js
+|   `-- errorController.js
 |-- log/
-|   `-- handler.js
+|   `-- errorController.js
 |-- models/
 |   |-- productModel.js
 |   `-- userModel.js
@@ -33,7 +33,7 @@
 |   `-- js/
 |-- routes/
 |   |-- product.js
-|   |-- routes.js
+|   |-- index.js
 |   `-- user.js
 |-- server/
 |   `-- config/

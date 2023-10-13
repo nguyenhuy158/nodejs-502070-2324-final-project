@@ -6,7 +6,6 @@ exports.listen = () => {
 };
 
 exports.morganLog = (req, res) => {
-    winstonLogger.info('hihi');
 
     let log;
     try {
