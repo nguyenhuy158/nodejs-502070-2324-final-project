@@ -16,8 +16,8 @@ const userSchema = new Schema({
         default: process.env.ROLE_SALE,
         lowercase: true
     },
-    password: { type: String, trim: true, minlength: 1, select: false },
-    password_confirm: { type: String, trim: true, minlength: 1 },
+    password: { type: String, trim: true, minlength: 1 },
+    password_confirm: { type: String, trim: true, minlength: 1, select: false },
     token: { type: String },
     tokenExpiration: { type: Date },
     isFirstLogin: { type: Boolean, default: true },
@@ -59,6 +59,18 @@ userSchema.pre("save", function (next) {
         });
     });
 });
+
+userSchema.methods.validPassword = async function (password) {
+    try {
+        console.log("=>(userModel.js:66) password", password);
+        console.log("=>(userModel.js:68) this.password", this.password);
+        console.log("=>[userModel.js::68] await bcrypt.compare(password, this.password)", await bcrypt.compare(password, this.password));
+        return await bcrypt.compare(password, this.password);
+
+    } catch (error) {
+        throw error;
+    }
+};
 
 
 userSchema.virtual("createdAtFormatted").get(function () {

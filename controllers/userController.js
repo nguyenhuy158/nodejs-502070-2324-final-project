@@ -11,9 +11,9 @@ require("dotenv").config();
 const { ObjectId } = require("mongodb");
 
 exports.changeProfilePicture = async (req, res, next) => {
+    const user = req.user;
     try {
         const { path: pathFile } = req.file;
-        const user = await User.findById(req.session.user._id);
         
         await sharp(pathFile)
             .resize(200, 200, {
@@ -43,7 +43,7 @@ exports.changeProfilePicture = async (req, res, next) => {
 exports.viewProfile = async (req, res, next) => {
     try {
         flash.addFlash(req, "success", "get info success");
-        res.render("pages/users/profile", { user: req.session.user });
+        res.render("pages/users/profile");
     } catch (error) {
         console.error(error);
         next(error);
@@ -157,7 +157,7 @@ exports.resendEmail = async function resendEmail(req, res, next) {
 };
 
 exports.getCreateAccount = (req, res) => {
-    res.render("pages/auth/createAccount");
+    res.render("pages/auth/create-account");
 };
 
 exports.createAccount = async (req, res, next) => {

@@ -143,3 +143,4 @@ public/uploads/*.bmp
 public/uploads/*.svg
 !public/uploads/*-profile.webp
 /.idea/
+.DS_Store

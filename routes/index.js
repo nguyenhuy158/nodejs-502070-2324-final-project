@@ -16,15 +16,15 @@ const { winstonLog } = require("../controllers/appController");
 const path = require("path");
 const config = require("../config/config");
 const { updateCurrentUser } = require("../middlewares/authentication");
+const { ensureAuthenticated } = require("../controllers/authController");
+const authController = require("../controllers/authController");
 
 // other middleware and server
 router
-    // .use(require("morgan")("tiny", config.morganOptions))
-    // .use(winstonLog)
+    .use(require("morgan")("tiny", config.morganOptions))
+    .use(winstonLog)
     .use(updateCurrentUser)
     .use(logRequestDetails)
-    .use(flashMiddleWare)
-    .use(autoViews)
     .get("/error", (req, res, next) => {
         try {
             throw new Error("This is a 500 error.");
@@ -34,26 +34,27 @@ router
     });
 
 // auth router
-router.use(authRoutes);
-
-// other middleware and server
 router
-    .get("/log", logger.morganLog)
+    .use(authRoutes)
+    .use(ensureAuthenticated)
+    .use(autoViews)
+    .get("/change-password", authController.changePassword)
+    .post("/change-password", authController.postChangePassword)
+    
+    // other middleware and server
     .use(routerController.checkFirstLogin)
-    .post("/register", UserValidator, userController.register)
-    .get("/sent-mail", routerController.sentMail)
+    .get("/log", logger.morganLog)
+    .get("/sent-test-mail", routerController.sentMail)
     .get("/", routerController.home)
     .get("/profile", userController.viewProfile)
     .post("/upload-profile-pic", upload.single("profilePic"), userController.changeProfilePicture)
     .get("/random-product", routerController.randomProduct);
 
-
 // main router
-router.use("/users", userRouter);
-router.use("/products", productRouter);
+router.use("/users", ensureAuthenticated, userRouter);
+router.use("/products", ensureAuthenticated, productRouter);
 
 // middleware error
 router.use(errors);
-
 
 module.exports = router;

@@ -12,11 +12,11 @@ const passport = require("passport");
 const session = require("express-session");
 const User = require("./models/userModel");
 const moment = require("moment/moment");
-const flash = require("./middlewares/flash");
+// const flash = require("./middlewares/flash");
 const bcrypt = require("bcryptjs");
 const { cookieOptions } = require("./config/config");
 const LocalStrategy = require("passport-local").Strategy;
-
+const flash = require("connect-flash");
 
 // process.on("uncaughtException", (error) => {
 //     winstonLogger.error("Uncaught Exception:", error);
@@ -44,76 +44,42 @@ app.use(require("express-session")({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(config.cookieSessionConfig);
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
-app.use(session({
-    secret: "secrettt",
-    resave: false,
-    saveUninitialized: true,
-}));
+app.use(flash());
 
 connectDb();
 
-// const authUser = async (username, password, done) => {
-//     console.log("=>(app.js:50) username", username);
-//     console.log("=>(app.js:51) password", password);
-//     const user = await User.findOne({ username }).select("+password");
-//     if (user) {
-//         if (!user.lockedStatus) {
-//             if (user.token) {
-//                 // if (moment(user.tokenExpiration).isBefore(moment())) {
-//                 //     flash.addFlash(req, "warning", `You can ask the administrator's support to resend another email with another link.`);
-//                 //     return res.redirect("/login");
-//                 // } else {
-//                 //     flash.addFlash(req, "warning", "Please login by clicking on the link in your email.");
-//                 //     return res.redirect("/login");
-//                 // }
-//                 done(null, false);
-//             } else if (await bcrypt.compare(password, user.password)) {
-//                 return done(null, user);
-//             }
-//         } else {
-//             // return res.render("pages/auth/form", {
-//             //     username,
-//             //     password,
-//             //     error: `You can contact the administrator's support unlock account link.`
-//             // });
-//             done(null, false);
-//         }
-//     }
-// };
-// app.use(passport.initialize());
-// app.use(passport.session());
-// passport.use(new LocalStrategy(authUser));
-// passport.serializeUser((user, done) => {
-//     console.log(`--------> Serialize User`);
-//     console.log(user);
-//
-//     done(null, user.id);
-//
-//     // Passport will pass the authenticated_user to serializeUser as "user"
-//     // This is the USER object from the done() in auth function
-//     // Now attach using done (null, user.id) tie this user to the req.session.passport.user = {id: user.id},
-//     // so that it is tied to the session object
-//
-// });
-//
-// passport.deserializeUser((id, done) => {
-//     console.log("---------> Deserialize Id")
-//     console.log(id)
-//
-//     done (null, {name: "Kyle", id: 123} )
-//
-// // This is the id that is saved in req.session.passport.{ user: "id"} during the serialization
-// // use the id to find the user in the DB and get the user object with user details
-// // pass the USER object in the done() of the de-serializer
-// // this USER object is attached to the "req.user", and can be used anywhere in the App.
-//
-// })
+passport.use(new LocalStrategy(async function (username, password, done) {
+    try {
+        const user = await User.findOne({ username: username });
 
+        if (!user) {
+            return done(null, false, { message: "Incorrect username." });
+        }
+
+        const isPasswordValid = await user.validPassword(password);
+
+        if (!isPasswordValid) {
+            return done(null, false, { message: "Incorrect password." });
+        }
+
+        return done(null, user);
+    } catch (err) {
+        return done(err);
+    }
+}));
+
+passport.serializeUser(function (user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(async function (id, done) {
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (err) {
+        done(err);
+    }
+});
 
 app.set("view engine", "pug");
 app.set("views", __dirname + "/views");

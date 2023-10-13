@@ -6,6 +6,13 @@ const flash = require("../middlewares/flash");
 const { cookieOptions } = require("../config/config");
 require("dotenv").config();
 
+exports.ensureAuthenticated = function (req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/login");
+};
+
 exports.checkAdmin = async function (req, res, next) {
     const currentRole = req.session.user.role;
     if (currentRole != process.env.ROLE_ADMIN) {
@@ -61,7 +68,11 @@ exports.get = async function (req, res, next) {
             const salesperson = await User.findOne({ token });
             
             if (!salesperson || salesperson.tokenExpiration < moment()) {
-                flash.addFlash(req, "warning", "Please login by clicking on the link in your email.");
+                flash.addFlash(
+                    req,
+                    "warning",
+                    "Please login by clicking on the link in your email."
+                );
                 return res.redirect("/login");
             }
             
@@ -70,11 +81,6 @@ exports.get = async function (req, res, next) {
             await salesperson.save();
             
             flash.addFlash(req, "success", "Welcome Now you are salespeople.");
-            
-            // req.session.loggedIn = true;
-            // req.session.user = salesperson;
-            // req.session.userId = salesperson._id;
-            // res.locals.user = salesperson;
             
             const token = salesperson.generateAccessJWT();
             res.cookie(process.env.COOKIE_NAME, token, cookieOptions);
@@ -85,7 +91,9 @@ exports.get = async function (req, res, next) {
             next(error);
         }
     } else {
-        return res.render("pages/auth/form");
+        return res.render("pages/auth/form", {
+            messages: req.flash(),
+        });
     }
 };
 
@@ -96,7 +104,7 @@ exports.createUser = async function (req, res, next) {
             email,
             username: req.body.username,
             password: req.body.password,
-            role: "salespeople"
+            role: "salespeople",
         });
         
         const existingUser = await User.findOne({ email });
@@ -112,19 +120,16 @@ exports.createUser = async function (req, res, next) {
         
         const savedUser = await newUser.save();
         const { password, role, ...user_data } = savedUser._doc;
-        console.log("🚀 ~ file: authController.js:43 ~ createUser ~ user_data:", user_data);
+        console.log(
+            "🚀 ~ file: authController.js:43 ~ createUser ~ user_data:",
+            user_data
+        );
         return res.redirect("/login");
     } catch (err) {
         next(err);
     }
 };
 
-exports.checkAuth = function (req, res, next) {
-    // if (!req.session.loggedIn) {
-    //     return res.redirect("/login");
-    // }
-    // next();
-};
 exports.checkUser = async function (req, res, next) {
     const { username, password } = req.body;
     try {
@@ -134,10 +139,18 @@ exports.checkUser = async function (req, res, next) {
             if (!user.lockedStatus) {
                 if (user.token) {
                     if (moment(user.tokenExpiration).isBefore(moment())) {
-                        flash.addFlash(req, "warning", `You can ask the administrator's support to resend another email with another link.`);
+                        flash.addFlash(
+                            req,
+                            "warning",
+                            `You can ask the administrator's support to resend another email with another link.`
+                        );
                         return res.redirect("/login");
                     } else {
-                        flash.addFlash(req, "warning", "Please login by clicking on the link in your email.");
+                        flash.addFlash(
+                            req,
+                            "warning",
+                            "Please login by clicking on the link in your email."
+                        );
                         return res.redirect("/login");
                     }
                 } else if (await bcrypt.compare(password, user.password)) {
@@ -158,26 +171,34 @@ exports.checkUser = async function (req, res, next) {
                 return res.render("pages/auth/form", {
                     username,
                     password,
-                    error: `You can contact the administrator's support unlock account link.`
+                    error: `You can contact the administrator's support unlock account link.`,
                 });
             }
         }
         
-        return res.render("pages/auth/form", { username, password, error: "Username or Password is not correct" });
+        return res.render("pages/auth/form", {
+            username,
+            password,
+            error: "Username or Password is not correct",
+        });
     } catch (err) {
         console.error("Error finding user:", err);
         next(err);
     }
 };
 
-
 exports.logout = function (req, res, next) {
-    req.logout();
-    req.session = null;
-    res.locals = null;
-    res.clearCookie(process.env.COOKIE_NAME);
-    res.cookies = null;
-    res.redirect("/login");
+    req.logout(function (err) {
+        if (err) {
+            res.redirect("/error");
+        } else {
+            req.session = null;
+            res.locals = null;
+            res.clearCookie(process.env.COOKIE_NAME);
+            res.cookies = null;
+            res.redirect("/login");
+        }
+    });
 };
 
 exports.getRegister = async function (req, res, next) {
@@ -185,25 +206,36 @@ exports.getRegister = async function (req, res, next) {
 };
 
 exports.changePassword = async function (req, res, next) {
-    res.render("pages/auth/change_password", { user: req.session.user, userName: req.session.user.name });
+    res.render("pages/auth/change-password");
 };
 
 exports.postChangePassword = async function (req, res, next) {
     const { currentPassword, newPassword, confirmPassword } = req.body;
-    const userId = req.session.userId;
     
     try {
-        const user = await User.findById(userId).select("+password");
+        const user = req.user;
+        console.log("=>(authController.js:226) user", user);
         
-        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        const isPasswordValid = await bcrypt.compare(
+            currentPassword,
+            user.password
+        );
         
         if (!isPasswordValid) {
-            flash.addFlash(req, "warning", "Change password fail: Password is not correct");
+            flash.addFlash(
+                req,
+                "warning",
+                "Change password fail: Password is not correct"
+            );
             return res.status(401).redirect("/change-password");
         }
         
         if (newPassword !== confirmPassword) {
-            flash.addFlash(req, "warning", "Change password fail: Password not match");
+            flash.addFlash(
+                req,
+                "warning",
+                "Change password fail: Password not match"
+            );
             return res.status(400).redirect("/change-password");
         }
         
@@ -219,4 +251,3 @@ exports.postChangePassword = async function (req, res, next) {
         next(error);
     }
 };
-

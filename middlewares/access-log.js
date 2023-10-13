@@ -6,7 +6,6 @@ exports.logRequestDetails = (req, res, next) => {
     const accessTime = currentTime();
     console.log(`[ACCESS-LOG]\t${method}\t[${accessTime}]\t${originalUrl}`);
     console.log(`[ACCESS-LOG]\t${method}\t[${accessTime}]\txhr: ${xhr}`);
-    console.log(`[COOKIE] ${res.cookies}`)
     console.log(`[USER] ${res.app.locals.user?.username}`)
     next();
 };
