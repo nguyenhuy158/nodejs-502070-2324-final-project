@@ -1,4 +1,4 @@
-const User = require("../models/userModel");
+const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const { transporter } = require("../config/email");

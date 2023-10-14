@@ -1,4 +1,4 @@
-const User = require("../models/userModel");
+const User = require("../models/user");
 const { faker } = require("@faker-js/faker");
 const moment = require("moment");
 const bcrypt = require("bcryptjs");

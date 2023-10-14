@@ -18,8 +18,8 @@
 |-- log/
 |   `-- errorController.js
 |-- models/
-|   |-- productModel.js
-|   `-- userModel.js
+|   |-- product.js
+|   `-- user.js
 |-- package.json
 |-- public/
 |   |-- css/

@@ -1,4 +1,4 @@
-const Product = require('../models/productModel');
+const Product = require("../models/product");
 const { faker } = require('@faker-js/faker');
 const moment = require('moment');
 

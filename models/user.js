@@ -62,9 +62,9 @@ userSchema.pre("save", function (next) {
 
 userSchema.methods.validPassword = async function (password) {
     try {
-        console.log("=>(userModel.js:66) password", password);
-        console.log("=>(userModel.js:68) this.password", this.password);
-        console.log("=>[userModel.js::68] await bcrypt.compare(password, this.password)", await bcrypt.compare(password, this.password));
+        console.log("=>(user.js:66) password", password);
+        console.log("=>(user.js:68) this.password", this.password);
+        console.log("=>[user.js::68] await bcrypt.compare(password, this.password)", await bcrypt.compare(password, this.password));
         return await bcrypt.compare(password, this.password);
 
     } catch (error) {
