@@ -52,7 +52,8 @@ router
     .get("/", routerController.home)
     .get("/profile", userController.viewProfile)
     .post("/upload-profile-pic", upload.single("profilePic"), userController.changeProfilePicture)
-    .get("/random-product", routerController.randomProduct);
+    .get("/random-product", routerController.randomProduct)
+    .get("/create-sample-data", routerController.createSampleData);
 
 // main router
 router.use("/users", requireRole(process.env.ROLE_ADMIN), userRouter);
