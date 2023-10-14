@@ -66,7 +66,7 @@ userSchema.methods.validPassword = async function (password) {
         console.log("=>(user.js:68) this.password", this.password);
         console.log("=>[user.js::68] await bcrypt.compare(password, this.password)", await bcrypt.compare(password, this.password));
         return await bcrypt.compare(password, this.password);
-
+        
     } catch (error) {
         throw error;
     }
