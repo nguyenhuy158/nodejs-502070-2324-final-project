@@ -47,6 +47,16 @@
     "winston": "^3.10.0",
     "yarn": "^1.22.19"
   },
+  "engines": {
+    "node": ">=18.18.0 <19.0.0"
+  },
+  "keywords": [
+    "express",
+    "nodejs",
+    "mongoose",
+    "tech-hut",
+    "retail-store"
+  ],
   "name": "tech-hut-retail-store",
   "version": "1.0.0",
   "description": "Website selling phone for retail store",
