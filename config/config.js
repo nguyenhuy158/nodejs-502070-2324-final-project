@@ -1,6 +1,7 @@
 const cookieSession = require("cookie-session");
 const path = require("path");
 const fs = require("fs");
+const rateLimit = require("express-rate-limit");
 
 module.exports = {
     port: process.env.PORT || 3000,
@@ -52,5 +53,10 @@ module.exports = {
     morganOptions: {
         stream: fs.createWriteStream(path.join(__dirname, process.env.MORGAN_LOG),
             { flags: "a" })
-    }
+    },
+    limiter: rateLimit({
+        windowMs: +process.env.LIMIT_TIME * 60 * 1000,
+        max: +process.env.LIMIT_MAX_REQUEST_PER_LIMIT_TIME,
+        message: process.env.LIMIT_MESSAGE
+    })
 };

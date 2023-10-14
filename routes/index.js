@@ -18,9 +18,12 @@ const config = require("../config/config");
 const { updateCurrentUser } = require("../middlewares/authentication");
 const { ensureAuthenticated } = require("../controllers/authController");
 const authController = require("../controllers/authController");
+const { limiter } = require("../config/config");
 
 // other middleware and server
+
 router
+    .use(limiter)
     .use(require("morgan")("tiny", config.morganOptions))
     .use(winstonLog)
     .use(updateCurrentUser)
