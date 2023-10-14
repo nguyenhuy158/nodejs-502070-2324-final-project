@@ -19,6 +19,7 @@ const { updateCurrentUser } = require("../middlewares/authentication");
 const { ensureAuthenticated } = require("../controllers/authController");
 const authController = require("../controllers/authController");
 const { limiter } = require("../config/config");
+const { requireRole } = require("../middlewares/authorization");
 
 // other middleware and server
 
@@ -54,8 +55,8 @@ router
     .get("/random-product", routerController.randomProduct);
 
 // main router
-router.use("/users", ensureAuthenticated, userRouter);
-router.use("/products", ensureAuthenticated, productRouter);
+router.use("/users", requireRole(process.env.ROLE_ADMIN), userRouter);
+router.use("/products", requireRole(process.env.ROLE_ADMIN), productRouter);
 
 // middleware error
 router.use(errors);
