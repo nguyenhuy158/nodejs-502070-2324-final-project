@@ -50,6 +50,25 @@ exports.viewProfile = async (req, res, next) => {
     }
 };
 
+exports.deleteUser = async (req, res, next) => {
+    const id = req.params.id;
+    console.log("=>(userController.js:55) id", id);
+    console.log("=>(userController.js:56) ObjectId.isValid(id)", ObjectId.isValid(id));
+    if (ObjectId.isValid(id)) {
+        try {
+            const currentUser = await User.findByIdAndDelete(id);
+            console.log("=>(userController.js:60) currentUser", currentUser);
+            if (!currentUser) {
+                res.render("pages/users/user-not-found");
+            }
+            res.redirect("/users");
+        } catch (err) {
+            console.log("=>(userController.js:56) err", err);
+            next(err);
+        }
+    }
+};
+
 exports.createUser = function (req, res, next) {
     const newData = req.body;
     // dataModel.addData(newData);
@@ -87,7 +106,7 @@ exports.getUsers = async function (req, res, next) {
             perPage,
             nextPage: hasNextPage ? nextPage : null
         };
-        console.log("🚀 ~ file: userController.js:88 ~ output:", output);
+        // console.log("🚀 ~ file: userController.js:88 ~ output:", output);
         res.render("pages/users/list", { ...output, navLink: process.env.NAVBAR_USER });
     } catch (error) {
         console.error("Error fetching users:", error);
@@ -139,7 +158,7 @@ exports.resendEmail = async function resendEmail(req, res, next) {
         user.tokenExpiration = moment().add(1, "minutes");
         await user.save();
         
-        await sendEmail(user.email, user.token);
+        await sendEmail(user, user.token);
         
         
         flash.addFlash(req, "success", "Email has been resent. Please check your email for further instructions.");
@@ -201,18 +220,28 @@ function generateToken() {
     return token;
 }
 
-async function sendEmail(email, token) {
-    const mailOptions = {
-        from: process.env.FROM_EMAIL,
-        to: email,
-        subject: "Sales System Account Creation",
-        text: `Dear Salesperson,
-                An account has been created for you in the Sales System. To log in, please click the following link within 1 minute: http://localhost:${process.env.PORT}/login?token=${token}
+async function sendEmail(user, token) {
+    try {
+        console.log("=>(userController.js:226) user", user);
+        
+        const mailOptions = {
+            from: process.env.FROM_EMAIL,
+            to: user.email,
+            subject: "Activate Sales Account",
+            text: `Dear ${user.fullName},
+                An account has been created for you in the Sales System. To log in, please click the following link within 1 minute:
+                http://localhost:${process.env.PORT}/email-confirm?token=${token}
                 Best regards,
                 Administrator`,
-    };
-    
-    await transporter.sendMail(mailOptions);
+        };
+        
+        await transporter.sendMail(mailOptions, (err, info) => {
+            console.log("=>(userController.js:237) info", info);
+            console.log("=>(userController.js:237) err", err);
+        });
+    } catch (err) {
+        console.log("=>(userController.js:243) err", err);
+    }
 }
 
 exports.login = async (req, res, next) => {

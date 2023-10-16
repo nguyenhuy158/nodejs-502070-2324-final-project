@@ -23,7 +23,13 @@ const userSchema = new Schema({
     isFirstLogin: { type: Boolean, default: true },
     profilePicture: { type: String },
     inactivateStatus: { type: Boolean, default: false },
-    lockedStatus: { type: Boolean, default: false }
+    lockedStatus: { type: Boolean, default: false },
+    settings: {
+        darkMode: { type: Boolean, default: false },
+        notification: { type: Boolean, default: true },
+        language: { type: String, default: "en" },
+        fontSize: { type: Number, default: 16 }
+    }
 }, {
     timestamps: true
 });

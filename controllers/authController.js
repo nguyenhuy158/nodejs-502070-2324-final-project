@@ -28,39 +28,7 @@ exports.logger = async function (req, res, next) {
 };
 
 exports.get = async function (req, res, next) {
-    // console.log("=>(authController.js:23) req.session.loggedIn", req.session.loggedIn);
-    // if (!req.session.loggedIn) {
-    //     const { token } = req.query;
-    //
-    //     if (token) {
-    //         try {
-    //             const salesperson = await User.findOne({ token });
-    //
-    //             if (!salesperson || salesperson.tokenExpiration < moment()) {
-    //                 flash.addFlash(req, "warning", "Please login by clicking on the link in your email.");
-    //                 return res.redirect("/login");
-    //             }
-    //
-    //             salesperson.token = undefined;
-    //             salesperson.tokenExpiration = undefined;
-    //             await salesperson.save();
-    //
-    //             flash.addFlash(req, "sucess", "Welcome Now you are salespeople.");
-    //
-    //             req.session.loggedIn = true;
-    //             req.session.user = salesperson;
-    //             req.session.userId = salesperson._id;
-    //             res.locals.user = salesperson;
-    //
-    //             res.redirect("/");
-    //         } catch (error) {
-    //             flash.addFlash(req, "warning", "An error occurred while logging in.");
-    //             next(error);
-    //         }
-    //     } else {
-    //         return res.render("pages/auth/form");
-    //     }
-    // }
+    
     const { token } = req.query;
     
     if (token) {
@@ -94,6 +62,40 @@ exports.get = async function (req, res, next) {
         return res.render("pages/auth/form", {
             messages: req.flash(),
         });
+    }
+};
+
+exports.emailConfirm = async (req, res, next) => {
+    const token = req.query.token;
+    console.log("=>(authController.js:70) token", token);
+    
+    if (token) {
+        try {
+            const salesperson = await User.findOne({ token });
+            
+            if (!salesperson || salesperson.tokenExpiration < moment()) {
+                flash.addFlash(req, "warning", "Please login by clicking on the link in your email.");
+                return res.redirect("/login");
+            }
+            
+            req.login(salesperson, async (err) => {
+                if (err) {
+                    return next(err);
+                }
+                flash.addFlash(req, "sucess", "Welcome Now you are salespeople.");
+                
+                salesperson.token = undefined;
+                salesperson.tokenExpiration = undefined;
+                await salesperson.save();
+                return res.redirect("/");
+            });
+            
+        } catch (error) {
+            flash.addFlash(req, "warning", "An error occurred while logging in.");
+            next(error);
+        }
+    } else {
+        return res.redirect("/login");
     }
 };
 

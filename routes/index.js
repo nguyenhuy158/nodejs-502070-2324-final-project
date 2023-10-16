@@ -41,12 +41,12 @@ router
 router
     .use(authRoutes)
     .use(ensureAuthenticated)
-    .use(autoViews)
     .get("/change-password", authController.changePassword)
     .post("/change-password", authController.postChangePassword)
     
     // other middleware and server
     .use(routerController.checkFirstLogin)
+    .use(autoViews)
     .get("/log", logger.morganLog)
     .get("/sent-test-mail", routerController.sentMail)
     .get("/", routerController.home)
@@ -56,10 +56,12 @@ router
     .get("/create-sample-data", routerController.createSampleData);
 
 // main router
-router.use("/users", requireRole(process.env.ROLE_ADMIN), userRouter);
-router.use("/products", requireRole(process.env.ROLE_ADMIN), productRouter);
+router
+    .use("/users", requireRole(process.env.ROLE_ADMIN), userRouter)
+    .use("/products", requireRole(process.env.ROLE_ADMIN), productRouter);
 
-// middleware error
-router.use(errors);
+// error router
+router
+    .use(errors);
 
 module.exports = router;

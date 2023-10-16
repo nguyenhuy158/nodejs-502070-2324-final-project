@@ -8,6 +8,7 @@ const bcrypt = require("bcryptjs");
 
 router
     .get("/login", authController.get)
+    .get("/email-confirm", authController.emailConfirm)
     .post("/login", passport.authenticate("local", {
         successRedirect: "/",
         failureRedirect: "/login",

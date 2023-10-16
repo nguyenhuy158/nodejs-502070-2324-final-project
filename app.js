@@ -51,18 +51,24 @@ connectDb();
 passport.use(new LocalStrategy(async function (username, password, done) {
     try {
         const user = await User.findOne({ username: username });
-
+        
         if (!user) {
             return done(null, false, { message: "Incorrect username." });
         }
-
+        
+        if (user.token) {
+            return done(null, false, {
+                message: "Please login by clicking on the link in your email"
+            });
+        }
+        
         const isPasswordValid = await user.validPassword(password);
-
+        
         if (!isPasswordValid) {
             return done(null, false, { message: "Incorrect password." });
         }
-
-        return done(null, user);
+        
+        return done(null, user, { message: "Login successfully." });
     } catch (err) {
         return done(err);
     }
