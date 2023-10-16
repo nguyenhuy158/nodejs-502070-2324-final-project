@@ -17,7 +17,7 @@ router
         failureMessage: "Invalid username or password.",
         successMessage: "Logged in successfully.",
     }))
-    .get("/logout", authController.logout)
+    .get("/logout", authController.logout);
 
 
 module.exports = router;

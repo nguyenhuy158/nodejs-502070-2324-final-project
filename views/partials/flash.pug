@@ -1,25 +1,38 @@
-- console.log("=>(flash.pug:4) messages", messages);
+- console.log("=>(flash.pug:4) message", message);
 
 .toast-container.top-0.end-0.p-3
-    - if (typeof messages !== 'undefined' && messages.error)
-        each msg in messages.error
-            - console.log("=>(flash.pug:6) msg", msg);
-            #liveToast.toast(role='alert', aria-live='assertive', aria-atomic='true')
-                .toast-header
-                    img.rounded.me-3(src='/images/TechHut.png', width='20', height=20 alt='')
-                    strong.me-auto TechHut
-                    small
-                    button.btn-close(data-bs-dismiss='toast', aria-label='Close')
-                .toast-body
-                    =msg
-    - if (typeof messages !== 'undefined' && messages.success)
+    if (message.info)
         #liveToast.toast(role='alert', aria-live='assertive', aria-atomic='true')
-                .toast-header
-                    img.rounded.me-3(src='/images/TechHut.png', width='20', height=20 alt='')
-                    strong.me-auto TechHut
-                    small
-                    button.btn-close(data-bs-dismiss='toast', aria-label='Close')
-                .toast-body
-                    =messages.success
+            .toast-header
+                img.rounded.me-3(src='/images/TechHut.png', width='20', height=20 alt='')
+                strong.me-auto TechHut
+                small
+                button.btn-close(data-bs-dismiss='toast', aria-label='Close')
+            .toast-body
+                =`I ${message.info}`
+    if (message.success)
+        #liveToast.toast(role='alert', aria-live='assertive', aria-atomic='true')
+            .toast-header
+                img.rounded.me-3(src='/images/TechHut.png', width='20', height=20 alt='')
+                strong.me-auto TechHut
+                small
+                button.btn-close(data-bs-dismiss='toast', aria-label='Close')
+            .toast-body
+                =`S ${message.success}`
+    if (message.error)
+        #liveToast.toast(role='alert', aria-live='assertive', aria-atomic='true')
+            .toast-header
+                img.rounded.me-3(src='/images/TechHut.png', width='20', height=20 alt='')
+                strong.me-auto TechHut
+                small
+                button.btn-close(data-bs-dismiss='toast', aria-label='Close')
+            .toast-body
+                =`E ${message.error}`
 
-
+script.
+    setTimeout(() => {
+        $(".toast").each((index, value) => {
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(value)
+            toastBootstrap.show()
+        })
+    }, 1000);

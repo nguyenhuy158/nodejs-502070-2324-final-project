@@ -2,7 +2,7 @@ const User = require("../models/user");
 const { faker } = require("@faker-js/faker");
 const moment = require("moment");
 const bcrypt = require("bcryptjs");
-const flash = require("../middlewares/flash");
+// const flash = require("../middlewares/flash");
 const { cookieOptions } = require("../config/config");
 require("dotenv").config();
 
@@ -36,11 +36,11 @@ exports.get = async function (req, res, next) {
             const salesperson = await User.findOne({ token });
             
             if (!salesperson || salesperson.tokenExpiration < moment()) {
-                flash.addFlash(
-                    req,
-                    "warning",
-                    "Please login by clicking on the link in your email."
-                );
+                // flash.addFlash(
+                //     req,
+                //     "warning",
+                //     "Please login by clicking on the link in your email."
+                // );
                 return res.redirect("/login");
             }
             
@@ -48,19 +48,19 @@ exports.get = async function (req, res, next) {
             salesperson.tokenExpiration = undefined;
             await salesperson.save();
             
-            flash.addFlash(req, "success", "Welcome Now you are salespeople.");
+            // flash.addFlash(req, "success", "Welcome Now you are salespeople.");
             
             const token = salesperson.generateAccessJWT();
             res.cookie(process.env.COOKIE_NAME, token, cookieOptions);
             
             res.redirect("/");
         } catch (error) {
-            flash.addFlash(req, "warning", "An error occurred while logging in.");
+            // flash.addFlash(req, "warning", "An error occurred while logging in.");
             next(error);
         }
     } else {
         return res.render("pages/auth/form", {
-            messages: req.flash(),
+            messages: req.flash("info"),
         });
     }
 };
@@ -74,7 +74,7 @@ exports.emailConfirm = async (req, res, next) => {
             const salesperson = await User.findOne({ token });
             
             if (!salesperson || salesperson.tokenExpiration < moment()) {
-                flash.addFlash(req, "warning", "Please login by clicking on the link in your email.");
+                req.flash("info", "Please login by clicking on the link in your email.");
                 return res.redirect("/login");
             }
             
@@ -82,7 +82,7 @@ exports.emailConfirm = async (req, res, next) => {
                 if (err) {
                     return next(err);
                 }
-                flash.addFlash(req, "sucess", "Welcome Now you are salespeople.");
+                req.flash("info", "Welcome Now you are salespeople.");
                 
                 salesperson.token = undefined;
                 salesperson.tokenExpiration = undefined;
@@ -91,7 +91,7 @@ exports.emailConfirm = async (req, res, next) => {
             });
             
         } catch (error) {
-            flash.addFlash(req, "warning", "An error occurred while logging in.");
+            req.flash("error", "An error occurred while logging in.");
             next(error);
         }
     } else {
@@ -122,10 +122,6 @@ exports.createUser = async function (req, res, next) {
         
         const savedUser = await newUser.save();
         const { password, role, ...user_data } = savedUser._doc;
-        console.log(
-            "🚀 ~ file: authController.js:43 ~ createUser ~ user_data:",
-            user_data
-        );
         return res.redirect("/login");
     } catch (err) {
         next(err);
@@ -141,18 +137,18 @@ exports.checkUser = async function (req, res, next) {
             if (!user.lockedStatus) {
                 if (user.token) {
                     if (moment(user.tokenExpiration).isBefore(moment())) {
-                        flash.addFlash(
-                            req,
-                            "warning",
-                            `You can ask the administrator's support to resend another email with another link.`
-                        );
+                        // flash.addFlash(
+                        //     req,
+                        //     "warning",
+                        //     `You can ask the administrator's support to resend another email with another link.`
+                        // );
                         return res.redirect("/login");
                     } else {
-                        flash.addFlash(
-                            req,
-                            "warning",
-                            "Please login by clicking on the link in your email."
-                        );
+                        // flash.addFlash(
+                        //     req,
+                        //     "warning",
+                        //     "Please login by clicking on the link in your email."
+                        // );
                         return res.redirect("/login");
                     }
                 } else if (await bcrypt.compare(password, user.password)) {
@@ -190,10 +186,12 @@ exports.checkUser = async function (req, res, next) {
 };
 
 exports.logout = function (req, res, next) {
+    
     req.logout(function (err) {
         if (err) {
             res.redirect("/error");
         } else {
+            req.flash("info", "Logout successfully.");
             req.session = null;
             res.locals = null;
             res.clearCookie(process.env.COOKIE_NAME);
@@ -216,7 +214,6 @@ exports.postChangePassword = async function (req, res, next) {
     
     try {
         const user = req.user;
-        console.log("=>(authController.js:226) user", user);
         
         const isPasswordValid = await bcrypt.compare(
             currentPassword,
@@ -224,20 +221,12 @@ exports.postChangePassword = async function (req, res, next) {
         );
         
         if (!isPasswordValid) {
-            flash.addFlash(
-                req,
-                "warning",
-                "Change password fail: Password is not correct"
-            );
+            req.flash("error", "Change password fail: Password is not correct.");
             return res.status(401).redirect("/change-password");
         }
         
         if (newPassword !== confirmPassword) {
-            flash.addFlash(
-                req,
-                "warning",
-                "Change password fail: Password not match"
-            );
+            req.flash("error", "Change password fail: Password not match.");
             return res.status(400).redirect("/change-password");
         }
         
@@ -245,8 +234,7 @@ exports.postChangePassword = async function (req, res, next) {
         user.isFirstLogin = false;
         await user.save();
         req.session.user = user;
-        
-        flash.addFlash(req, "success", "Change password success: Password changed");
+        req.flash("success", "Change password success: Password changed.");
         res.redirect("/");
     } catch (error) {
         console.error(error);
