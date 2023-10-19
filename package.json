@@ -64,5 +64,8 @@
   "main": "app.js",
   "repository": "https://gitlab.duthu.net/S52000668/nodejs-502070-2324-final-project",
   "author": "huy.ntq <huy.ntq02@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "sass": "^1.69.4"
+  }
 }

@@ -1,13 +1,18 @@
 extends layout
 
 block content
-    .container
-        h1.text-primary Welcome to #{app_name}
-        i.bi.bi-envelope
+    link(rel="stylesheet" href="/css/home.css")
 
-    - const classList = ['class1', 'class2', 'class3']
-    p(class= classList) this is a p tag
-
-    input(disable=false)
+    .container.px-4.px-lg-5.h-100
+        .row.gx-4.gx-lg-5.h-100.align-items-center.justify-content-center.text-center
+            .col-lg-8.align-self-end
+                h1.text-primary.font-weight-bold Welcome to #{app_name}
+                hr.divider
+            .col-lg-8.align-self-baseline
+                p.text-white-75.mb-5
+                    | Access our #{app_name} website is a wonderful choice you ever do before.
+                a.btn.btn-primary.btn-xl(href='/about') Find Out More
+    //- .container
+    //-     h1.text-primary.text-center Welcome to #{app_name}
 
 

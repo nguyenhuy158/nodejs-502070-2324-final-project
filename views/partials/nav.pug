@@ -1,7 +1,9 @@
-nav.navbar.navbar-expand-lg.bg-body-tertiary.bg-light
+link(rel="stylesheet" href="/css/nav.css")
+
+nav.navbar.navbar-expand-lg.bg-body-tertiary.bg-light.py-3
     .container
         a.navbar-brand(href='/') 
-            img(src='/images/TechHut.png' height='70' alt='' loading='lazy')
+            img(src='/TechHut.png' height='70' alt='' loading='lazy')
         button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
             span.navbar-toggler-icon
         .collapse.navbar-collapse#navbarSupportedContent
@@ -26,36 +28,27 @@ nav.navbar.navbar-expand-lg.bg-body-tertiary.bg-light
                             a.dropdown-item(href='/sent-test-mail') Test sent mail
                         li
                             a.dropdown-item(href='/users/create-account') Create account 
-                li.nav-item.dropdown
-                    a.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false') 
-                        - if (user && user.fullName)
-                            b= user.fullName
-                        - else 
-                            b= 'Unknow'
-                    ul.dropdown-menu 
-                        li
-                            a.dropdown-item(href='/profile') Profile
-                        li
-                            a.dropdown-item(href='/change-password') Change Password
-                        li
-                            hr.dropdown-divider
-                        li
-                            a.dropdown-item(href='/logout') Logout
+
                 li.nav-item
                     a.nav-link.disabled(aria-disabled='true') Coming soon
+
 
             form.d-flex(role='search')
                 input.form-control.me-2(type='search' placeholder='Search' aria-label='Search')
                 button.btn.btn-outline-success(type='submit') Search
-
-    script.
-        document.addEventListener('DOMContentLoaded', function () {
-            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-
-            navLinks.forEach(link => {
-                link.addEventListener('click', (event) => {
-                    navLinks.forEach(link => link.classList.remove('active'));
-                    event.target.classList.add('active');
-                });
-            });
-        });
+            
+            li.nav-item.dropdown.d-flex.ms-4
+                a.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false') 
+                    - if (user && user.fullName)
+                        b= user.fullName
+                    - else 
+                        b= 'Unknown'
+                ul.dropdown-menu 
+                    li
+                        a.dropdown-item(href='/profile') Profile
+                    li
+                        a.dropdown-item(href='/change-password') Change Password
+                    li
+                        hr.dropdown-divider
+                    li
+                        a.dropdown-item(href='/logout') Logout
