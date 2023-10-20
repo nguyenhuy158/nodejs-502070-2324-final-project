@@ -35,7 +35,7 @@ block content
                     th Handle
 
             tbody
-            if products
+            if products && products.length > 0
                 each product, index in products
                     tr
                         td= index
@@ -43,18 +43,20 @@ block content
                         td= product.productName
                         td= product.importPrice
                         td= product.retailPrice
-                        td= product.category
+                        td= product.category.name
                         td= product.creationDateFormatted
                         td= product.lastUpdateDateFormatted
                         td= product.createdAtFormatted
-                        td= product.updatedAtFormatted
+                        td= product.createdAtFormatted
                         td
                             img(src=product.imageUrls[0], alt='Product Image' height='100' width='100')
                         td
                             a.btn.btn-primary(href=`/products/${product._id}`) View
                             a.btn.btn-success(href=`/products/${product._id}/edit`) Update
                             a.btn.btn-danger(href=`/products/delete/${product._id}`) Delete
-
+            else
+                tr
+                    td.text-center.p-5.h4(colspan='12') No products found.
 
 
     // Display the message

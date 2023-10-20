@@ -1,17 +1,47 @@
-require('dotenv').config();
-const mongoose = require('mongoose');
+require("dotenv").config();
+const mongoose = require("mongoose");
 const User = require("../../models/user");
+const ProductCategory = require("../../models/productCategory");
 
 const connectDB = async () => {
     try {
-        mongoose.set('strictQuery', false);
+        mongoose.set("strictQuery", false);
         const connect = await mongoose.connect(process.env.MONGODB_URI);
         console.log(`[db] Database connected ${connect.connection.host}`);
         checkAndCreateAdminUser();
+        checkAndCreateDefaultCategory();
     } catch (error) {
         console.log("[db] error:", error);
     }
 };
+
+async function checkAndCreateDefaultCategory() {
+    try {
+        const phoneCategoryExists = await ProductCategory.exists({ name: "Phone" });
+        
+        const accessoriesCategoryExists = await ProductCategory.exists({ name: "Accessories" });
+        
+        if (!phoneCategoryExists) {
+            const phoneCategory = new ProductCategory({
+                name: "Phone",
+                description: "Category for mobile phones and smartphones",
+            });
+            await phoneCategory.save();
+        }
+        
+        if (!accessoriesCategoryExists) {
+            const accessoriesCategory = new ProductCategory({
+                name: "Accessories",
+                description: "Category for various accessories for electronic devices",
+            });
+            await accessoriesCategory.save();
+        }
+        
+        console.log("Product categories created or checked successfully.");
+    } catch (error) {
+        console.error("Error creating/checking product categories:", error);
+    }
+}
 
 async function checkAndCreateAdminUser() {
     try {
@@ -28,14 +58,14 @@ async function checkAndCreateAdminUser() {
                 token: undefined,
                 tokenExpiration: undefined,
             });
-
+            
             await newUser.save();
-            console.log('[db] Admin user created.');
+            console.log("[db] Admin user created.");
         } else {
-            console.log('[db] Admin user already exists.');
+            console.log("[db] Admin user already exists.");
         }
     } catch (err) {
-        console.error('[db] Error checking/creating admin user:', err);
+        console.error("[db] Error checking/creating admin user:", err);
     } finally {
     }
 }
