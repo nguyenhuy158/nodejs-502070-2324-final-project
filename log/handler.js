@@ -1,18 +1,18 @@
 const PORT = process.env.PORT;
-const winstonLogger = require('../config/logger')
+const winstonLogger = require("../config/logger");
 
 exports.listen = () => {
-    console.log(`Server is running on port http://localhost:${PORT}`);
+    console.log(`Server is running on ${PORT}`);
 };
 
 exports.morganLog = (req, res) => {
-
+    
     let log;
     try {
-        log = require('fs').readFileSync('access.log', 'utf8');
+        log = require("fs").readFileSync("access.log", "utf8");
     } catch (error) {
         log = null;
     } finally {
-        res.render('pages/log', { log });
+        res.render("pages/log", { log });
     }
 };

@@ -2,21 +2,14 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
 const passport = require("passport");
-const User = require("../models/user");
-const LocalStrategy = require("passport-local");
-const bcrypt = require("bcryptjs");
+const { passportAuthenticateConfig } = require("../config/config");
 
 router
     .get("/login", authController.get)
     .get("/email-confirm", authController.emailConfirm)
-    .post("/login", passport.authenticate("local", {
-        successRedirect: "/",
-        failureRedirect: "/login",
-        failureFlash: true,
-        successFlash: true,
-        failureMessage: "Invalid username or password.",
-        successMessage: "Logged in successfully.",
-    }))
+    .get("/password-reset", authController.passwordResetGet)
+    .post("/password-reset", authController.passwordReset)
+    .post("/login", passport.authenticate("local", passportAuthenticateConfig))
     .get("/logout", authController.logout);
 
 

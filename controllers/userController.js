@@ -1,7 +1,6 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
-const { transporter } = require("../config/email");
 const flash = require("../middlewares/flash");
 const moment = require("moment");
 const sharp = require("sharp");
@@ -10,6 +9,7 @@ const fs = require("fs");
 require("dotenv").config();
 const { ObjectId } = require("mongodb");
 const Product = require("../models/product");
+const { generateToken, sendEmail } = require("../middlewares/utils");
 
 exports.changeProfilePicture = async (req, res, next) => {
     const user = req.user;
@@ -116,13 +116,13 @@ exports.getUsers = async function (req, res, next) {
 
 exports.register = function (req, res, next) {
     User.findOne({ email: req.body.email }, (err, user) => {
-        if (user == null) { //Kiểm tra xem email đã được sử dụng chưa
-            bcrypt.hash(req.body.password, 10, function (err, hash) { //Mã hóa mật khẩu trước khi lưu vào db
+        if (user == null) {
+            bcrypt.hash(req.body.password, 10, function (err, hash) {
                 if (err) {
                     return next(err);
                 }
                 const user = new User(req.body);
-                user.role = ["salespeople"]; //sau khi register thì role auto là customer
+                user.role = ["salespeople"];
                 user.password = hash;
                 user.password_confirm = hash;
                 user.save((err, result) => {
@@ -158,7 +158,7 @@ exports.resendEmail = async function resendEmail(req, res, next) {
         user.tokenExpiration = moment().add(1, "minutes");
         await user.save();
         
-        await sendEmail(user, user.token);
+        await sendEmail(req, user, user.token);
         
         
         flash.addFlash(req, "success", "Email has been resent. Please check your email for further instructions.");
@@ -186,7 +186,7 @@ exports.createAccount = async (req, res, next) => {
         const existingUser = await User.findOne({ email });
         
         if (existingUser) {
-            flash.addFlash(req, "error", "Email already exists Please use a different email address.");
+            req.flash("error", "Email already exists Please use a different email address.");
             return res.redirect("/user/create-account");
         }
         
@@ -198,49 +198,15 @@ exports.createAccount = async (req, res, next) => {
         });
         
         await salesperson.save();
-        await sendEmail(email, token);
+        await sendEmail(req, existingUser, token);
         
-        flash.addFlash(req, "success", "Account created successfully: Please check your email for further instructions.");
+        req.flash("success", "Account created successfully: Please check your email for further instructions.");
         res.redirect("/users");
     } catch (error) {
-        flash.addFlash(req, "success", `Account created fail: ${error}.`);
+        req.flash("error", `Account created fail: ${error}.`);
         next(error);
     }
 };
-
-function generateToken() {
-    const length = 64;
-    const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let token = "";
-    for (let i = 0; i < length; i++) {
-        token += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return token;
-}
-
-async function sendEmail(user, token) {
-    try {
-        console.log("=>(userController.js:226) user", user);
-        
-        const mailOptions = {
-            from: process.env.FROM_EMAIL,
-            to: user.email,
-            subject: "Activate Sales Account",
-            text: `Dear ${user.fullName},
-                An account has been created for you in the Sales System. To log in, please click the following link within 1 minute:
-                http://localhost:${process.env.PORT}/email-confirm?token=${token}
-                Best regards,
-                Administrator`,
-        };
-        
-        await transporter.sendMail(mailOptions, (err, info) => {
-            console.log("=>(userController.js:237) info", info);
-            console.log("=>(userController.js:237) err", err);
-        });
-    } catch (err) {
-        console.log("=>(userController.js:243) err", err);
-    }
-}
 
 exports.login = async (req, res, next) => {
     const { token } = req.query;
@@ -276,7 +242,7 @@ exports.loginSubmit = async (req, res, next) => {
         salesperson.tokenExpiration = undefined;
         await salesperson.save();
         
-        flash.addFlash(req, "sucess", "Password updated. You can now log in using your credentials.");
+        flash.addFlash(req, "success", "Password updated. You can now log in using your" + " credentials.");
         res.redirect("/login");
     } catch (error) {
         flash.addFlash(req, "warning", "An error occurred while logging in.");

@@ -7,7 +7,7 @@ router
     .post("/", userController.createUser)
     .put("/:id/lock", userController.lockAccount)
     .put("/:id/unlock", userController.unlockAccount)
-    .get("/resend/:id", userController.resendEmail)
+    .get("/:id/resend", userController.resendEmail)
     .get("/create-account", userController.getCreateAccount)
     .post("/create-account", userController.createAccount)
     .delete("/:id", userController.deleteUser)

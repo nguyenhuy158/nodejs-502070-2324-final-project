@@ -60,7 +60,7 @@ block content
                                 data-user-id=`${user._id}`
                             ) Delete
                             br
-                            a.my-1.btn.btn-secondary(href=`/users/resend/${user._id}`) Resend Email
+                            a.my-1.btn.btn-secondary(href=`/users/${user._id}/resend`) Resend Email
                             br
                             if user.lockedStatus
                                 button.my-1.btn.btn-warning.unlock-btn(

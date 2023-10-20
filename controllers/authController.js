@@ -2,8 +2,9 @@ const User = require("../models/user");
 const { faker } = require("@faker-js/faker");
 const moment = require("moment");
 const bcrypt = require("bcryptjs");
-// const flash = require("../middlewares/flash");
 const { cookieOptions } = require("../config/config");
+const { generateToken, sendEmail } = require("../middlewares/utils");
+const { sentMail } = require("./routerController");
 require("dotenv").config();
 
 exports.ensureAuthenticated = function (req, res, next) {
@@ -62,6 +63,46 @@ exports.get = async function (req, res, next) {
         return res.render("pages/auth/form", {
             messages: req.flash("info"),
         });
+    }
+};
+
+exports.passwordResetGet = async (req, res, next) => {
+    return res.render("pages/auth/password-reset");
+};
+
+exports.passwordReset = async (req, res, next) => {
+    const { email } = req.body;
+    
+    try {
+        const user = await User.findOne({ email });
+        
+        if (!user) {
+            return res.render("pages/auth/password-reset", { email });
+        }
+        
+        const resetToken = generateToken();
+        const resetTokenExpires = new Date(Date.now() + 10 * 60 * 1000);
+        
+        user.passwordResetToken = resetToken;
+        user.passwordResetTokenExpires = resetTokenExpires;
+        user.isFirstLogin = true;
+        await user.save();
+        
+        const resetLink = `${req.protocol + "://" + req.get("host")}/reset-password/${resetToken}`;
+        const mailOptions = {
+            from: process.env.FROM_EMAIL,
+            to: email,
+            subject: "Password Reset Request",
+            text: `You are receiving this email because you (or someone else) requested a password reset for your account.\n\n`
+                + `Please click on the following link, or paste this into your browser to reset your password:\n\n`
+                + resetLink
+        };
+        sendEmail(req, user, resetToken, mailOptions);
+        req.flash("success", "Reset success, please check mail to login.");
+        res.redirect("/login");
+    } catch (error) {
+        console.log("=>(authController.js:104) ",);
+        next(error);
     }
 };
 

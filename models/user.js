@@ -20,6 +20,8 @@ const userSchema = new Schema({
     password_confirm: { type: String, trim: true, minlength: 1, select: false },
     token: { type: String },
     tokenExpiration: { type: Date },
+    passwordResetToken: String,
+    passwordResetTokenExpires: Date,
     isFirstLogin: { type: Boolean, default: true },
     profilePicture: { type: String },
     inactivateStatus: { type: Boolean, default: false },
