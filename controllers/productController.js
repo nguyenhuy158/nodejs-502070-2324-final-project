@@ -1,10 +1,11 @@
 const Product = require("../models/product");
-const { faker } = require('@faker-js/faker');
-const moment = require('moment');
+const ProductCategory = require("../models/productCategory");
+const { faker } = require("@faker-js/faker");
+const moment = require("moment");
 
 
 async function add(req, res, next) {
-    res.render('pages/products/form');
+    res.render("pages/products/form");
 };
 
 
@@ -20,11 +21,11 @@ async function create(req, res, next) {
         creationDate,
         lastUpdateDate,
     } = req.body;
-
+    
     let product;
-
+    
     try {
-
+        
         if (productId) {
             // Editing an existing product
             product = await Product.findByIdAndUpdate(
@@ -33,8 +34,7 @@ async function create(req, res, next) {
                     barcode,
                     productName,
                     importPrice,
-                    retailPrice,
-                    imageUrls: imageUrls.split('\n'), // Split image URLs by line breaks
+                    retailPrice, imageUrls: imageUrls.split("\n"), // Split image URLs by line breaks
                     category,
                     creationDate,
                     lastUpdateDate,
@@ -47,19 +47,18 @@ async function create(req, res, next) {
                 barcode,
                 productName,
                 importPrice,
-                retailPrice,
-                imageUrls: imageUrls.split('\n'), // Split image URLs by line breaks
+                retailPrice, imageUrls: imageUrls.split("\n"), // Split image URLs by line breaks
                 category,
                 creationDate,
                 lastUpdateDate,
             });
             await product.save();
         }
-
-        res.redirect('/products'); // Redirect to the product list page after submission
+        
+        res.redirect("/products"); // Redirect to the product list page after submission
     } catch (error) {
         // console.error('Error:', error);
-        res.render('pages/products/form', { product });
+        res.render("pages/products/form", { product });
         next(error);
         // res.status(500).send('Internal Server Error');
     }
@@ -67,27 +66,27 @@ async function create(req, res, next) {
 
 async function edit(req, res, next) {
     try {
-
+        
         const id = req.params.id;
-
+        
         const product = await Product.findById({ _id: id });
-
-        res.render('pages/products/form', { product });
+        
+        res.render("pages/products/form", { product });
     } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
         next(error);
     }
 };
 
 async function get(req, res, next) {
-
+    
     try {
         const id = req.params.id;
-
+        
         const product = await Product.findById({ _id: id });
-        res.render('pages/products/detail', { product });
+        res.render("pages/products/detail", { product });
     } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
         next(error);
     }
 };
@@ -96,19 +95,25 @@ async function get(req, res, next) {
 async function gets(req, res, next) {
     const perPage = parseInt(req.query.perPage) || 10;
     let page = parseInt(req.query.page) || 1;
-
+    
     try {
-
-        const products = await Product
-            .aggregate([{ $sort: { creationDate: -1 } }])
+        
+        // const products = await Product
+        //     .aggregate([{ $sort: { creationDate: -1 } }])
+        //     .skip(perPage * page - perPage)
+        //     .limit(perPage)
+        //     .exec();
+        const products = await Product.find()
+            .sort({ creationDate: -1 })
             .skip(perPage * page - perPage)
             .limit(perPage)
+            .populate("category")
             .exec();
-
+        
         const count = await Product.count();
         const nextPage = parseInt(page) + 1;
         const hasNextPage = nextPage <= Math.ceil(count / perPage);
-
+        
         const output = {
             products,
             current: page,
@@ -116,17 +121,19 @@ async function gets(req, res, next) {
             perPage,
             nextPage: hasNextPage ? nextPage : null
         };
-        res.render('pages/products/list', { ...output, navLink: process.env.NAVBAR_PRODUCT });
-
+        res.render("pages/products/list", { ...output, navLink: process.env.NAVBAR_PRODUCT });
+        
     } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
         next(error);
     }
 };
 
-async function seedDatabase() {
+async function seedDatabaseV1() {
     const products = [];
-
+    const phoneCategory = await ProductCategory.findOne({ name: "Phone" });
+    const accessoriesCategory = await ProductCategory.findOne({ name: "Accessories" });
+    
     for (let i = 0; i < 50; i++) {
         const product = {
             barcode: faker.string.uuid(),
@@ -134,18 +141,18 @@ async function seedDatabase() {
             importPrice: faker.number.int({ min: 1000, max: 10000 }),
             retailPrice: faker.number.int({ min: 1000, max: 10000 }),
             imageUrls: [faker.image.url(), faker.image.url(), faker.image.url()],
-            category: faker.helpers.arrayElements(['phone', 'accessories'])[0],
+            category: faker.helpers.arrayElements([phoneCategory, accessoriesCategory])[0],
             creationDate: faker.date.past(),
             lastUpdateDate: faker.date.recent(),
         };
         products.push(product);
     }
-
+    
     try {
         await Product.insertMany(products);
-        console.log('Sample products inserted successfully.');
+        console.log("Sample products inserted successfully.");
     } catch (err) {
-        console.error('Error inserting sample products:', err);
+        console.error("Error inserting sample products:", err);
     } finally {
     }
 };
@@ -157,6 +164,5 @@ module.exports = {
     add,
     edit,
     get,
-    gets,
-    seedDatabase,
+    gets, seedDatabase: seedDatabaseV1,
 };
