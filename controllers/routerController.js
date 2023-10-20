@@ -55,7 +55,7 @@ exports.permissionDenied = (req, res) => {
 };
 
 exports.randomProduct = (req, res) => {
-    productController.seedDatabase();
+    productController.seedDatabaseV1();
     res.redirect("/");
 };
 

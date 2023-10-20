@@ -47,7 +47,7 @@ app.use(passport.session());
 app.use(flash());
 
 app.use((req, res, next) => {
-    console.log("===============================new request===============================");
+    console.log("|||||||||===============================new request===============================|||||||||");
     res.locals.message = req.flash();
     console.log("=>(app.js:51) req.flash()", req.flash());
     console.log("=>(app.js:52) res.locals.message", res.locals.message);

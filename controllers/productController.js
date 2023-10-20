@@ -4,12 +4,12 @@ const { faker } = require("@faker-js/faker");
 const moment = require("moment");
 
 
-async function add(req, res, next) {
+exports.add = async function (req, res, next) {
     const categories = await ProductCategory.find().sort({ name: 1 });
     res.render("pages/products/form", { categories });
 };
 
-async function create(req, res, next) {
+exports.create = async function (req, res, next) {
     const categories = await ProductCategory.find().sort({ name: 1 });
     
     const {
@@ -38,8 +38,7 @@ async function create(req, res, next) {
         await (new Product({
             barcode,
             productName,
-            importPrice,
-            retailPrice, imageUrls: imageUrls.split("\n"),
+            importPrice, retailPrice, imageUrls: imageUrls.split("\n"),
             category,
             creationDate,
             lastUpdateDate,
@@ -60,7 +59,7 @@ async function create(req, res, next) {
     }
 };
 
-async function createV1(req, res, next) {
+exports.createV1 = async function (req, res, next) {
     const categories = await ProductCategory.find().sort({ name: 1 });
     
     const productId = req.params.id;
@@ -81,29 +80,15 @@ async function createV1(req, res, next) {
         
         if (productId) {
             // Editing an existing product
-            product = await Product.findByIdAndUpdate(
-                productId,
-                {
-                    barcode,
-                    productName,
-                    importPrice,
-                    retailPrice, imageUrls: imageUrls.split("\n"), // Split image URLs by line breaks
-                    category,
-                    creationDate,
-                    lastUpdateDate,
-                },
-                { new: true }
-            );
+            product = await Product.findByIdAndUpdate(productId, {
+                barcode, productName, importPrice, retailPrice, imageUrls: imageUrls.split("\n"), // Split image URLs by line breaks
+                category, creationDate, lastUpdateDate,
+            }, { new: true });
         } else {
             // Creating a new product
             product = new Product({
-                barcode,
-                productName,
-                importPrice,
-                retailPrice, imageUrls: imageUrls.split("\n"), // Split image URLs by line breaks
-                category,
-                creationDate,
-                lastUpdateDate,
+                barcode, productName, importPrice, retailPrice, imageUrls: imageUrls.split("\n"), // Split image URLs by line breaks
+                category, creationDate, lastUpdateDate,
             });
             await product.save();
         }
@@ -125,7 +110,66 @@ async function createV1(req, res, next) {
     }
 };
 
-async function edit(req, res, next) {
+exports.update = async function (req, res, next) {
+    const categories = await ProductCategory.find().sort({ name: 1 });
+    
+    const productId = req.params.id;
+    console.log("=>(productController.js:117) productId", productId);
+    const {
+        barcode,
+        productName,
+        importPrice,
+        retailPrice,
+        imageUrls,
+        category,
+        creationDate,
+        lastUpdateDate,
+    } = req.body;
+    
+    let product = {
+        barcode,
+        productName,
+        importPrice,
+        retailPrice,
+        imageUrls,
+        category,
+        creationDate,
+        lastUpdateDate,
+    };
+    
+    try {
+        if (productId) {
+            product = await Product.findByIdAndUpdate(productId, {
+                barcode,
+                productName,
+                importPrice,
+                retailPrice,
+                imageUrls: imageUrls.split("\n"),
+                category,
+                creationDate,
+                lastUpdateDate,
+            }, { new: true });
+        }
+        req.flash("info", "Update products successfully");
+        res.redirect("/products");
+        
+    } catch (error) {
+        if (error.name === "ValidationError") {
+            
+            const errors = Object.values(error.errors).map((e) => e.message);
+            console.log("=>(productController.js:64) errors", errors);
+            
+            req.flash("info", errors);
+            res.render("pages/products/form", { product, categories });
+        } else {
+            console.error("Error:", error);
+            next(error);
+        }
+    }
+    next();
+};
+
+exports.edit = async function (req, res, next) {
     try {
         const categories = await ProductCategory.find().sort({ name: 1 });
         
@@ -140,8 +184,7 @@ async function edit(req, res, next) {
     }
 };
 
-async function get(req, res, next) {
-    
+exports.detail = async function (req, res, next) {
     try {
         const id = req.params.id;
         
@@ -154,7 +197,7 @@ async function get(req, res, next) {
 };
 
 
-async function gets(req, res, next) {
+exports.gets = async function (req, res, next) {
     const perPage = parseInt(req.query.perPage) || 10;
     let page = parseInt(req.query.page) || 1;
     
@@ -177,11 +220,7 @@ async function gets(req, res, next) {
         const hasNextPage = nextPage <= Math.ceil(count / perPage);
         
         const output = {
-            products,
-            current: page,
-            count,
-            perPage,
-            nextPage: hasNextPage ? nextPage : null
+            products, current: page, count, perPage, nextPage: hasNextPage ? nextPage : null
         };
         res.render("pages/products/list", { ...output, navLink: process.env.NAVBAR_PRODUCT });
         
@@ -191,7 +230,7 @@ async function gets(req, res, next) {
     }
 };
 
-async function seedDatabaseV1() {
+exports.seedDatabaseV1 = async function () {
     const products = [];
     const phoneCategory = await ProductCategory.findOne({ name: "Phone" });
     const accessoriesCategory = await ProductCategory.findOne({ name: "Accessories" });
@@ -217,14 +256,4 @@ async function seedDatabaseV1() {
         console.error("Error inserting sample products:", err);
     } finally {
     }
-};
-
-
-module.exports = {
-    create,
-    add,
-    add,
-    edit,
-    get,
-    gets, seedDatabase: seedDatabaseV1,
 };
