@@ -30,62 +30,14 @@ nav#mainNav.navbar.navbar-expand-lg.navbar-dark.fixed-top
                         li
                             a.dropdown-item(href='/users/create-account') Create account 
 
-//-                 li.nav-item
-//-                     a.nav-link.disabled(aria-disabled='true') Coming soon
+                li.nav-item
+                    a.nav-link.disabled(aria-disabled='true') Coming soon
 
 
-//-             form.d-flex(role='search')
-//-                 input.form-control.me-2(type='search' placeholder='Search' aria-label='Search')
-//-                 button.btn.btn-outline-success(type='submit') Search
-
-//-             li.nav-item.dropdown.d-flex.ms-4
-//-                 a.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false') 
-//-                     - if (user && user.fullName)
-//-                         b= user.fullName
-//-                     - else 
-//-                         b= 'Unknown'
-//-                 ul.dropdown-menu 
-//-                     li
-//-                         a.dropdown-item(href='/profile') Profile
-//-                     li
-//-                         a.dropdown-item(href='/change-password') Change Password
-//-                     li
-//-                         hr.dropdown-divider
-//-                     li
-//-                         a.dropdown-item(href='/logout') Logout
-
-nav#box-navbar.box-navbar.navbar-expand-lg
-    .wrap.wrap-navbar
-        #box-logo.box-logo
-            a.navbar-brand(href='/') 
-                img(src='/TechHut.png' height='70' alt='' loading='lazy')   
-        #box-menu.box-menu
-            #wrap-menu.wrap-menu
-                ul.menu.me-auto.mb-2.mb-lg-0
-                    li
-                        a.nav-link(aria-current='page' href='/' class=(navLink == 'Home' ? 'active' : '')) Home
-                    li
-                        a.nav-link(href='/about' class=(navLink == 'About' ? 'active' : '')) About    
-                    li 
-                        a.nav-link(href='/users' class=(navLink == 'User' ? 'active' : '')) User
-                    li
-                        a.nav-link(href='products' class=(navLink == 'Product' ? 'active' : '')) Product
-                    li.dropdown
-                        a.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false') 
-                            span Feature
-                        ul.dropdown-menu
-                            li
-                                a.dropdown-item(href='/random-product') Add 50 product random
-                            li
-                                a.dropdown-item(href='/create-sample-data') Create sample data
-                            li
-                                a.dropdown-item(href='/sent-test-mail') Test sent mail
-                            li
-                                a.dropdown-item(href='/users/create-account') Create account    
-        .box-cta
             form.d-flex(role='search')
                 input.form-control.me-2(type='search' placeholder='Search' aria-label='Search')
                 button.btn.btn-outline-success(type='submit') Search
+
             li.nav-item.dropdown.d-flex.ms-4
                 a.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false') 
                     - if (user && user.fullName)
@@ -101,3 +53,4 @@ nav#box-navbar.box-navbar.navbar-expand-lg
                         hr.dropdown-divider
                     li
                         a.dropdown-item(href='/logout') Logout
+
