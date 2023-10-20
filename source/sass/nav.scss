@@ -1,13 +1,90 @@
-.nav-link {
-    display: block;
-    padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
-    font-size: var(--bs-nav-link-font-size);
-    font-weight: var(--bs-nav-link-font-weight);
-    color: var(--bs-nav-link-color);
-    text-decoration: none;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900');
+
+.box-navbar {
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    padding: 0 10%;
+    transform: translateX(-50%);
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border-radius: 12px;
+    transition: all 0.25s linear;
 }
 
-// .navbar {
-//     background-color: #e3f2de;
-// }
+.box-navbar .wrap-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 35px 0px;
+    transition: all 0.3s linear;
+}
+
+.box-navbar .wrap-navbar .box-logo {
+    display: flex;
+}
+
+.box-navbar .wrap-navbar .box-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 35px;
+}
+
+.box-navbar .wrap-navbar .box-menu .wrap-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-navbar .wrap-navbar .box-menu .wrap-menu .menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.box-navbar .wrap-navbar .box-menu .wrap-menu .menu li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-navbar .wrap-navbar .box-menu .wrap-menu .menu li a {
+    position: relative;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    font-family: var(--normal-font);
+    color: #7b7b6c;
+    transition: all 0.25s linear;
+}
+
+.box-navbar .wrap-navbar .box-menu .wrap-menu .menu li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    border: 12px;
+    background-color: #7b7b6c;
+    transition: all 0.25s linear;
+}
+
+.box-navbar .wrap-navbar .box-menu .wrap-menu .menu li a:hover:after {
+    width: 100%;
+    transition: all 0.25s linear;
+}
+/* <<<>>> */
+
+.box-navbar .wrap-navbar .box-cta {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 30px;
+}
