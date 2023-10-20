@@ -1,7 +1,7 @@
 
 
 mixin renderProfilePicture(imageSrc)
-    img.img-fluid.w-100(src=imageSrc ? `/${imageSrc}` : 'https://placehold.co/200?text=Empty&font=roboto' alt='Profile Picture' onerror="this.src='https://placehold.co/200?text=Not+available&font=roboto'")
+    img.img-fluid.w-100(src=imageSrc ? `${imageSrc}` : 'https://placehold.co/200?text=Empty&font=roboto' alt='Profile Picture' onerror="this.src='https://placehold.co/200?text=Not+available&font=roboto'")
 
 mixin formatDate(dateString, format)
     - const date = new Date(dateString)
