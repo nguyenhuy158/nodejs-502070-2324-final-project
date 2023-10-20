@@ -5,11 +5,12 @@ block content
         a.btn.btn-primary(href="/products") Back to product list
 
         h2 #{product && product.id ? 'Edit Product' : 'Create Product'}
-        form(method='POST', action=product && product.id ? `/products/${product._id}` : '/products')
+        form(method='POST', action=product && product.id ? `/products/${product._id}/edit` :
+        '/products')
 
             .mb-3(class=product && product.id ? 'd-none' : '')
                 label(for='barcode' class='form-label') Barcode:
-                input#barcode.form-control(type='text' name='barcode', value=product ? product.barcode : '',readonly=product ? true: false, required)
+                input#barcode.form-control(type='text' name='barcode', value=product ? product.barcode : '',readonly=product ? true : false, required)
 
             .mb-3
                 label(for='productName' class='form-label') Product Name:
@@ -40,7 +41,8 @@ block content
                 label(for='category' class='form-label') Category:
                 select#category.form-select(name='category')
                     each category in categories
-                        option(value=category._id, selected=product ? product.category == category._id : '')= category.name
+                        - const areEqual = String(product.category) === String(category._id)
+                        option(value=category._id, selected=areEqual)= category.name
 
             button.btn(type='submit', class=`${product ? 'btn-success' : 'btn-primary'}`) #{product ? 'Save' : 'Create'}
             a.btn.btn-secondary(href='/products') Cancel

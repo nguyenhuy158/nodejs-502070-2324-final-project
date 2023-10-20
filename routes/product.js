@@ -8,8 +8,9 @@ router
     .get("/", productController.gets)
     .post("/", productController.create)
     .get("/add", productController.add)
-    .get("/:id", productController.get)
+    .get("/:id", productController.detail)
     .get("/:id/edit", productController.edit)
+    .post("/:id/edit", productController.update)
     .put("/:id/edit", productController.gets)
     .delete("/delete/:id", productController.gets)
     .get("/about", productController.gets);

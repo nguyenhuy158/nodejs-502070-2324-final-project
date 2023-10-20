@@ -53,7 +53,8 @@ block content
                         td
                             a.btn.btn-primary(href=`/products/${product._id}`) View
                             a.btn.btn-success(href=`/products/${product._id}/edit`) Update
-                            a.btn.btn-danger(href=`/products/delete/${product._id}`) Delete
+                            a.btn.btn-danger.btn-delete(href=`/products/delete/${product._id}`)
+                            Delete
             else
                 tr
                     td.text-center.p-5.h4(colspan='12') No products found.
@@ -65,10 +66,12 @@ block content
     // Pagination
     include ../../partials/pagination
 
+    // Confirm modal
+    include ../../partials/confirm-delete-modal
+
     script.
         function updatePerPage(select) {
             const selectedValue = select.value;
-            // Update the URL with the selected product per page value
             window.location.href = `/products?page=#{current}&perPage=${selectedValue}`;
         }
 
