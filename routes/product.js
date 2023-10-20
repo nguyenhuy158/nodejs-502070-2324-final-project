@@ -12,7 +12,7 @@ router
     .get("/:id/edit", productController.edit)
     .post("/:id/edit", productController.update)
     .put("/:id/edit", productController.gets)
-    .delete("/delete/:id", productController.gets)
+    .delete("/:id", productController.delete)
     .get("/about", productController.gets);
 
 module.exports = router;

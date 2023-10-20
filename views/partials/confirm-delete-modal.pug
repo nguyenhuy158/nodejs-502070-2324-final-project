@@ -1,59 +1,31 @@
 // Confirm delete
-.modal.fade#modalDelete(tabindex='-1', aria-labelledby='exampleModalLabel', aria-hidden='true')
-    .modal-dialog
+.modal.fade#modalDelete(data-bs-backdrop="static",
+    data-bs-keyboard="true",
+    tabindex='-1',
+    aria-labelledby='staticBackdropLabel',
+    aria-hidden='true')
+    .modal-dialog.modal-dialog-scrollable
         .modal-content
             // Modal Header
             .modal-header
-                h4.modal-title Delete
-                button.close(data-dismiss='modal') &times;
+                h5.modal-title Delete
+                button.btn-close(data-bs-dismiss='modal', aria-label='Close')
 
             // Modal body
             .modal-body
-                | Are you sure you want to delete
+                p Are you sure you want to delete
                 strong
                 | ?
 
             // Modal footer
             .modal-footer
+                button.btn.btn-secondary(data-bs-dismiss='modal') Close
                 button.btn.btn-danger Delete
-                button.btn.btn-dark(data-dismiss='modal') Close
-
 // End Confirm delete
 
-// Script for confirming delete
 script.
     $(document).ready(function () {
-        const deleteButtons = $(".delete-btn");
-        const modalTitle = $("#modalDelete .modal-title");
-        const confirmModalBody = $("#modalDelete .modal-body");
-        const confirmDeleteButton = $("#modalDelete .btn.btn-danger");
-
-        deleteButtons.click(function () {
-            const fullName = $(this).data("product-product-name");
-            const userId = $(this).data("product-id");
-            confirmModalBody.text(`Are you sure you want to delete ${fullName}?`);
-            $('#modalDelete').modal('show');
-
-            confirmDeleteButton.click(function () {
-                $('#modalDelete').modal('hide');
-                // Delete user using Fetch API
-                fetch(`/students/delete/${userId}`, {
-                    method: "DELETE"
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            $("#flash-alert span").text(`User ${fullName} has been deleted`);
-                            $("#flash-alert").show().delay(2000).fadeOut(2000);
-                            location.reload();
-                        } else {
-                            console.log("Failed to delete user:", data.error);
-                        }
-                    })
-                    .catch(error => {
-                        console.log("Error in deleting user:", error);
-                    });
-            });
+        $('#modalDelete').on('shown.bs.modal', function () {
+            $('#modalDelete .modal-footer button.btn.btn-danger').focus();
         });
     });
-// End script for confirming delete
