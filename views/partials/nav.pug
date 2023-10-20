@@ -1,13 +1,14 @@
 link(rel="stylesheet" href="/css/nav.css")
 
-nav.navbar.navbar-expand-lg.bg-body-tertiary.bg-light.py-3
+nav#mainNav.navbar.navbar-expand-lg.navbar-dark.fixed-top
     .container
-        a.navbar-brand(href='/') 
+        a.navbar-brand(href='#page-top') 
             img(src='/TechHut.png' height='70' alt='' loading='lazy')
         button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
-            span.navbar-toggler-icon
-        .collapse.navbar-collapse#navbarSupportedContent
-            ul.navbar-nav.me-auto.mb-2.mb-lg-0
+            | Menu
+            i.fas.fa-bars.ms-1
+        #navbarResponsive.collapse.navbar-collapse
+            ul.navbar-nav.text-uppercase.ms-auto.py-4.py-lg-0
                 li.nav-item
                     a.nav-link(aria-current='page' href='/' class=(navLink == 'Home' ? 'active' : '')) Home
                 li.nav-item
