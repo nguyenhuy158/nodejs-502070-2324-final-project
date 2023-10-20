@@ -5,11 +5,64 @@ const moment = require("moment");
 
 
 async function add(req, res, next) {
-    res.render("pages/products/form");
+    const categories = await ProductCategory.find().sort({ name: 1 });
+    res.render("pages/products/form", { categories });
 };
 
-
 async function create(req, res, next) {
+    const categories = await ProductCategory.find().sort({ name: 1 });
+    
+    const {
+        barcode,
+        productName,
+        importPrice,
+        retailPrice,
+        imageUrls,
+        category,
+        creationDate,
+        lastUpdateDate,
+    } = req.body;
+    
+    let product = {
+        barcode,
+        productName,
+        importPrice,
+        retailPrice,
+        imageUrls,
+        category,
+        creationDate,
+        lastUpdateDate,
+    };
+    
+    try {
+        await (new Product({
+            barcode,
+            productName,
+            importPrice,
+            retailPrice, imageUrls: imageUrls.split("\n"),
+            category,
+            creationDate,
+            lastUpdateDate,
+        })).save();
+        req.flash("info", `Add product successfully: ${productName}`);
+        res.redirect("/products");
+    } catch (error) {
+        if (error.name === "ValidationError") {
+            const errors = Object.values(error.errors).map((e) => e.message);
+            console.log("=>(productController.js:64) errors", errors);
+            
+            req.flash("info", errors);
+            res.render("pages/products/form", { product, categories });
+        } else {
+            console.error("Error:", error);
+            next(error);
+        }
+    }
+};
+
+async function createV1(req, res, next) {
+    const categories = await ProductCategory.find().sort({ name: 1 });
+    
     const productId = req.params.id;
     const {
         barcode,
@@ -57,21 +110,30 @@ async function create(req, res, next) {
         
         res.redirect("/products"); // Redirect to the product list page after submission
     } catch (error) {
-        // console.error('Error:', error);
-        res.render("pages/products/form", { product });
-        next(error);
-        // res.status(500).send('Internal Server Error');
+        if (error.name === "ValidationError") {
+            // Handle validation errors and send them to the view
+            const errors = Object.values(error.errors).map((e) => e.message);
+            console.log("=>(productController.js:64) errors", errors);
+            
+            req.flash("info", errors);
+            res.render("pages/products/form", { product, categories });
+        } else {
+            // Handle other errors
+            console.error("Error:", error);
+            next(error);
+        }
     }
 };
 
 async function edit(req, res, next) {
     try {
+        const categories = await ProductCategory.find().sort({ name: 1 });
         
         const id = req.params.id;
         
         const product = await Product.findById({ _id: id });
         
-        res.render("pages/products/form", { product });
+        res.render("pages/products/form", { product, categories });
     } catch (error) {
         console.error("Error fetching products:", error);
         next(error);
