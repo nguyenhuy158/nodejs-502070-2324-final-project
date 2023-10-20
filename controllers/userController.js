@@ -9,6 +9,7 @@ const path = require("path");
 const fs = require("fs");
 require("dotenv").config();
 const { ObjectId } = require("mongodb");
+const Product = require("../models/product");
 
 exports.changeProfilePicture = async (req, res, next) => {
     const user = req.user;
@@ -17,8 +18,7 @@ exports.changeProfilePicture = async (req, res, next) => {
         
         await sharp(pathFile)
             .resize(200, 200, {
-                fit: sharp.fit.cover,
-                withoutEnlargement: true
+                fit: sharp.fit.cover, withoutEnlargement: true
             })
             .webp({ quality: 80 })
             .toFile(path.join(__dirname, "..", "public", `uploads/${user._id}-profile.webp`));
@@ -54,18 +54,22 @@ exports.deleteUser = async (req, res, next) => {
     const id = req.params.id;
     console.log("=>(userController.js:55) id", id);
     console.log("=>(userController.js:56) ObjectId.isValid(id)", ObjectId.isValid(id));
-    if (ObjectId.isValid(id)) {
-        try {
-            const currentUser = await User.findByIdAndDelete(id);
-            console.log("=>(userController.js:60) currentUser", currentUser);
-            if (!currentUser) {
-                res.render("pages/users/user-not-found");
-            }
-            res.redirect("/users");
-        } catch (err) {
-            console.log("=>(userController.js:56) err", err);
-            next(err);
+    if (!ObjectId.isValid(id)) {
+        res.status(400).json({ code: 400, success: false, message: "Invalid ObjectId" });
+        return;
+    }
+    try {
+        const currentUser = await User.findByIdAndDelete(id);
+        if (currentUser) {
+            req.flash("success", `Successfully deleted ${currentUser.fullName}`);
+            res.json({ code: 200, success: true, message: "User deleted successfully" });
+        } else {
+            req.flash("error", `User not found`);
+            res.json({ code: 404, success: false, message: "User not found" });
         }
+    } catch (error) {
+        req.flash("error", `Failed to delete for ${id}`);
+        res.status(500).json({ code: 500, success: false, message: "Internal Server Error" });
     }
 };
 
@@ -100,11 +104,7 @@ exports.getUsers = async function (req, res, next) {
         const hasNextPage = nextPage <= Math.ceil(count / perPage);
         
         const output = {
-            users,
-            current: page,
-            count,
-            perPage,
-            nextPage: hasNextPage ? nextPage : null
+            users, current: page, count, perPage, nextPage: hasNextPage ? nextPage : null
         };
         // console.log("🚀 ~ file: userController.js:88 ~ output:", output);
         res.render("pages/users/list", { ...output, navLink: process.env.NAVBAR_USER });
@@ -194,18 +194,16 @@ exports.createAccount = async (req, res, next) => {
         const tokenExpiration = moment().add(1, "minutes");
         
         const salesperson = new User({
-            fullName,
-            email,
-            token,
-            tokenExpiration
+            fullName, email, token, tokenExpiration
         });
         
         await salesperson.save();
         await sendEmail(email, token);
         
         flash.addFlash(req, "success", "Account created successfully: Please check your email for further instructions.");
-        res.redirect("/");
+        res.redirect("/users");
     } catch (error) {
+        flash.addFlash(req, "success", `Account created fail: ${error}.`);
         next(error);
     }
 };
@@ -287,35 +285,55 @@ exports.loginSubmit = async (req, res, next) => {
 };
 
 exports.lockAccount = async (req, res) => {
+    const id = req.params.id;
+    
+    if (!ObjectId.isValid(id)) {
+        res.status(400).json({ code: 400, success: false, message: "Invalid ObjectId" });
+        return;
+    }
     try {
-        const userId = req.params.id;
-        const user = await User.findById(userId);
+        const user = await User.findById(id);
         
         if (user) {
             user.lockedStatus = true;
             await user.save();
-            flash.addFlash(req, "warning", "Change locked account.");
-            res.redirect("/users");
+            
+            req.flash("success", `Change locked account`);
+            res.json({ code: 200, success: true, message: "Change locked account" });
+        } else {
+            req.flash("error", `Change locked account fail`);
+            res.json({ code: 404, success: false, message: "Change locked account fail" });
         }
     } catch (error) {
-        console.error("Error locking account:", error);
-        next(error);
+        req.flash("error", `Change locked account fail`);
+        res.status(500).json({ code: 500, success: false, message: "Internal Server Error" });
     }
 };
 
 exports.unlockAccount = async (req, res) => {
+    const id = req.params.id;
+    console.log("=>(userController.js:315) id", id);
+    
+    if (!ObjectId.isValid(id)) {
+        res.status(400).json({ code: 400, success: false, message: "Invalid ObjectId" });
+        return;
+    }
     try {
-        const userId = req.params.id;
-        const user = await User.findById(userId);
+        const user = await User.findById(id);
+        console.log("=>(userController.js:323) user", user);
         
         if (user) {
             user.lockedStatus = false;
             await user.save();
-            flash.addFlash(req, "success", "Change unlocked account.");
-            res.redirect("/users");
+            
+            req.flash("success", `Change locked account`);
+            res.json({ code: 200, success: true, message: "Change unlocked account" });
+        } else {
+            req.flash("error", `Change unlocked account fail`);
+            res.json({ code: 404, success: false, message: "Change unlocked account fail" });
         }
     } catch (error) {
-        console.error("Error unlocking account:", error);
-        next(error);
+        req.flash("error", `Change unlocked account fail`);
+        res.status(500).json({ code: 500, success: false, message: "Internal Server Error" });
     }
 };

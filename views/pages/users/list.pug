@@ -18,7 +18,7 @@ block content
 
     div.container
         h2 User List
-        table.table.table-striped.table-bordered
+        table.table.table-sm.table-striped.table-bordered
             thead
                 tr
                     th STT
@@ -38,7 +38,7 @@ block content
             if users && users.length > 0
                 each user, index in users
                     tr
-                        td= index
+                        td= index + 1
                         td
                             +renderProfilePicture(user.profilePicture)
                         td= user.email
@@ -51,18 +51,27 @@ block content
                         td= user.inactivateStatus
                         td= user.lockedStatus
                         td
-                            a.btn.btn-primary(href=`/users/${user._id}`) View
+                            a.my-1.btn.btn-primary(href=`/users/${user._id}`) View
                             br
-                            a.btn.btn-success(href=`/users/${user._id}/edit`) Update
+                            a.my-1.btn.btn-success(href=`/users/${user._id}/edit`) Update
                             br
-                            a.btn.btn-danger(href=`/users/delete/${user._id}`) Delete
+                            button.my-1.btn.btn-danger.delete-btn(
+                                data-user-name=`${user.fullName}`
+                                data-user-id=`${user._id}`
+                            ) Delete
                             br
-                            a.btn.btn-secondary(href=`/users/resend/${user._id}`) Resend Email
+                            a.my-1.btn.btn-secondary(href=`/users/resend/${user._id}`) Resend Email
                             br
                             if user.lockedStatus
-                                a.btn.btn-warning(href=`/users/unlock/${user._id}`) Unlock Account
+                                button.my-1.btn.btn-warning.unlock-btn(
+                                    data-user-name=`${user.fullName}`
+                                    data-user-id=`${user._id}`
+                                ) Unlock
                             else
-                                a.btn.btn-info(href=`/users/lock/${user._id}`) Lock Account
+                                button.my-1.btn.btn-info.lock-btn(
+                                    data-user-name=`${user.fullName}`
+                                    data-user-id=`${user._id}`
+                                ) Lock
             else
                 tr
                     td.text-center.p-5.h4(colspan='11') No users found.
@@ -73,6 +82,92 @@ block content
 
     // Pagination
     include ../../partials/pagination
+
+    // Confirm modal
+    include ../../partials/confirm-delete-modal
+
+    #flash-alert.alert.alert-danger(style="display: none")
+        span Flash alert message
+
+    // Script for confirming delete
+    script.
+        $(document).ready(function () {
+            const deleteButtons = $(".delete-btn");
+            const modalTitle = $("#modalDelete .modal-title");
+            const confirmModalBody = $("#modalDelete .modal-body");
+            const confirmButton = $("#modalDelete .btn.btn-danger");
+
+            deleteButtons.click(function () {
+                const fullname = $(this).data("user-name");
+                const userId = $(this).data("user-id");
+                console.log("=>(list.pug:99) userId", userId);
+                modalTitle.text('Delete confirm');
+                confirmButton.text('Delete');
+                confirmModalBody.html(`Are you sure you want to delete
+                <strong>${fullname}</strong>?`);
+                $('#modalDelete').modal('show');
+
+                confirmButton.click(function () {
+                    $('#modalDelete').modal('hide');
+                    console.log('click');
+                    console.log(`/users/${userId}`);
+                    fetch(`/users/${userId}`, {
+                        method: "DELETE"
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("=>(list.pug:113) data", data);
+                            location.reload();
+                        })
+                        .catch(error => {
+                            console.log("Error in deleting:", error);
+                        });
+                });
+            });
+        });
+    // End script for confirming delete
+
+    // Script for confirming lock/unlock
+    script.
+        $(document).ready(function () {
+            const lockButtons = $(".lock-btn");
+            const unlockButtons = $(".unlock-btn");
+            const confirmModalBody = $("#modalDelete .modal-body");
+            const confirmButton = $("#modalDelete .btn.btn-danger");
+            const modalTitle = $("#modalDelete .modal-title");
+
+
+            function handleLockUnlock(button, isLock) {
+                button.click(function () {
+                    const fullname = button.data("user-name");
+                    const userId = button.data("user-id");
+                    const action = isLock ? "lock" : "unlock";
+                    modalTitle.text(isLock ? "Lock confirm" : "Unlock confirm")
+                    confirmButton.text(isLock ? "Lock" : "Unlock");
+                    confirmModalBody.html(`Are you sure you want to ${action} the account for
+                       <strong>${fullname}</strong>?`);
+                    $('#modalDelete').modal('show');
+
+                    confirmButton.click(function () {
+                        $('#modalDelete').modal('hide');
+                        fetch(`/users/${userId}/${action}`, {
+                            method: "PUT"
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                location.reload();
+                            })
+                            .catch(error => {
+                                console.log(`Error in ${action}ing the account:`, error);
+                            });
+                    });
+                });
+            }
+
+            handleLockUnlock(lockButtons, true);
+            handleLockUnlock(unlockButtons, false);
+        });
+    // End script for confirming lock/unlock
 
     script.
         function updatePerPage(select) {

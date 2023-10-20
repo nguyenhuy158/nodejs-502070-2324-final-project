@@ -2,6 +2,7 @@ const Product = require("../models/product");
 const ProductCategory = require("../models/productCategory");
 const { faker } = require("@faker-js/faker");
 const moment = require("moment");
+const { ObjectId } = require("mongodb");
 
 
 exports.add = async function (req, res, next) {
@@ -196,6 +197,32 @@ exports.detail = async function (req, res, next) {
     }
 };
 
+
+exports.delete = async function (req, res, next) {
+    const id = req.params.id;
+    console.log("=>(productController.js:203) id", id);
+    
+    if (!ObjectId.isValid(id)) {
+        res.status(400).json({ code: 400, success: false, message: "Invalid ObjectId" });
+        return;
+    }
+    console.log("=>(productController.js:209) req.xhr", req.xhr);
+    try {
+        const deletedProduct = await Product.findByIdAndDelete(id);
+        console.log("=>(productController.js:213) deletedProduct", deletedProduct);
+        
+        if (deletedProduct) {
+            req.flash("success", `Successfully deleted ${deletedProduct.productName}`);
+            res.json({ code: 200, success: true, message: "Product deleted successfully" });
+        } else {
+            req.flash("error", `Product not found`);
+            res.json({ code: 404, success: false, message: "Product not found" });
+        }
+    } catch (error) {
+        req.flash("error", `Failed to delete for ${id}`);
+        res.status(500).json({ code: 500, success: false, message: "Internal Server Error" });
+    }
+};
 
 exports.gets = async function (req, res, next) {
     const perPage = parseInt(req.query.perPage) || 10;
