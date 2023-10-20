@@ -1,29 +1,6 @@
 include ../../partials/html
 include ../../partials/flash
 
-//- .container.mt-5
-//-     .row.justify-content-center
-//-         .col-md-6
-//-             .card
-//-                 .card-header
-//-                     h3 Register/Login
-//-                 .card-body
-//-                     form(method='post' action= isRegister ? '/register' : '/login')
-//-                         .mb-3
-//-                             label.form-label(for='username') Username:
-//-                             input#username.form-control(name='username' type='text' placeholder='Nhập ')
-//-                         if isRegister
-//-                             label.form-label(for='password') Email:
-//-                             input#email.form-control(name='email' type='email' placeholder='Nhập ')
-//-                         .mb-3
-//-                             label.form-label(for='password') Password:
-//-                             input#password.form-control(name='password' type='password' placeholder='Nhập ')
-//-                         if error
-//-                             .text-danger.mb-3.alert.alert-danger
-//-                                 span=error
-
-//-                         button.btn.btn-success(type='submit') Login
-
 link(rel="stylesheet" href="/css/form.css")
 link(rel="stylesheet", href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css")
 
@@ -40,7 +17,9 @@ link(rel="stylesheet", href="https://unicons.iconscout.com/release/v2.1.9/css/un
                                         form(method='post' action= isRegister ? '/register' : '/login')
                                             h4.mb-4.pb-3 Register/Login
                                             .form-group
-                                                input#username.form-style(type='text' name='username' placeholder='Your Name' autocomplete='off')
+                                                input#username.form-style(type='text'
+                                                    name='username' placeholder='Your Name'
+                                                    autocomplete='off', focus)
                                                 i.input-icon.uil.uil-at
                                             if isRegister
                                                 input#email.form-style(type='email' name='email' placeholder='Your Email' autocomplete='off')
@@ -54,3 +33,9 @@ link(rel="stylesheet", href="https://unicons.iconscout.com/release/v2.1.9/css/un
                                             button.btn.mt-4(type='submit') Login
                                             p.mb-0.mt-4.text-center
                                                 .link Forgot your password?
+
+
+script.
+    $(document).ready(function () {
+        $('#username').focus();
+    });
