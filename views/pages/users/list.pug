@@ -41,7 +41,8 @@ block content
                         td= index + 1
                         td
                             +renderProfilePicture(user.profilePicture)
-                        td= user.email
+                        td
+                            a.text-decoration-none(href=`/users/${user._id}`)=user.email
                         td= user.username
                         td= user.fullName
                         td= user.role
