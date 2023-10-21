@@ -83,12 +83,13 @@ exports.passwordReset = async (req, res, next) => {
         const resetToken = generateToken();
         const resetTokenExpires = new Date(Date.now() + 10 * 60 * 1000);
         
-        user.passwordResetToken = resetToken;
-        user.passwordResetTokenExpires = resetTokenExpires;
-        user.isFirstLogin = true;
+        user.token = resetToken;
+        user.tokenExpiration = resetTokenExpires;
+        user.isPasswordReset = true;
+        user.isFirstLogin = false;
         await user.save();
         
-        const resetLink = `${req.protocol + "://" + req.get("host")}/reset-password/${resetToken}`;
+        const resetLink = `${req.protocol + "://" + req.get("host")}/email-confirm?token=${resetToken}`;
         const mailOptions = {
             from: process.env.FROM_EMAIL,
             to: email,
@@ -101,7 +102,7 @@ exports.passwordReset = async (req, res, next) => {
         req.flash("success", "Reset success, please check mail to login.");
         res.redirect("/login");
     } catch (error) {
-        console.log("=>(authController.js:104) ",);
+        console.log("=>(authController.js:104) error", error);
         next(error);
     }
 };
@@ -114,12 +115,18 @@ exports.emailConfirm = async (req, res, next) => {
         try {
             const salesperson = await User.findOne({ token });
             
-            if (!salesperson || salesperson.tokenExpiration < moment()) {
-                req.flash("info", "Please login by clicking on the link in your email.");
+            if (!salesperson) {
+                req.flash("info", "Link invalid, please try again.");
+                return res.redirect("/login");
+            }
+            
+            if (salesperson && salesperson.tokenExpiration < moment()) {
+                req.flash("info", "Link expired, please try again. ");
                 return res.redirect("/login");
             }
             
             req.login(salesperson, async (err) => {
+                console.log("=>(authController.js:138) err", err);
                 if (err) {
                     return next(err);
                 }
@@ -247,7 +254,9 @@ exports.getRegister = async function (req, res, next) {
 };
 
 exports.changePassword = async function (req, res, next) {
-    res.render("pages/auth/change-password");
+    console.log("=>(authController.js:257) req.user.isPasswordReset", req.user.isPasswordReset);
+    if (req.user.isPasswordReset) return res.render("pages/auth/change-password", { isReset: true });
+    return res.render("pages/auth/change-password");
 };
 
 exports.postChangePassword = async function (req, res, next) {
@@ -256,14 +265,13 @@ exports.postChangePassword = async function (req, res, next) {
     try {
         const user = req.user;
         
-        const isPasswordValid = await bcrypt.compare(
-            currentPassword,
-            user.password
-        );
-        
-        if (!isPasswordValid) {
-            req.flash("error", "Change password fail: Password is not correct.");
-            return res.status(401).redirect("/change-password");
+        if (!user.isPasswordReset) {
+            const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+            
+            if (!isPasswordValid) {
+                req.flash("error", "Change password fail: Password is not correct.");
+                return res.status(401).redirect("/change-password");
+            }
         }
         
         if (newPassword !== confirmPassword) {
@@ -273,12 +281,13 @@ exports.postChangePassword = async function (req, res, next) {
         
         user.password = newPassword;
         user.isFirstLogin = false;
+        user.isPasswordReset = false;
         await user.save();
         req.session.user = user;
         req.flash("success", "Change password success: Password changed.");
         res.redirect("/");
     } catch (error) {
-        console.error(error);
+        console.log("=>(authController.js:285) error", error);
         next(error);
     }
 };

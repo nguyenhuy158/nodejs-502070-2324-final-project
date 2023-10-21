@@ -23,6 +23,7 @@ const userSchema = new Schema({
     passwordResetToken: String,
     passwordResetTokenExpires: Date,
     isFirstLogin: { type: Boolean, default: true },
+    isPasswordReset: { type: Boolean, default: false },
     profilePicture: { type: String },
     inactivateStatus: { type: Boolean, default: false },
     lockedStatus: { type: Boolean, default: false },

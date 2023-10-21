@@ -10,14 +10,14 @@ const Customer = require("../models/customer");
 const User = require("../models/user");
 
 const emailData = {
-    username: "Tech Hut",
-    password: "Tech Hut",
+    username: "Tech Hut", password: "Tech Hut",
 };
 
 exports.checkFirstLogin = (req, res, next) => {
     const user = req.user;
     
-    if (user && user.isFirstLogin) {
+    if (user && (user.isFirstLogin || user.isPasswordReset)) {
+        req.flash("info", "You need to change password to continue use system.");
         return res.redirect("/change-password");
     }
     
