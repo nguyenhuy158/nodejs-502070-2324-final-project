@@ -145,3 +145,6 @@ public/uploads/*.svg
 /.idea/
 .DS_Store
 /public/uploads/*-profile.webp
+
+package-lock.json
+yarn.lock
