@@ -41,9 +41,9 @@ nav#mainNav.navbar.navbar-expand-lg.navbar-dark
 
             li.nav-item.dropdown.d-flex.ms-4
                 a.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
-                    - if (user && user.fullName)
+                    if (user && user.fullName)
                         b= user.fullName
-                    - else
+                    else
                         b= 'Unknown'
                 ul.dropdown-menu
                     li
@@ -51,8 +51,16 @@ nav#mainNav.navbar.navbar-expand-lg.navbar-dark
                     li
                         a.dropdown-item(href='/change-password') Change Password
                     li
+                        .dropdown-item
+                            .form-check.form-switch
+                                input#darkModeSwitch.form-check-input(type="checkbox" role="switch" checked=user.settings.darkMode)
+                                label.form-check-label Dark mode
+                    li
                         hr.dropdown-divider
                     li
                         a.dropdown-item(href='/logout') Logout
 
-script(src='/js/search.js')
+
+
+    script(src='/js/search.js')
+    script(src='/js/darkMode.js')
