@@ -1,16 +1,19 @@
-require("dotenv").config();
-const { transporter } = require("../config/email");
-const compiledFunction = require("pug").compileFile("./views/email/email-template.pug");
+require("dotenv")
+    .config();
+const { transporter }  = require("../config/email");
+const compiledFunction = require("pug")
+    .compileFile("./views/email/email-template.pug");
 const productController = require("../controllers/productController");
-const { faker } = require("@faker-js/faker");
-const ProductCategory = require("../models/productCategory");
-const Product = require("../models/product");
-const Order = require("../models/order");
-const Customer = require("../models/customer");
-const User = require("../models/user");
+const { faker }        = require("@faker-js/faker");
+const ProductCategory  = require("../models/productCategory");
+const Product          = require("../models/product");
+const Order            = require("../models/order");
+const Customer         = require("../models/customer");
+const User             = require("../models/user");
 
 const emailData = {
-    username: "Tech Hut", password: "Tech Hut",
+    username: "Tech Hut",
+    password: "Tech Hut",
 };
 
 exports.checkFirstLogin = (req, res, next) => {
@@ -43,7 +46,10 @@ exports.sentMail = (req, res) => {
 };
 
 exports.home = (req, res) => {
-    res.render("pages/home", { title: "Home", app_name: process.env.APP_NAME });
+    res.render("pages/home", {
+        title   : "Home",
+        app_name: process.env.APP_NAME
+    });
 };
 
 exports.about = (req, res) => {
@@ -65,10 +71,10 @@ async function createSampleDataCustomer() {
         const customers = [];
         for (let i = 0; i < 10; i++) {
             const customer = new Customer({
-                phone: faker.phone.number("#### ### ###"),
-                fullName: faker.person.fullName(),
-                address: faker.location.streetAddress(),
-            });
+                                              phone   : faker.phone.number("#### ### ###"),
+                                              fullName: faker.person.fullName(),
+                                              address : faker.location.streetAddress(),
+                                          });
             customers.push(customer);
         }
         await Customer.insertMany(customers);
@@ -88,15 +94,21 @@ async function createSampleDataProduct() {
         const products = [];
         for (let i = 0; i < 20; i++) {
             const product = new Product({
-                barcode: faker.datatype.uuid(),
-                productName: faker.commerce.productName(),
-                importPrice: faker.datatype.number({ min: 1000, max: 1000000000 }),
-                retailPrice: faker.datatype.number({ min: 1000, max: 2000000000 }),
-                imageUrls: [faker.image.imageUrl()],
-                category: productCategories[Math.floor(Math.random() * productCategories.length)],
-                creationDate: faker.date.past(),
-                lastUpdateDate: faker.date.recent(),
-            });
+                                            barcode       : faker.datatype.uuid(),
+                                            productName   : faker.commerce.productName(),
+                                            importPrice   : faker.datatype.number({
+                                                                                      min: 1000,
+                                                                                      max: 1000000000
+                                                                                  }),
+                                            retailPrice   : faker.datatype.number({
+                                                                                      min: 1000,
+                                                                                      max: 2000000000
+                                                                                  }),
+                                            imageUrls     : [faker.image.imageUrl()],
+                                            category      : productCategories[Math.floor(Math.random() * productCategories.length)],
+                                            creationDate  : faker.date.past(),
+                                            lastUpdateDate: faker.date.recent(),
+                                        });
             products.push(product);
         }
         await Product.insertMany(products);
@@ -113,8 +125,9 @@ async function createSampleDataProductCategory() {
         const productCategories = [];
         for (let i = 0; i < 5; i++) {
             const category = new ProductCategory({
-                name: faker.commerce.productName(), description: faker.lorem.sentence(),
-            });
+                                                     name       : faker.commerce.productName(),
+                                                     description: faker.lorem.sentence(),
+                                                 });
             productCategories.push(category);
         }
         await ProductCategory.insertMany(productCategories);
@@ -135,19 +148,32 @@ async function createSampleDataOrder() {
         const orders = [];
         for (let i = 0; i < 30; i++) {
             const order = new Order({
-                customer: customers[Math.floor(Math.random() * customers.length)],
-                products: products
-                    .slice(faker.datatype.number({ min: 0, max: products.length - 1 }))
-                    .map((product) => {
-                        return {
-                            product: product, unitPrice: 100
-                        };
-                    }),
-                totalAmount: faker.datatype.number({ min: 10, max: 5000 }),
-                givenAmount: faker.datatype.number({ min: 10, max: 6000 }),
-                changeAmount: faker.datatype.number({ min: 0, max: 1000 }),
-                purchaseDate: faker.date.recent(),
-            });
+                                        customer    : customers[Math.floor(Math.random() * customers.length)],
+                                        products    : products
+                                            .slice(faker.datatype.number({
+                                                                             min: 0,
+                                                                             max: products.length - 1
+                                                                         }))
+                                            .map((product) => {
+                                                return {
+                                                    product  : product,
+                                                    unitPrice: 100
+                                                };
+                                            }),
+                                        totalAmount : faker.datatype.number({
+                                                                                min: 10,
+                                                                                max: 5000
+                                                                            }),
+                                        givenAmount : faker.datatype.number({
+                                                                                min: 10,
+                                                                                max: 6000
+                                                                            }),
+                                        changeAmount: faker.datatype.number({
+                                                                                min: 0,
+                                                                                max: 1000
+                                                                            }),
+                                        purchaseDate: faker.date.recent(),
+                                    });
             orders.push(order);
         }
         await Order.insertMany(orders);
@@ -157,6 +183,70 @@ async function createSampleDataOrder() {
         console.error("Error creating sample order data:", error);
     }
 }
+
+const isFormSubmit = (req) => {
+    return !(req.headers["x-requested-with"] === "XMLHttpRequest");
+};
+
+
+exports.searchResults = async (req, res) => {
+    const { q } = req.query;
+    console.log(`=>(routerController.js:197) isFormSubmit`, isFormSubmit(req));
+    
+    Product.find({
+                     productName: {
+                         $regex  : q,
+                         $options: "i"
+                     }
+                 })
+           .then((products) => {
+               User.find({
+                             fullName: {
+                                 $regex  : q,
+                                 $options: "i"
+                             }
+                         })
+                   .then(async (users) => {
+                       
+                       if (isFormSubmit(req)) {
+                           return res.render("pages/search/search-results", {
+                               products,
+                               users,
+                               categories: await ProductCategory.find({})
+                                                                .limit(10),
+                               q         : req.query.q
+                           });
+                       }
+                       return res.json({
+                                           error  : false,
+                                           message: "Get data success",
+                                           results: [...products, ...users]
+                                       });
+                   })
+                   .catch((error) => {
+                       console.log("=>(routerController.js:213) error", error);
+                       if (isFormSubmit(req)) {
+                           return next(error);
+                       }
+                       
+                       return res.json({
+                                           error  : true,
+                                           message: error
+                                       });
+                   });
+           })
+           .catch((error) => {
+               console.log("=>(routerController.js:218) error", error);
+               if (isFormSubmit(req)) {
+                   return next(error);
+               }
+               
+               return res.json({
+                                   error  : true,
+                                   message: error
+                               });
+           });
+};
 
 exports.createSampleData = async function (req, res, next) {
     await createSampleDataCustomer();

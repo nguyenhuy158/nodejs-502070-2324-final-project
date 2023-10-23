@@ -14,7 +14,8 @@ link(rel="stylesheet", href="https://unicons.iconscout.com/release/v2.1.9/css/un
                             .card-content
                                 .center-wrap
                                     .section.text-center
-                                        form(method='post' action= isRegister ? '/register' : '/login')
+                                        form(method='post' action= isRegister ? '/register' :
+                                        '/login' autocomplete="off")
                                             h4.mb-4.pb-3 Register/Login
                                             .form-group
                                                 input#username.form-style(type='text'
