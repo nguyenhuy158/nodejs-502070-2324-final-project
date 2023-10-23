@@ -45,10 +45,13 @@ exports.sentMail = (req, res) => {
     });
 };
 
-exports.home = (req, res) => {
+exports.home = async (req, res) => {
+    
     res.render("pages/home", {
         title   : "Home",
-        app_name: process.env.APP_NAME
+        app_name: process.env.APP_NAME,
+        products: await Product.find({})
+                               .limit(3)
     });
 };
 
