@@ -1,0 +1,109 @@
+extends ../layout
+
+block content
+    .container
+        .row
+            //- BEGIN SEARCH RESULT
+            .col-md-12
+                .grid.search
+                    .grid-body
+                        .row
+                            //- BEGIN FILTERS
+                            .col-md-3
+                                h2.grid-title
+                                    i.fa.fa-filter
+                                    |  Filters
+                                hr
+                                //- BEGIN FILTER BY CATEGORY
+                                h4 By category:
+                                for category in categories
+                                    .form-check.d-flex.align-items-center
+                                        input.form-check-input.align-self-center(type="checkbox" value="" id=`ct${category.name}`)
+                                        label.form-check-label.ms-2(for=`ct${category.name}`)= category.name
+                                //- END FILTER BY CATEGORY
+                                .p-2
+                                //- BEGIN FILTER BY DATE
+                                h4 By date:
+                                |  From
+                                .input-group.mb-3
+                                    span.input-group-text
+                                        i.fa-solid.fa-calendar-days
+                                    input.form-control(type="date" data-date-format="dd-mm-yyyy" value=new Date().toISOString()
+                                                                                                                 .split('T')[0])
+
+                                |  To
+                                .input-group.mb-3
+                                    span.input-group-text
+                                        i.fa-solid.fa-calendar-days
+                                    input.form-control(type="date" data-date-format="dd-mm-yyyy" value=new Date().toISOString()
+                                                                                                                 .split('T')[0])
+                                //- END FILTER BY DATE
+                                .p-2
+                                //- BEGIN FILTER BY PRICE
+                                h4 By price:
+                                |  Between
+                                div#price1 $300
+                                |  to
+                                div#price2  $800
+                                input.slider.form-range(type="range" value="" data-slider-min="0"
+                                    data-slider-max="1000" data-slider-step="1" data-slider-value="[300,800]" data-slider-tooltip="hide")
+                                //- END FILTER BY PRICE
+                            //- END FILTERS
+                            //- BEGIN RESULT
+                            .col-md-9
+                                h2
+                                    i.fa.fa-file-o
+                                    |  Result
+                                hr
+                                //- BEGIN SEARCH INPUT
+                                form(action='/search', method='get')
+                                    .input-group
+                                        input.form-control(name='q' type="text" placeholder="Search..." value=q)
+                                        button.btn.btn-outline-secondary(type="submit")
+                                            i.fa.fa-search
+
+                                //- END SEARCH INPUT
+                                p Showing all results matching "#{q}"
+                                .p-2
+
+                                .row
+                                    //- BEGIN ORDER RESULT
+                                    .col-sm-6
+                                        .btn-group
+                                            button.btn.btn-secondary.dropdown-toggle(type="button" data-bs-toggle="dropdown") Order by
+                                            ul.dropdown-menu(role="menu")
+                                                li
+                                                    a.dropdown-item(href="#") Name
+                                                li
+                                                    a.dropdown-item(href="#") Date
+                                                li
+                                                    a.dropdown-item(href="#") View
+                                                li
+                                                    a.dropdown-item(href="#") Rating
+
+                                    //- END ORDER RESULT
+                                    .col-md-6.text-end
+                                        .btn-group
+                                            button#view-list.btn.btn-outline-secondary.disabled
+                                                i.fa.fa-list
+                                            button#view-table.btn.btn-outline-secondary
+                                                i.fa.fa-th
+                                //- END RESULT
+
+
+    script.
+        $('#view-list')
+            .on('click', () => {
+                $('#view-table')
+                    .toggleClass('disabled');
+                $('#view-list')
+                    .toggleClass('disabled');
+            });
+
+        $('#view-table')
+            .on('click', () => {
+                $('#view-list')
+                    .toggleClass('disabled');
+                $('#view-table')
+                    .toggleClass('disabled');
+            });

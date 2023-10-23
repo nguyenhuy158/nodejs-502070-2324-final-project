@@ -1,8 +1,9 @@
 link(rel="stylesheet" href="/css/nav.css")
+link(rel="stylesheet" href="/css/search.css")
 
 nav#mainNav.navbar.navbar-expand-lg.navbar-dark
     .container
-        a.navbar-brand(href='/') 
+        a.navbar-brand(href='/')
             img(src='/TechHut.png' alt='' loading='lazy')
         button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
             span.navbar-toggler-icon
@@ -17,7 +18,7 @@ nav#mainNav.navbar.navbar-expand-lg.navbar-dark
                 li.nav-item
                     a.nav-link(href='products' class=(navLink == 'Product' ? 'active' : '')) Product
                 li.nav-item.dropdown
-                    a.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false') 
+                    a.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
                         span Feature
                     ul.dropdown-menu
                         li
@@ -31,23 +32,38 @@ nav#mainNav.navbar.navbar-expand-lg.navbar-dark
 
 
 
-            form.d-flex(role='search')
-                input.form-control.me-2(type='search' placeholder='Search' aria-label='Search')
+            form#search-container.d-flex(action=`/search`, method='get', role='search'
+                autocomplete="off" enctype="application/x-www-form-urlencoded")
+                input#search-input.form-control.me-2(name='q' type='search' placeholder='Search product'
+                    aria-label='Search')
+                #search-results.search-results-popup
                 button.btn.btn-outline-success(type='submit') Search
 
+            include ../partials/cart
+
             li.nav-item.dropdown.d-flex.ms-4
-                a.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false') 
-                    - if (user && user.fullName)
+                a.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
+                    if (user && user.fullName)
                         b= user.fullName
-                    - else 
+                    else
                         b= 'Unknown'
-                ul.dropdown-menu 
+                ul.dropdown-menu
                     li
                         a.dropdown-item(href='/profile') Profile
                     li
                         a.dropdown-item(href='/change-password') Change Password
                     li
+                        .dropdown-item
+                            .form-check.form-switch
+                                input#darkModeSwitch.form-check-input(type="checkbox" role="switch" checked=user.settings.darkMode)
+                                label.form-check-label(for="darkModeSwitch") Dark mode
+                    li
                         hr.dropdown-divider
                     li
                         a.dropdown-item(href='/logout') Logout
 
+
+
+
+    script(src='/js/search.js')
+    script(src='/js/darkMode.js')

@@ -17,6 +17,7 @@ const productSchema = new Schema({
             message: "One or more image URLs are not valid."
         }
     },
+                                     desc: { type: String },
     category: { type: Schema.Types.ObjectId, ref: "ProductCategory" },
     creationDate: { type: Date },
     lastUpdateDate: { type: Date },
