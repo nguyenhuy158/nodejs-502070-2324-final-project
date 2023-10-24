@@ -1,7 +1,7 @@
 doctype html
 html
     head
-        include ../partials/html 
+        include ../partials/html
     body
         include ../partials/fn
         include ../partials/header
@@ -13,8 +13,20 @@ html
         //- Auto remove flash message - KEEP IT
         script.
             setTimeout(() => {
-                $(".toast").each((index, value) => {
-                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(value)
-                    toastBootstrap.show()
-                })
+                $(".toast")
+                    .each((index, value) => {
+                        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(value)
+                        toastBootstrap.show()
+                    })
             }, 1000);
+
+        script.
+            $(document)
+                .ready(function () {
+                    $("img")
+                        .on("error", function () {
+                            $(this)
+                                .attr("src", "https://placehold.co/200?text=Not+available&font=roboto");
+                        });
+                });
+

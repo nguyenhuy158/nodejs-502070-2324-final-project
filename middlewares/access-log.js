@@ -2,7 +2,12 @@ const { currentTime } = require("./format");
 
 
 exports.logRequestDetails = (req, res, next) => {
-    const { method, originalUrl, xhr, status } = req;
+    const {
+              method,
+              originalUrl,
+              xhr,
+              status
+          } = req;
     const accessTime = currentTime();
     const fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
     
