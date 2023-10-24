@@ -2,7 +2,7 @@ const PORT = process.env.PORT;
 const winstonLogger = require("../config/logger");
 
 exports.listen = () => {
-    console.log(`Server is running on ${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 };
 
 exports.morganLog = (req, res) => {
