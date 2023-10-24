@@ -90,6 +90,23 @@ block content
                                                 i.fa.fa-th
                                 //- END RESULT
 
+                                ul.list-group.list-group-numbered
+                                    each product in products
+                                        li.list-group-item.d-flex.justify-content-between.align-items-start
+                                            .ms-2.me-auto
+                                            .fw-bold #{product.productName}
+                                            | Barcode: #{product.barcode}
+                                            | Import Price: $#{product.importPrice}
+                                            | Retail Price: $#{product.retailPrice}
+                                            div
+                                                if product.imageUrls.length > 0
+                                                    img(src=product.imageUrls[0] alt=product.productName width=100 height=100)
+                                                else
+                                                    p No images available
+                                            p Description: #{product.desc}
+                                            p Category: #{product.category}
+                                            span.badge.bg-primary.rounded-pill Created: #{product.creationDate}
+
 
     script.
         $('#view-list')
