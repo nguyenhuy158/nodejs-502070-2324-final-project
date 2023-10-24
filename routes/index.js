@@ -7,6 +7,7 @@ const { UserValidator } = require("../middlewares/validator");
 const { upload }      = require("../config/upload");
 const authRoutes      = require("./auth");
 const userRouter      = require("./user");
+const checkoutRouter = require("./checkout");
 const productRouter   = require("./product");
 const { autoViews }   = require("../middlewares/auto-views");
 const { flashMiddleWare } = require("../middlewares/flash");
@@ -59,7 +60,8 @@ router
 // main router
 router
     .use("/users", requireRole(process.env.ROLE_ADMIN), userRouter)
-    .use("/products", requireRole(process.env.ROLE_ADMIN), productRouter);
+    .use("/products", requireRole(process.env.ROLE_ADMIN), productRouter)
+    .use("/checkout", checkoutRouter);
 
 // error router
 router

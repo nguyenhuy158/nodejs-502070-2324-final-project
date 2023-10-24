@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const User = require("../../models/user");
 const ProductCategory = require("../../models/productCategory");
 
-const connectDB = async () => {
+const connectDB = async (req, res, next) => {
     try {
         mongoose.set("strictQuery", false);
         const connect = await mongoose.connect(process.env.MONGODB_URI);
@@ -21,8 +21,10 @@ const connectDB = async () => {
         console.log(`[db] Database connected ${connect.connection.host}`);
         checkAndCreateAdminUser();
         checkAndCreateDefaultCategory();
+        next();
     } catch (error) {
         console.log("[db] error:", error);
+        next(error);
     }
 };
 

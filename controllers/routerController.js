@@ -74,7 +74,7 @@ async function createSampleDataCustomer() {
         const customers = [];
         for (let i = 0; i < 10; i++) {
             const customer = new Customer({
-                                              phone   : faker.phone.number("#### ### ###"),
+                phone: faker.phone.number("##########"),
                                               fullName: faker.person.fullName(),
                                               address : faker.location.streetAddress(),
                                           });

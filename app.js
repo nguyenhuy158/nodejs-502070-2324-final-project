@@ -54,7 +54,7 @@ app.use((req, res, next) => {
     next();
 });
 
-connectDb();
+app.use(connectDb);
 
 passport.use(new LocalStrategy(async function (username, password, done) {
     try {

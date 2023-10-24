@@ -3,17 +3,18 @@ html
     head
         include ../partials/html 
     body
+        include ../partials/fn
         include ../partials/header
         include ../partials/flash
-        include ../partials/fn
+
         include ../partials/footer
 
 
-    script.
-        setTimeout(() => {
-            $(".toast").each((index, value) => {
-                const toastBootstrap = bootstrap.Toast.getOrCreateInstance(value)
-                toastBootstrap.show()
-            })
-        }, 1000);
-    
+        //- Auto remove flash message - KEEP IT
+        script.
+            setTimeout(() => {
+                $(".toast").each((index, value) => {
+                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(value)
+                    toastBootstrap.show()
+                })
+            }, 1000);
