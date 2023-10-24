@@ -22,7 +22,7 @@ $(document)
                 const darkMode = $("#darkModeSwitch")
                     .is(":checked");
                 $.ajax({
-                           url    : `/users/update-settings`,
+                           url: `/update-settings`,
                            method : "POST",
                            data   : { darkMode: darkMode },
                            success: function (data) {
