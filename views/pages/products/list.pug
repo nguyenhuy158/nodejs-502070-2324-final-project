@@ -62,7 +62,8 @@ block content
     p Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
 
     // Pagination
-    include ../../partials/pagination
+    +pagination('/products', current, count, perPage)
+
 
     // Confirm modal
     include ../../partials/confirm-delete-modal
