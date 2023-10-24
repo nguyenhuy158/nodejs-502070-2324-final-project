@@ -122,7 +122,7 @@
     "window.zoomLevel": 0,
     "workbench.activityBar.iconClickBehavior": "toggle",
     "workbench.activityBar.visible": true,
-    "workbench.colorTheme": "Tokyo Night Moon",
+    "workbench.colorTheme": "Default High Contrast Light",
     "workbench.editor.enablePreview": false,
     "workbench.iconTheme": "material-icon-theme",
     "workbench.list.smoothScrolling": true,
@@ -152,4 +152,5 @@
     "terminal.integrated.tabFocusMode": false,
     "editor.tabFocusMode": false,
     "emmet.triggerExpansionOnTab": true,
+    "pugFormatter.tabSize": 4,
 }
