@@ -58,8 +58,8 @@ svg(xmlns='http://www.w3.org/2000/svg' style='display: none')
           //-   svg.bi.me-2(width='16' height='16')
           //-     use(xlink:href='#people-circle')
           //-   |               Customers
-          li.nav-item
-            a.nav-link.text-white(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
+          li.nav-item.dropdown
+            a.nav-link.dropdown-toggle(href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
               svg.bi.me-2(width='16' height='16')
                 use(xlink:href='#feature')
               |               Feature
@@ -85,10 +85,10 @@ svg(xmlns='http://www.w3.org/2000/svg' style='display: none')
             li
               a.dropdown-item(href='#') New project...
             li
-                        .dropdown-item
-                            .form-check.form-switch
-                                input#darkModeSwitch.form-check-input(type="checkbox" role="switch" checked=user.settings.darkMode)
-                                label.form-check-label(for="darkModeSwitch") Dark mode
+              .dropdown-item
+                .form-check.form-switch
+                  input#darkModeSwitch.form-check-input(type="checkbox" role="switch" checked=user.settings.darkMode)
+                  label.form-check-label(for="darkModeSwitch") Dark mode
             li
               a.dropdown-item(href='/profile') User Profile
             li
