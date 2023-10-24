@@ -8,6 +8,7 @@ const { upload }        = require("../config/upload");
 const authRoutes        = require("./auth");
 const userRouter        = require("./user");
 const checkoutRouter    = require("./checkout");
+const customerRouter    = require("./customer");
 const productRouter     = require("./product");
 const { autoViews }     = require("../middlewares/auto-views");
 const { flashMiddleWare } = require("../middlewares/flash");
@@ -62,6 +63,7 @@ router
 router
     .use("/users", requireRole(process.env.ROLE_ADMIN), userRouter)
     .use("/products", requireRole(process.env.ROLE_ADMIN), productRouter)
+    .use("/customers", customerRouter)
     .use("/checkout", checkoutRouter);
 
 // error router
