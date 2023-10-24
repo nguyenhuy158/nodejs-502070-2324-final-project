@@ -41,26 +41,26 @@ nav#mainNav.navbar.navbar-expand-lg.navbar-dark
 
             include ../partials/cart
 
-            li.nav-item.dropdown.d-flex.ms-auto.pe-5
-                a.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
-                    if (user && user.fullName)
-                        b= user.fullName
-                    else
-                        b= 'Unknown'
-                ul.dropdown-menu
-                    li
-                        a.dropdown-item(href='/profile') Profile
-                    li
-                        a.dropdown-item(href='/change-password') Change Password
-                    li
-                        .dropdown-item
-                            .form-check.form-switch
-                                input#darkModeSwitch.form-check-input(type="checkbox" role="switch" checked=user.settings.darkMode)
-                                label.form-check-label(for="darkModeSwitch") Dark mode
-                    li
-                        hr.dropdown-divider
-                    li
-                        a.dropdown-item(href='/logout') Logout
+            //- li.nav-item.dropdown.d-flex.ms-auto.pe-5
+            //-     a.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
+            //-         if (user && user.fullName)
+            //-             b= user.fullName
+            //-         else
+            //-             b= 'Unknown'
+            //-     ul.dropdown-menu
+            //-         li
+            //-             a.dropdown-item(href='/profile') Profile
+            //-         li
+            //-             a.dropdown-item(href='/change-password') Change Password
+            //-         li
+            //-             .dropdown-item
+            //-                 .form-check.form-switch
+            //-                     input#darkModeSwitch.form-check-input(type="checkbox" role="switch" checked=user.settings.darkMode)
+            //-                     label.form-check-label(for="darkModeSwitch") Dark mode
+            //-         li
+            //-             hr.dropdown-divider
+            //-         li
+            //-             a.dropdown-item(href='/logout') Logout
 
 
 
