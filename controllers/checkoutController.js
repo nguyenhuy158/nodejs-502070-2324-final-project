@@ -17,13 +17,14 @@ exports.getCustomer = async (req, res, next) => {
     const { phone } = req.body;
     console.log("🚀 ~ file: checkoutController.js:9 ~ phone:", phone);
 
-    const customer = { phone };
+    // const customer = { phone };
     try {
 
-        customer = await Customer.findOne({ phone });
+        const customer = await Customer.findOne({ phone });
         res.json({
             error: false,
-            message: customer
+            customer,
+            message: 'Get data success'
         });
     } catch (error) {
         console.log("🚀 ~ file: checkoutController.js:21 ~ error:", error);
