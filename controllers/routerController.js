@@ -74,7 +74,7 @@ async function createSampleDataCustomer() {
         const customers = [];
         for (let i = 0; i < 10; i++) {
             const customer = new Customer({
-                phone: faker.phone.number("##########"),
+                                              phone: faker.phone.number("##########"),
                                               fullName: faker.person.fullName(),
                                               address : faker.location.streetAddress(),
                                           });
@@ -192,64 +192,72 @@ const isFormSubmit = (req) => {
 };
 
 
-exports.searchResults = async (req, res) => {
-    const { q } = req.query;
-    console.log(`=>(routerController.js:197) isFormSubmit`, isFormSubmit(req));
+exports.searchResults = async (req, res, next) => {
+    const q       = req.query.q;
+    const perPage = parseInt(req.query.perPage) || 10;
+    let page      = parseInt(req.query.page) || 1;
     
-    Product.find({
-                     productName: {
-                         $regex  : q,
-                         $options: "i"
-                     }
-                 })
-           .then((products) => {
-               User.find({
-                             fullName: {
-                                 $regex  : q,
-                                 $options: "i"
-                             }
-                         })
-                   .then(async (users) => {
-                       
-                       if (isFormSubmit(req)) {
-                           return res.render("pages/search/search-results", {
-                               products,
-                               users,
-                               categories: await ProductCategory.find({})
-                                                                .limit(10),
-                               q         : req.query.q
-                           });
-                       }
-                       return res.json({
-                                           error  : false,
-                                           message: "Get data success",
-                                           results: [...products, ...users]
-                                       });
-                   })
-                   .catch((error) => {
-                       console.log("=>(routerController.js:213) error", error);
-                       if (isFormSubmit(req)) {
-                           return next(error);
-                       }
-                       
-                       return res.json({
-                                           error  : true,
-                                           message: error
-                                       });
-                   });
-           })
-           .catch((error) => {
-               console.log("=>(routerController.js:218) error", error);
-               if (isFormSubmit(req)) {
-                   return next(error);
-               }
-               
-               return res.json({
-                                   error  : true,
-                                   message: error
-                               });
-           });
+    try {
+        const products    = await Product.find({
+                                                   productName: {
+                                                       $regex  : q,
+                                                       $options: "i"
+                                                   }
+                                               })
+                                         .populate("category")
+                                         .skip(perPage * page - perPage)
+                                         .limit(perPage)
+                                         .exec();
+        const count       = await Product.countDocuments({
+                                                             productName: {
+                                                                 $regex  : q,
+                                                                 $options: "i"
+                                                             }
+                                                         });
+        const nextPage    = parseInt(page) + 1;
+        const hasNextPage = nextPage <= Math.ceil(count / perPage);
+        
+        if (isFormSubmit(req)) {
+            const response = {
+                products,
+                current   : page,
+                count,
+                perPage,
+                nextPage  : hasNextPage ? nextPage : null,
+                q         : req.query.q,
+                categories: await ProductCategory.find({})
+                                                 .limit(10),
+            };
+            
+            res.render("pages/search/search-results", { ...response });
+        } else {
+            const users = await User.find({
+                                              fullName: {
+                                                  $regex  : q,
+                                                  $options: "i"
+                                              }
+                                          })
+                                    .limit(5);
+            
+            res.json({
+                         error  : false,
+                         message: "Get data success",
+                         results: [...products, ...users]
+                     });
+        }
+    } catch (error) {
+        console.log("=>(routerController.js:213) error", error);
+        if (isFormSubmit(req)) {
+            return next(error);
+        }
+        
+        res.json({
+                     error  : true,
+                     message: error
+                 });
+    }
 };
+
 
 exports.createSampleData = async function (req, res, next) {
     await createSampleDataCustomer();

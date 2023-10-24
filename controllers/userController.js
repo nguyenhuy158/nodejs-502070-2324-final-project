@@ -126,16 +126,15 @@ exports.getUsers = async function (req, res, next) {
         const nextPage = parseInt(page) + 1;
         const hasNextPage = nextPage <= Math.ceil(count / perPage);
         
-        const output = {
+        const response = {
             users,
             current : page,
             count,
             perPage,
             nextPage: hasNextPage ? nextPage : null
         };
-        // console.log("🚀 ~ file: userController.js:88 ~ output:", output);
         res.render("pages/users/list", {
-            ...output,
+            ...response,
             navLink: process.env.NAVBAR_USER
         });
     } catch (error) {

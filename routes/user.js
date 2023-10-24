@@ -10,7 +10,6 @@ router
     .get("/:id/resend", userController.resendEmail)
     .get("/create-account", userController.getCreateAccount)
     .post("/create-account", userController.createAccount)
-    .post("/update-settings", userController.apiUpdateSetting)
     .delete("/:id", userController.deleteUser)
     .get("/:id", userController.getUser)
     .get("/login", userController.login)
