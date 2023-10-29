@@ -11,7 +11,7 @@ const {
           uploadImage,
           removeImageByUrl
       }              = require("../middlewares/utils");
-const { categories } = require("./ProductCategoryController");
+const { categories } = require("./productCategoryController");
 
 
 function product(productId) {
