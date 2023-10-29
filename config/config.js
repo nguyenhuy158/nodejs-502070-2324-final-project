@@ -1,6 +1,6 @@
 const cookieSession = require("cookie-session");
-const path = require("path");
-const fs = require("fs");
+const path     = require("path");
+const fs       = require("fs");
 const rateLimit = require("express-rate-limit");
 const passport = require("passport");
 
@@ -32,9 +32,9 @@ module.exports = {
     },
     staticOptions             : {
         dotfiles: "ignore",
-        etag: false,
+        etag  : false,
         extensions: ["htm", "html", "css"],
-        index: false,
+        index : false,
         maxAge: "1d",
         redirect: false,
         setHeaders(res, path, stat) {
@@ -44,7 +44,7 @@ module.exports = {
     sassOptions               : {
         src   : path.join("..", "source", "sass"),
         dest  : path.join("..", "public", "css"),
-        debug: false,
+        debug : false,
         outputStyle: "compressed",
         force : true,
         root  : __dirname,
