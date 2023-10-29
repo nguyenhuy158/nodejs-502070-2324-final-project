@@ -22,7 +22,7 @@ const { ensureAuthenticated } = require("../controllers/authController");
 const authController    = require("../controllers/authController");
 const { limiter }       = require("../config/config");
 const { requireRole }   = require("../middlewares/authorization");
-const { categories }    = require("../controllers/ProductCategoryController");
+const { categories } = require("../controllers/productCategoryController");
 
 // other middleware and server
 
