@@ -1,4 +1,5 @@
-require("dotenv").config();
+require("dotenv")
+    .config();
 const express = require("express");
 const router = require("./routes");
 const cookieParser = require("cookie-parser");
@@ -14,9 +15,15 @@ const User = require("./models/user");
 const moment = require("moment/moment");
 // const flash = require("./middlewares/flash");
 const bcrypt = require("bcryptjs");
-const { cookieOptions } = require("./config/config");
+const {
+          cookieOptions,
+          cloudinaryConfig
+      }    = require("./config/config");
 const LocalStrategy = require("passport-local").Strategy;
 const flash = require("connect-flash");
+
+const { v2: cloudinary } = require("cloudinary");
+const { uploadImage }    = require("./middlewares/utils");
 
 // process.on("uncaughtException", (error) => {
 //     winstonLogger.error("Uncaught Exception:", error);
@@ -38,10 +45,10 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(require("express-session")({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: false
-}));
+                                       secret           : "keyboard cat",
+                                       resave           : false,
+                                       saveUninitialized: false
+                                   }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -55,6 +62,9 @@ app.use((req, res, next) => {
 });
 
 app.use(connectDb);
+cloudinary.config(cloudinaryConfig);
+console.log("=>(app.js:65) cloudinary.config()", cloudinary.config());
+// uploadImage("C:\\Users\\ADMIN\\Desktop\\nodejs-502070-2324-final-project\\public\\favicon.ico");
 
 passport.use(new LocalStrategy(async function (username, password, done) {
     try {

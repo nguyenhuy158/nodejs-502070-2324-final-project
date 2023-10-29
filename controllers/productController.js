@@ -1,9 +1,12 @@
-const Product = require("../models/product");
+const Product         = require("../models/product");
 const ProductCategory = require("../models/productCategory");
-const { faker } = require("@faker-js/faker");
-const moment  = require("moment");
-const { ObjectId } = require("mongodb");
-
+const { faker }       = require("@faker-js/faker");
+const moment          = require("moment");
+const { ObjectId }    = require("mongodb");
+const sharp           = require("sharp");
+const path            = require("path");
+const fs              = require("fs");
+const { uploadImage } = require("../middlewares/utils");
 
 exports.add = async function (req, res, next) {
     const categories = await ProductCategory.find()
@@ -14,57 +17,64 @@ exports.add = async function (req, res, next) {
 exports.create = async function (req, res, next) {
     const categories = await ProductCategory.find()
                                             .sort({ name: 1 });
-    
     const {
               barcode,
               productName,
               importPrice,
               retailPrice,
-              imageUrls,
-              category,
-              creationDate,
-              lastUpdateDate,
-          } = req.body;
-    
-    let product = {
-        barcode,
-        productName,
-        importPrice,
-        retailPrice,
-        imageUrls,
-        category,
-        creationDate,
-        lastUpdateDate,
-    };
+              category
+          }         = req.body;
+    const imageUrls = await Promise.all(req.files
+                                           .map((file) => file.path)
+                                           .map(async file => {
+                                               const parsedPath               = path.parse(file);
+                                               const fileNameWithoutExtension = parsedPath.name;
+                                               const newFilePath              = path.join(__dirname, "..", "public", `uploads/${fileNameWithoutExtension}.webp`);
+                                               
+                                               await sharp(file)
+                                                   .resize(200, 200, {
+                                                       fit               : sharp.fit.cover,
+                                                       withoutEnlargement: true
+                                                   })
+                                                   .webp({ quality: 80 })
+                                                   .toFile(newFilePath);
+                                               try {
+                                                   await fs.promises.access(newFilePath);
+                                                   await fs.promises.unlink(file);
+                                                   return await uploadImage(newFilePath);
+                                               } catch (err) {
+                                                   console.log("=>(productController.js:47) err", err);
+                                               }
+                                               
+                                               return newFilePath;
+                                           }));
+    console.log("=>(productController.js:48) imageUrls", imageUrls);
     
     try {
-        await (new Product({
-                               barcode,
-                               productName,
-                               importPrice,
-                               retailPrice,
-                               imageUrls: imageUrls.split("\n"),
-                               category,
-                               creationDate,
-                               lastUpdateDate,
-                           })).save();
-        req.flash("info", `Add product successfully: ${productName}`);
-        res.redirect("/products");
+        const product = new Product({
+                                        barcode,
+                                        productName,
+                                        importPrice,
+                                        retailPrice,
+                                        imageUrls,
+                                        category,
+                                    });
+        
+        await product.save();
+        
+        console.log("Product saved:", product);
+        
+        res.json({
+                     message: "Product saved successfully",
+                     product: product
+                 });
     } catch (error) {
-        if (error.name === "ValidationError") {
-            const errors = Object.values(error.errors)
-                                 .map((e) => e.message);
-            console.log("=>(productController.js:64) errors", errors);
-            
-            req.flash("info", errors);
-            res.render("pages/products/form", {
-                product,
-                categories
-            });
-        } else {
-            console.error("Error:", error);
-            next(error);
-        }
+        console.error("Error:", error);
+        res.status(500)
+           .json({
+                     error  : true,
+                     message: "Internal Server Error"
+                 });
     }
 };
 
@@ -82,7 +92,7 @@ exports.createV1 = async function (req, res, next) {
               category,
               creationDate,
               lastUpdateDate,
-          }          = req.body;
+          } = req.body;
     
     let product;
     

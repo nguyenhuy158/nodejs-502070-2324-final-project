@@ -9,13 +9,13 @@ const productSchema = new Schema({
     retailPrice: { type: Number, min: 1000 },
     imageUrls: {
         type: [String],
-        validate: {
-            validator: function (value) {
-                const urlRegex = /^(http|https):\/\/[^\s/$.?#].[^\s]*$/;
-                return value.every(url => urlRegex.test(url));
-            },
-            message: "One or more image URLs are not valid."
-        }
+        // validate: {
+        //     validator: function (value) {
+        //         const urlRegex = /^(http|https):\/\/[^\s/$.?#].[^\s]*$/;
+        //         return value.every(url => urlRegex.test(url));
+        //     },
+        //     message: "One or more image URLs are not valid."
+        // }
     },
                                      desc: { type: String },
     category: { type: Schema.Types.ObjectId, ref: "ProductCategory" },

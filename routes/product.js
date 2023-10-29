@@ -1,13 +1,14 @@
-const express = require("express");
-const router = express.Router();
+const express    = require("express");
+const router     = express.Router();
 const productController = require("../controllers/productController");
 const authController = require("../controllers/authController");
+const { upload } = require("../config/upload");
 
 router
     // .get('/', authController.checkAdmin, productController.gets)
     .get("/", productController.gets)
-    .post("/", productController.create)
     .get("/add", productController.add)
+    .post("/", upload.array("imageUrls", 5), productController.create)
     .get("/:id", productController.detail)
     .get("/:id/edit", productController.edit)
     .post("/:id/edit", productController.update)

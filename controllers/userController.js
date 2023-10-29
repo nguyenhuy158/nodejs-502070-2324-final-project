@@ -12,7 +12,8 @@ const { ObjectId } = require("mongodb");
 const Product = require("../models/product");
 const {
           generateToken,
-          sendEmail
+          sendEmail,
+          uploadImage
       }    = require("../middlewares/utils");
 
 exports.changeProfilePicture = async (req, res, next) => {
@@ -28,7 +29,7 @@ exports.changeProfilePicture = async (req, res, next) => {
             .webp({ quality: 80 })
             .toFile(path.join(__dirname, "..", "public", `uploads/${user._id}-profile.webp`));
         
-        user.profilePicture = `uploads/${user._id}-profile.webp`;
+        user.profilePicture = await uploadImage(`public/uploads/${user._id}-profile.webp`);
         await user.save();
         req.session.user = user;
         fs.unlinkSync(pathFile);

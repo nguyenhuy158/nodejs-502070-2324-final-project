@@ -5,8 +5,8 @@ block content
         a.btn.btn-primary(href="/products") Back to product list
 
         h2 #{product && product.id ? 'Edit Product' : 'Create Product'}
-        form(method='POST', action=product && product.id ? `/products/${product._id}/edit` :
-        '/products' autocomplete="off")
+        form#add-product(method='POST', action=product && product.id ? `/products/${product._id}/edit` :
+        '/products' autocomplete="off" enctype="multipart/form-data")
 
             .mb-3(class=product && product.id ? 'd-none' : '')
                 label(for='barcode' class='form-label') Barcode:
@@ -26,10 +26,7 @@ block content
 
             .mb-3
                 label(for='imageUrls' class='form-label') Image URLs:
-                input#imageUrls.form-control(type='text' name='imageUrls', value=product && product.imageUrls ?
-                    product.imageUrls.join(';\n') : '')
-                p.text-muted Enter image URLs separated by ;.
-
+                input#imageUrls.form-control(type='file' name='imageUrls', multiple)
             // Add image preview for editing
             if product && product.imageUrls.length > 0
                 .mb-3
@@ -41,8 +38,42 @@ block content
                 label(for='category' class='form-label') Category:
                 select#category.form-select(name='category')
                     each category in categories
-                        - const areEqual = String(product.category) === String(category._id)
+                        if product
+                            - const areEqual = String(product.category) === String(category._id)
+                        else
+                            - const areEqual = false
                         option(value=category._id, selected=areEqual)= category.name
 
             button.btn(type='submit', class=`${product ? 'btn-success' : 'btn-primary'}`) #{product ? 'Save' : 'Create'}
             a.btn.btn-secondary(href='/products') Cancel
+
+    script.
+        $(document)
+            .ready(function () {
+                const addForm = $('#add-product');
+
+                addForm.on('submit', function (e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    console.log("=>(form.pug:59) formData", formData);
+
+
+                    $.ajax({
+                               url        : addForm.attr('action'),
+                               type       : addForm.attr('method'),
+                               data       : formData,
+                               processData: false,
+                               contentType: false,
+                               success    : function (response) {
+                                   console.log("Response:", response);
+                                   showToast(response.message, 'success')
+                                   window.location = '/products'
+                               },
+                               error      : function (error) {
+                                   console.log("Error:", error);
+                                   showToast(error, 'success')
+                               }
+                           });
+                });
+            });
