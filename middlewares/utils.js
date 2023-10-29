@@ -55,3 +55,18 @@ exports.uploadImage = async (imagePath) => {
         console.error(error);
     }
 };
+
+exports.removeImageByUrl = async function (imageUrl) {
+    try {
+        const publicId = imageUrl.match(/\/v\d+\/(.+)\./)[1];
+        
+        const result = await cloudinary.uploader.destroy(publicId);
+        
+        console.log(`Image removed from Cloudinary: ${publicId}`);
+        return result;
+    } catch (error) {
+        console.error(`Error removing image from Cloudinary: ${error.message}`);
+    }
+};
+
+

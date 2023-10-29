@@ -20,7 +20,7 @@ function showToast(message, type) {
         autohide: true,
         delay   : 5000
     });
-    console.log("=>(index.hbs:377) toastInstance", toastInstance);
+    // console.log("=>(index.hbs:377) toastInstance", toastInstance);
     toastInstance.show();
     $(toastInstance)
         .on("hidden.bs.toast", function () {

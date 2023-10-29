@@ -16,8 +16,14 @@ block content
             label(for='floatingSelect') Product per page
 
 
+    // Pagination
+    +pagination('/products', current, count, perPage)
+
+    // Table list
     div.container
         h2 Product List
+        // Display the message
+        p Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
         table.table.table-striped.table-bordered
             thead
                 tr
@@ -27,10 +33,8 @@ block content
                     th Import Price
                     th Retail Price
                     th Category
-                    th Creation Date
-                    th Last Update Date
-                    th Image
-                    th Handle
+                    th Thumbnail
+                    th
 
             tbody
             if products && products.length > 0
@@ -42,13 +46,14 @@ block content
                         td= product.importPrice
                         td= product.retailPrice
                         td= product.category.name
-                        td= product.createdAtFormatted
-                        td= product.updatedAtFormatted
                         td
                             +renderProfilePicture(product.imageUrls[0])
                         td
                             a.my-1.btn.btn-primary(href=`/products/${product._id}`) View
-                            a.my-1.btn.btn-success(href=`/products/${product._id}/edit`) Update
+                            button.my-1.btn.btn-success.btn-edit(
+                                data-product-id=`${product._id}`
+                                data-href=`/products/${product._id}/edit`
+                            ) Update
                             button.my-1.btn.btn-danger.delete-btn(
                                 data-product-name=`${product.productName}`
                                 data-product-id=`${product._id}`
@@ -57,53 +62,18 @@ block content
                 tr
                     td.text-center.p-5.h4(colspan='12') No products found.
 
-
-    // Display the message
-    p Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
-
-    // Pagination
-    +pagination('/products', current, count, perPage)
-
-
     // Confirm modal
     include ../../partials/confirm-delete-modal
+
+    // Confirm modal
+    include ../../partials/product-edit-modal
 
     #flash-alert.alert.alert-danger(style="display: none")
         span Flash alert message
 
     // Script for confirming delete
-    script.
-        $(document).ready(function () {
-            const deleteButtons = $(".delete-btn");
-            const modalTitle = $("#modalDelete .modal-title");
-            const confirmModalBody = $("#modalDelete .modal-body");
-            const confirmDeleteButton = $("#modalDelete .btn.btn-danger");
-
-            deleteButtons.click(function () {
-                const productName = $(this).data("product-name");
-                const productId = $(this).data("product-id");
-                confirmModalBody.html(`Are you sure you want to delete
-                <strong>${productName}</strong>?`);
-                $('#modalDelete').modal('show');
-
-                confirmDeleteButton.click(function () {
-                    $('#modalDelete').modal('hide');
-                    console.log('click');
-                    console.log(`/products/${productId}`);
-                    fetch(`/products/${productId}`, {
-                        method: "DELETE"
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log("=>(list.pug:113) data", data);
-                            location.reload();
-                        })
-                        .catch(error => {
-                            console.log("Error in deleting:", error);
-                        });
-                });
-            });
-        });
+    script(src="js/products/confirm-delete.js")
+    script(src="js/products/product-edit-modal.js")
     // End script for confirming delete
 
     script.

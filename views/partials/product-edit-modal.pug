@@ -1,0 +1,54 @@
+// Confirm edit
+.modal.fade#modal-product-edit(data-bs-backdrop="static",
+    data-bs-keyboard="true",
+    tabindex='-1',
+    aria-labelledby='staticBackdropLabel',
+    aria-hidden='true')
+    .modal-dialog.modal-dialog-scrollable
+        .modal-content
+            // Modal Header
+            .modal-header
+                h5.modal-title
+                button.btn-close(data-bs-dismiss='modal', aria-label='Close')
+
+            // Modal body
+            .modal-body
+                form#edit-product(autocomplete="off" enctype="multipart/form-data")
+                    p Leave if don't want change this field
+
+                    .mb-3
+                        label(for='productName' class='form-label') Product Name:
+                        input#productName.form-control(type='text' name='productName', required)
+
+                    .mb-3
+                        label(for='importPrice' class='form-label') Import Price:
+                        input#importPrice.form-control(type='number' name='importPrice', min='1000')
+
+                    .mb-3
+                        label(for='retailPrice' class='form-label') Retail Price:
+                        input#retailPrice.form-control(type='number' name='retailPrice', min='1000')
+
+                    //.mb-3
+                    //    label(for='imageUrls' class='form-label') Image URLs:
+                    //    input#imageUrls.form-control(type='file' name='imageUrls', multiple)
+                    //
+                    //.mb-3.image-urls-list
+                    //    label(class='form-label') Current Image:
+
+                    .mb-3
+                        label(class='form-label') Description:
+                        textarea.form-control(name='desc')
+
+                    .mb-3
+                        label(for='category' class='form-label') Category:
+                        select#category.form-select(name='category')
+                            each category in categories
+                                option(value=category._id)= category.name
+
+
+                    // Modal footer
+                    .modal-footer
+                        button.btn.btn-secondary(data-bs-dismiss='modal') Close
+                        button.btn.btn-success(type='submit') Save
+// End Confirm edit
+

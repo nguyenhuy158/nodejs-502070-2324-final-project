@@ -3,15 +3,23 @@ const ProductCategory = require("../models/productCategory");
 const { faker }       = require("@faker-js/faker");
 const moment          = require("moment");
 const { ObjectId }    = require("mongodb");
+const mongoose       = require("mongoose");
 const sharp           = require("sharp");
 const path            = require("path");
 const fs              = require("fs");
-const { uploadImage } = require("../middlewares/utils");
+const {
+          uploadImage,
+          removeImageByUrl
+      }              = require("../middlewares/utils");
+const { categories } = require("./ProductCategoryController");
+
+
+function product(productId) {
+    return Product.findById(productId);
+}
 
 exports.add = async function (req, res, next) {
-    const categories = await ProductCategory.find()
-                                            .sort({ name: 1 });
-    res.render("pages/products/form", { categories });
+    res.render("pages/products/form", { categories: await categories() });
 };
 
 exports.create = async function (req, res, next) {
@@ -24,31 +32,7 @@ exports.create = async function (req, res, next) {
               retailPrice,
               category
           }         = req.body;
-    const imageUrls = await Promise.all(req.files
-                                           .map((file) => file.path)
-                                           .map(async file => {
-                                               const parsedPath               = path.parse(file);
-                                               const fileNameWithoutExtension = parsedPath.name;
-                                               const newFilePath              = path.join(__dirname, "..", "public", `uploads/${fileNameWithoutExtension}.webp`);
-                                               
-                                               await sharp(file)
-                                                   .resize(200, 200, {
-                                                       fit               : sharp.fit.cover,
-                                                       withoutEnlargement: true
-                                                   })
-                                                   .webp({ quality: 80 })
-                                                   .toFile(newFilePath);
-                                               try {
-                                                   await fs.promises.access(newFilePath);
-                                                   await fs.promises.unlink(file);
-                                                   return await uploadImage(newFilePath);
-                                               } catch (err) {
-                                                   console.log("=>(productController.js:47) err", err);
-                                               }
-                                               
-                                               return newFilePath;
-                                           }));
-    console.log("=>(productController.js:48) imageUrls", imageUrls);
+    const imageUrls = await processImageUrlsBeforeStore(req.files);
     
     try {
         const product = new Product({
@@ -147,49 +131,33 @@ exports.createV1 = async function (req, res, next) {
 };
 
 exports.update = async function (req, res, next) {
-    const categories = await ProductCategory.find()
-                                            .sort({ name: 1 });
     
     const productId = req.params.id;
-    console.log("=>(productController.js:117) productId", productId);
+    
     const {
-              barcode,
               productName,
               importPrice,
               retailPrice,
-              imageUrls,
               category,
-              creationDate,
-              lastUpdateDate,
+              desc
           } = req.body;
-    
-    let product = {
-        barcode,
-        productName,
-        importPrice,
-        retailPrice,
-        imageUrls,
-        category,
-        creationDate,
-        lastUpdateDate,
-    };
     
     try {
         if (productId) {
             product = await Product.findByIdAndUpdate(productId, {
-                barcode,
                 productName,
                 importPrice,
                 retailPrice,
-                imageUrls: imageUrls.split("\n"),
                 category,
-                creationDate,
-                lastUpdateDate,
+                desc
             }, { new: true });
+            console.log(`=>(productController.js:180) product`, product);
+            req.flash("info", "Update products successfully");
+            res.json({
+                         error: false,
+                         product
+                     });
         }
-        req.flash("info", "Update products successfully");
-        res.redirect("/products");
-        
     } catch (error) {
         if (error.name === "ValidationError") {
             
@@ -198,16 +166,19 @@ exports.update = async function (req, res, next) {
             console.log("=>(productController.js:64) errors", errors);
             
             req.flash("info", errors);
-            res.render("pages/products/form", {
-                product,
-                categories
-            });
+            res.json({
+                         error  : true,
+                         message: errors
+                     });
         } else {
             console.error("Error:", error);
-            next(error);
+            res.setStatus(500)
+               .json({
+                         error  : true,
+                         message: error
+                     });
         }
     }
-    next();
 };
 
 exports.edit = async function (req, res, next) {
@@ -230,11 +201,19 @@ exports.edit = async function (req, res, next) {
 };
 
 exports.detail = async function (req, res, next) {
+    
     try {
         const id = req.params.id;
         
         const product = await Product.findById({ _id: id });
-        res.render("pages/products/detail", { product });
+        if (req.xhr) {
+            return res.json({
+                                error: false,
+                                product
+                            });
+        } else {
+            res.render("pages/products/detail", { product });
+        }
     } catch (error) {
         console.error("Error fetching products:", error);
         next(error);
@@ -357,5 +336,120 @@ exports.seedDatabaseV1 = async function () {
     } catch (err) {
         console.error("Error inserting sample products:", err);
     } finally {
+    }
+};
+
+function processImageUrlsBeforeStore(files) {
+    return Promise.all(files
+                           .map((file) => file.path)
+                           .map(async file => {
+                               const parsedPath               = path.parse(file);
+                               const fileNameWithoutExtension = parsedPath.name;
+                               const newFilePath              = path.join(__dirname, "..", "public", `uploads/${fileNameWithoutExtension}.webp`);
+                               
+                               await sharp(file)
+                                   .resize(200, 200, {
+                                       fit               : sharp.fit.cover,
+                                       withoutEnlargement: true
+                                   })
+                                   .webp({ quality: 80 })
+                                   .toFile(newFilePath);
+                               try {
+                                   await fs.promises.access(newFilePath);
+                                   await fs.promises.unlink(file);
+                                   return await uploadImage(newFilePath);
+                               } catch (err) {
+                                   console.log("=>(productController.js:47) err", err);
+                               }
+                               
+                               return newFilePath;
+                           }));
+}
+
+exports.addThumbnails = async (req, res) => {
+    const imageUrls = await processImageUrlsBeforeStore(req.files);
+    const productId = req.params.id;
+    console.log(`=>(productController.js:369) productId`, productId);
+    try {
+        const result = await Product.updateOne({ _id: productId }, { $push: { imageUrls: { $each: imageUrls } } });
+        console.log(`=>(productController.js:371) result`, result);
+        
+        return res.json({
+                            error: false,
+                            result
+                        });
+    } catch (error) {
+        console.log(`=>(productController.js:377) error`, error);
+        return res.json({
+                            error  : true,
+                            message: error
+                        });
+    }
+};
+
+exports.removeThumbnails = async (req, res) => {
+    const imageUrls = req.body.imageUrls;
+    const productId = req.params.id;
+    try {
+        const result = await Product.updateOne({ _id: productId }, { $pull: { imageUrls: imageUrls } });
+        console.log(`=>(productController.js:371) result`, result);
+        await removeImageByUrl(imageUrls);
+        
+        return res.json({
+                            error: false,
+                            result
+                        });
+    } catch (error) {
+        console.log(`=>(productController.js:377) error`, error);
+        return res.json({
+                            error  : true,
+                            message: error
+                        });
+    }
+};
+
+
+exports.mainThumbnail = async (req, res) => {
+    const productId = req.params.id;
+    const value     = req.body.imageUrls;
+    
+    try {
+        const product = await Product.findById(productId);
+        
+        if (!product) {
+            return res.json({
+                                error  : true,
+                                message: "Product not found"
+                            });
+        }
+        
+        const { imageUrls } = product;
+        
+        if (imageUrls.length < 2) {
+            return res.json({
+                                error  : true,
+                                message: "There are not enough images to move"
+                            });
+        }
+        
+        const index = imageUrls.indexOf(value);
+        if (index !== -1) {
+            imageUrls.splice(index, 1);
+            
+            imageUrls.unshift(value);
+        }
+        
+        product.markModified("imageUrls");
+        await product.save();
+        
+        return res.json({
+                            error  : false,
+                            message: "Last image moved to the first position and saved"
+                        });
+    } catch (error) {
+        return res.json({
+                            error  : true,
+                            message: "Error moving last image:" + error
+                        });
     }
 };

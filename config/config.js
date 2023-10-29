@@ -44,7 +44,7 @@ module.exports = {
     sassOptions               : {
         src   : path.join("..", "source", "sass"),
         dest  : path.join("..", "public", "css"),
-        debug : true,
+        debug: false,
         outputStyle: "compressed",
         force : true,
         root  : __dirname,

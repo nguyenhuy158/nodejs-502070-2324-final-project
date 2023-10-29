@@ -10,10 +10,13 @@ router
     .get("/add", productController.add)
     .post("/", upload.array("imageUrls", 5), productController.create)
     .get("/:id", productController.detail)
+    .put("/:id", upload.array("imageUrls", 5), productController.update)
     .get("/:id/edit", productController.edit)
-    .post("/:id/edit", productController.update)
-    .put("/:id/edit", productController.gets)
+    // .post("/:id/edit", productController.update)
     .delete("/:id", productController.delete)
-    .get("/about", productController.gets);
+    .get("/about", productController.gets)
+    .post("/:id/imageUrls", upload.array("imageUrls", 5), productController.addThumbnails)
+    .put("/:id/imageUrls", productController.removeThumbnails)
+    .put("/:id/main-thumbnail", productController.mainThumbnail)
 
 module.exports = router;

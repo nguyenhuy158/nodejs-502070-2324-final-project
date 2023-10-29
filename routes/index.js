@@ -22,15 +22,16 @@ const { ensureAuthenticated } = require("../controllers/authController");
 const authController    = require("../controllers/authController");
 const { limiter }       = require("../config/config");
 const { requireRole }   = require("../middlewares/authorization");
+const { categories }    = require("../controllers/ProductCategoryController");
 
 // other middleware and server
 
 router
-    .use(limiter)
-    .use(require("morgan")("tiny", config.morganOptions))
-    .use(winstonLog)
-    .use(updateCurrentUser)
     .use(logRequestDetails)
+    .use(limiter)
+    // .use(require("morgan")("tiny", config.morganOptions))
+    // .use(winstonLog)
+    .use(updateCurrentUser)
     .get("/error", (req, res, next) => {
         try {
             throw new Error("This is a 500 error.");
@@ -61,6 +62,15 @@ router
 
 // main router
 router
+    .use(async (req, res, next) => {
+        try {
+            req.app.locals.categories = await categories();
+        } catch (e) {
+            console.log("=>(index.js:71) e", e);
+            req.app.locals.categories = [];
+        }
+        next();
+    })
     .use("/users", requireRole(process.env.ROLE_ADMIN), userRouter)
     .use("/products", requireRole(process.env.ROLE_ADMIN), productRouter)
     .use("/customers", customerRouter)

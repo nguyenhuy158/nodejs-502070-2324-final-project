@@ -63,7 +63,7 @@ app.use((req, res, next) => {
 
 app.use(connectDb);
 cloudinary.config(cloudinaryConfig);
-console.log("=>(app.js:65) cloudinary.config()", cloudinary.config());
+// console.log("=>(app.js:65) cloudinary.config()", cloudinary.config());
 // uploadImage("C:\\Users\\ADMIN\\Desktop\\nodejs-502070-2324-final-project\\public\\favicon.ico");
 
 passport.use(new LocalStrategy(async function (username, password, done) {
