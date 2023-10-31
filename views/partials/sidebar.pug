@@ -16,7 +16,7 @@ svg(xmlns='http://www.w3.org/2000/svg' style='display: none')
 
 .container-fluid
     .row
-        .col-2.bg-secondary.text-white.d-flex.h-auto
+        .col-2.bg-secondary.text-white.d-flex.position-relative
             // Sidebar
             .d-flex.flex-column.flex-shrink-0.p-3
                 a.slide-title.d-flex.text-center.mb-3.mb-md-0.me-md-auto.text-white.text-decoration-none(href='/')
@@ -67,9 +67,9 @@ svg(xmlns='http://www.w3.org/2000/svg' style='display: none')
                                 input#darkModeSwitch.form-check-input(type="checkbox" role="switch" checked=user.settings.darkMode)
                                 label.form-check-label(for="darkModeSwitch") Dark mode
                 hr
-                .dropdown
-                    a#dropdownUser1.d-flex.align-items-center.text-white.text-decoration-none.dropdown-toggle(href='#' data-bs-toggle='dropdown' aria-expanded='false')
-                        img.rounded-circle.me-2(src=user.profilePicture alt='' width='32' height='32')
+                .dropdown.text-center
+                    a#dropdownUser1.text-white.text-decoration-none.dropdown-toggle(href='#' data-bs-toggle='dropdown' aria-expanded='false')
+                        img.rounded-circle.me-2(src=user.profilePicture alt='' width='58' height='58')
                         if (user && user.fullName)
                             b= user.fullName
                         else
