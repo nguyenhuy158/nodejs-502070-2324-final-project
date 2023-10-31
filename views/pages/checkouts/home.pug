@@ -1,77 +1,77 @@
 extends ../layout
 
 block content 
-    .container-fluid
-    .row
-        .col-md-8
-            ul.list-unstyled
-                li.list-item Product 1
-                li.list-item Product 1
-                li.list-item Product 1
-                li.list-item Product 1
-                li.list-item Product 1
+    //- .container-fluid
+    //- .row
+    //-     .col-md-8
+    //-         ul.list-unstyled
+    //-             li.list-item Product 1
+    //-             li.list-item Product 1
+    //-             li.list-item Product 1
+    //-             li.list-item Product 1
+    //-             li.list-item Product 1
 
-        .col-md-4
-            form#customer-info(role='form' action='/checkout' method='post')
-                input(name="id" type="text" hidden)
-                .form-group
-                    label(for='input-phone') Phone
-                    .input-group
-                        input#input-phone.form-control(name='phone' type='text')
-                        button#load-customer.btn.btn-outline-secondary(type='button')
-                            ion-icon(name='reload-circle-outline')
-                .form-group
-                    label.form-label(for="") Full Name
-                    input.form-control(name="fullName" type="text" value='')
-                .form-group
-                    label.form-label(for="") Address
-                    input.form-control(name="address" type="text" value='')
-                .form-group
-                    label.form-label(for="") Note
-                    textarea.form-control(name="note" type="text" value='' cols="30" rows="5")
+    //-     .col-md-4
+    //-         form#customer-info(role='form' action='/checkout' method='post')
+    //-             input(name="id" type="text" hidden)
+    //-             .form-group
+    //-                 label(for='input-phone') Phone
+    //-                 .input-group
+    //-                     input#input-phone.form-control(name='phone' type='text')
+    //-                     button#load-customer.btn.btn-outline-secondary(type='button')
+    //-                         ion-icon(name='reload-circle-outline')
+    //-             .form-group
+    //-                 label.form-label(for="") Full Name
+    //-                 input.form-control(name="fullName" type="text" value='')
+    //-             .form-group
+    //-                 label.form-label(for="") Address
+    //-                 input.form-control(name="address" type="text" value='')
+    //-             .form-group
+    //-                 label.form-label(for="") Note
+    //-                 textarea.form-control(name="note" type="text" value='' cols="30" rows="5")
 
-                button.my-2.btn.btn-primary(type='submit') Checkout
+    //-             button.my-2.btn.btn-primary(type='submit') Checkout
 
 
-    script.
-        $(document)
-            .ready(() => {
-                console.log('Checkout page');
-                $('#load-customer')
-                    .click(() => {
-                        const phone = $('#input-phone')
-                            .val();
+    //- script.
+    //-     $(document)
+    //-         .ready(() => {
+    //-             console.log('Checkout page');
+    //-             $('#load-customer')
+    //-                 .click(() => {
+    //-                     const phone = $('#input-phone')
+    //-                         .val();
 
-                        $.ajax({
-                                   url    : '/checkout/get-customer',
-                                   method : 'POST',
-                                   data   : { phone },
-                                   success: function (response) {
-                                       const customer = response.customer;
-                                       if (customer) {
-                                           console.log("🚀 ~ file: home.pug:51 ~ $ ~ response:", response)
-                                           $(`input[name="fullName"]`)
-                                               .val(customer.fullName);
-                                           $(`input[name="address"]`)
-                                               .val(customer.address);
-                                           $(`input[name="fullName"]`)
-                                               .val(customer.fullName);
-                                           $(`input[name="fullName"]`)
-                                               .val(customer.fullName);
-                                       } else {
-                                           $('#customer-info')
-                                               .trigger("reset");
-                                           $('#input-phone')
-                                               .val(phone)
-                                       }
-                                   },
-                                   error  : function (error) {
-                                       console.log("🚀 ~ file: home.pug:55 ~ $ ~ error:", error)
-                                       $('#customer-info')
-                                           .trigger("reset");
-                                       $('#input-phone')
-                                           .val(phone)
-                                   }
-                               })
-                    })
-            })
+    //-                     $.ajax({
+    //-                                url    : '/checkout/get-customer',
+    //-                                method : 'POST',
+    //-                                data   : { phone },
+    //-                                success: function (response) {
+    //-                                    const customer = response.customer;
+    //-                                    if (customer) {
+    //-                                        console.log("🚀 ~ file: home.pug:51 ~ $ ~ response:", response)
+    //-                                        $(`input[name="fullName"]`)
+    //-                                            .val(customer.fullName);
+    //-                                        $(`input[name="address"]`)
+    //-                                            .val(customer.address);
+    //-                                        $(`input[name="fullName"]`)
+    //-                                            .val(customer.fullName);
+    //-                                        $(`input[name="fullName"]`)
+    //-                                            .val(customer.fullName);
+    //-                                    } else {
+    //-                                        $('#customer-info')
+    //-                                            .trigger("reset");
+    //-                                        $('#input-phone')
+    //-                                            .val(phone)
+    //-                                    }
+    //-                                },
+    //-                                error  : function (error) {
+    //-                                    console.log("🚀 ~ file: home.pug:55 ~ $ ~ error:", error)
+    //-                                    $('#customer-info')
+    //-                                        .trigger("reset");
+    //-                                    $('#input-phone')
+    //-                                        .val(phone)
+    //-                                }
+    //-                            })
+    //-                 })
+    //-         })
