@@ -51,7 +51,8 @@ exports.home = async (req, res) => {
         title   : "Home",
         app_name: process.env.APP_NAME,
         products: await Product.find({})
-                               .limit(3)
+            .limit(3),
+        sideLink: process.env.SIDEBAR_HOME
     });
 };
 

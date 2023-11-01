@@ -296,7 +296,7 @@ exports.gets = async function (req, res, next) {
         };
         res.render("pages/products/list", {
             ...output,
-            navLink: process.env.NAVBAR_PRODUCT
+            sideLink: process.env.SIDEBAR_PRODUCT
         });
         
     } catch (error) {

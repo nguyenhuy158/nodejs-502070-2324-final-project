@@ -1,34 +1,36 @@
 extends ../layout
 
 block content 
-    .container-fluid
-    .row
-        .col-md-8
-            ul.list-unstyled
-                li.list-item Product 1
-                li.list-item Product 1
-                li.list-item Product 1
-                li.list-item Product 1
-                li.list-item Product 1
-    .col-md-4
-        form#customer-info(role='form' action='/checkout' method='post')
-            input(name="id" type="text" hidden)
-            .form-group
-                label(for='input-phone') Phone
-                .input-group
-                    input#input-phone.form-control(name='phone' type='text')
-                    button#load-customer.btn.btn-outline-secondary(type='button')
-                        ion-icon(name='reload-circle-outline')
-            .form-group
-                label.form-label(for="") Full Name
-                input.form-control(name="fullName" type="text" value='')
-            .form-group
-                label.form-label(for="") Address
-                input.form-control(name="address" type="text" value='')
-            .form-group
-                label.form-label(for="") Note
-                textarea.form-control(name="note" type="text" value='' cols="30" rows="5")
-            button.my-2.btn.btn-primary(type='submit') Checkout
+    .content 
+        include ../../partials/nav
+        .container-fluid
+        .row
+            .col-md-8
+                ul.list-unstyled
+                    li.list-item Product 1
+                    li.list-item Product 1
+                    li.list-item Product 1
+                    li.list-item Product 1
+                    li.list-item Product 1
+        .col-md-4
+            form#customer-info(role='form' action='/checkout' method='post')
+                input(name="id" type="text" hidden)
+                .form-group
+                    label(for='input-phone') Phone
+                    .input-group
+                        input#input-phone.form-control(name='phone' type='text')
+                        button#load-customer.btn.btn-outline-secondary(type='button')
+                            ion-icon(name='reload-circle-outline')
+                .form-group
+                    label.form-label(for="") Full Name
+                    input.form-control(name="fullName" type="text" value='')
+                .form-group
+                    label.form-label(for="") Address
+                    input.form-control(name="address" type="text" value='')
+                .form-group
+                    label.form-label(for="") Note
+                    textarea.form-control(name="note" type="text" value='' cols="30" rows="5")
+                button.my-2.btn.btn-primary(type='submit') Checkout
 
 
     script.

@@ -1,126 +1,128 @@
 extends ../layout
 
 block content
-    .container
-        .row
-            //- BEGIN SEARCH RESULT
-            .col-md-12
-                .grid.search
-                    .grid-body
-                        .row
-                            //- BEGIN FILTERS
-                            .col-md-3
-                                h2.grid-title
-                                    i.fa.fa-filter
-                                    |  Filters
-                                hr
-                                //- BEGIN FILTER BY CATEGORY
-                                h4 By category:
-                                for category in categories
-                                    .form-check.d-flex.align-items-center
-                                        input.form-check-input.align-self-center(type="checkbox" value="" id=`ct${category.name}`)
-                                        label.form-check-label.ms-2(for=`ct${category.name}`)= category.name
-                                //- END FILTER BY CATEGORY
-                                .p-2
-                                //- BEGIN FILTER BY DATE
-                                h4 By date:
-                                |  From
-                                .input-group.mb-3
-                                    span.input-group-text
-                                        i.fa-solid.fa-calendar-days
-                                    input.form-control(type="date" data-date-format="dd-mm-yyyy" value=new Date().toISOString()
-                                                                                                                 .split('T')[0])
+    .content 
+        include ../../partials/nav
+        .container
+            .row
+                //- BEGIN SEARCH RESULT
+                .col-md-12
+                    .grid.search
+                        .grid-body
+                            .row
+                                //- BEGIN FILTERS
+                                .col-md-3
+                                    h2.grid-title
+                                        i.fa.fa-filter
+                                        |  Filters
+                                    hr
+                                    //- BEGIN FILTER BY CATEGORY
+                                    h4 By category:
+                                    for category in categories
+                                        .form-check.d-flex.align-items-center
+                                            input.form-check-input.align-self-center(type="checkbox" value="" id=`ct${category.name}`)
+                                            label.form-check-label.ms-2(for=`ct${category.name}`)= category.name
+                                    //- END FILTER BY CATEGORY
+                                    .p-2
+                                    //- BEGIN FILTER BY DATE
+                                    h4 By date:
+                                    |  From
+                                    .input-group.mb-3
+                                        span.input-group-text
+                                            i.fa-solid.fa-calendar-days
+                                        input.form-control(type="date" data-date-format="dd-mm-yyyy" value=new Date().toISOString()
+                                                                                                                    .split('T')[0])
 
-                                |  To
-                                .input-group.mb-3
-                                    span.input-group-text
-                                        i.fa-solid.fa-calendar-days
-                                    input.form-control(type="date" data-date-format="dd-mm-yyyy" value=new Date().toISOString()
-                                                                                                                 .split('T')[0])
-                                //- END FILTER BY DATE
-                                .p-2
-                                //- BEGIN FILTER BY PRICE
-                                h4 By price:
-                                |  Between
-                                div#price1 $300
-                                |  to
-                                div#price2  $800
-                                input.slider.form-range(type="range" value="" data-slider-min="0"
-                                    data-slider-max="1000" data-slider-step="1" data-slider-value="[300,800]" data-slider-tooltip="hide")
-                                //- END FILTER BY PRICE
-                            //- END FILTERS
-                            //- BEGIN RESULT
-                            .col-md-9
-                                h2
-                                    i.fa.fa-file-o
-                                    |  Result
-                                hr
-                                //- BEGIN SEARCH INPUT
-                                form(action='/search', method='get')
-                                    .input-group
-                                        input.form-control(name='q' type="text" placeholder="Search..." value=q)
-                                        button.btn.btn-outline-secondary(type="submit")
-                                            i.fa.fa-search
+                                    |  To
+                                    .input-group.mb-3
+                                        span.input-group-text
+                                            i.fa-solid.fa-calendar-days
+                                        input.form-control(type="date" data-date-format="dd-mm-yyyy" value=new Date().toISOString()
+                                                                                                                    .split('T')[0])
+                                    //- END FILTER BY DATE
+                                    .p-2
+                                    //- BEGIN FILTER BY PRICE
+                                    h4 By price:
+                                    |  Between
+                                    div#price1 $300
+                                    |  to
+                                    div#price2  $800
+                                    input.slider.form-range(type="range" value="" data-slider-min="0"
+                                        data-slider-max="1000" data-slider-step="1" data-slider-value="[300,800]" data-slider-tooltip="hide")
+                                    //- END FILTER BY PRICE
+                                //- END FILTERS
+                                //- BEGIN RESULT
+                                .col-md-9
+                                    h2
+                                        i.fa.fa-file-o
+                                        |  Result
+                                    hr
+                                    //- BEGIN SEARCH INPUT
+                                    form(action='/search', method='get')
+                                        .input-group
+                                            input.form-control(name='q' type="text" placeholder="Search..." value=q)
+                                            button.btn.btn-outline-secondary(type="submit")
+                                                i.fa.fa-search
 
-                                //- END SEARCH INPUT
-                                p Showing all results matching "#{q}"
-                                .p-2
+                                    //- END SEARCH INPUT
+                                    p Showing all results matching "#{q}"
+                                    .p-2
 
-                                .row
-                                    //- BEGIN ORDER RESULT
-                                    .col-sm-6
-                                        .btn-group
-                                            button.btn.btn-secondary.dropdown-toggle(type="button" data-bs-toggle="dropdown") Order by
-                                            ul.dropdown-menu(role="menu")
-                                                li
-                                                    a.dropdown-item(href="#") Name
-                                                li
-                                                    a.dropdown-item(href="#") Date
-                                                li
-                                                    a.dropdown-item(href="#") View
-                                                li
-                                                    a.dropdown-item(href="#") Rating
+                                    .row
+                                        //- BEGIN ORDER RESULT
+                                        .col-sm-6
+                                            .btn-group
+                                                button.btn.btn-secondary.dropdown-toggle(type="button" data-bs-toggle="dropdown") Order by
+                                                ul.dropdown-menu(role="menu")
+                                                    li
+                                                        a.dropdown-item(href="#") Name
+                                                    li
+                                                        a.dropdown-item(href="#") Date
+                                                    li
+                                                        a.dropdown-item(href="#") View
+                                                    li
+                                                        a.dropdown-item(href="#") Rating
 
-                                    //- END ORDER RESULT
-                                    .col-md-6.text-end
-                                        .btn-group
-                                            button#view-list.btn.btn-outline-secondary.disabled
-                                                i.fa.fa-list
-                                            button#view-table.btn.btn-outline-secondary
-                                                i.fa.fa-th
-                                //- END RESULT
+                                        //- END ORDER RESULT
+                                        .col-md-6.text-end
+                                            .btn-group
+                                                button#view-list.btn.btn-outline-secondary.disabled
+                                                    i.fa.fa-list
+                                                button#view-table.btn.btn-outline-secondary
+                                                    i.fa.fa-th
+                                    //- END RESULT
 
-                                // PAGINATION
-                                +pagination('/search', current, count, perPage, q)
-                                // END PAGINATION
+                                    // PAGINATION
+                                    +pagination('/search', current, count, perPage, q)
+                                    // END PAGINATION
 
-                                // Display the message
-                                span Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
+                                    // Display the message
+                                    span Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
 
-                                ol.list-group.list-group-numbered.mt-3
-                                    each product in products
-                                        li.list-group-item
-                                            .row
-                                                .col.ms-2.me-auto
-                                                    a.fw-bold.text-decoration-none(href=`/products/${product._id}`) #{product.productName}
-                                                    p Code: #{product.barcode}
+                                    ol.list-group.list-group-numbered.mt-3
+                                        each product in products
+                                            li.list-group-item
+                                                .row
+                                                    .col.ms-2.me-auto
+                                                        a.fw-bold.text-decoration-none(href=`/products/${product._id}`) #{product.productName}
+                                                        p Code: #{product.barcode}
 
-                                                if product.imageUrls.length > 0
-                                                    .col-3
-                                                        img(src=product.imageUrls[0] alt=product.productName width=100 height=100)
-                                                .col-1
-                                                    .row.mb-1
-                                                        span.badge.bg-warning.w-auto.text-wrap.lh-sm.p-1.overflow-hidden.text-truncate #{product.category.name}
-                                                    if user.isAdmin()
+                                                    if product.imageUrls.length > 0
+                                                        .col-3
+                                                            img(src=product.imageUrls[0] alt=product.productName width=100 height=100)
+                                                    .col-1
                                                         .row.mb-1
-                                                            span.badge.bg-info.rounded-pill.w-auto #{product.importPrice}
-                                                    .row.mb-1
-                                                        span.badge.bg-primary.rounded-pill.w-auto #{product.retailPrice}
-                                            .row
-                                                .col
-                                                    button.me-2.btn.btn-outline-primary Add to cart
-                                                    button.me-2.btn.btn-outline-primary View revenue
-                                                    button.me-2.btn.btn-outline-primary Other
+                                                            span.badge.bg-warning.w-auto.text-wrap.lh-sm.p-1.overflow-hidden.text-truncate #{product.category.name}
+                                                        if user.isAdmin()
+                                                            .row.mb-1
+                                                                span.badge.bg-info.rounded-pill.w-auto #{product.importPrice}
+                                                        .row.mb-1
+                                                            span.badge.bg-primary.rounded-pill.w-auto #{product.retailPrice}
+                                                .row
+                                                    .col
+                                                        button.me-2.btn.btn-outline-primary Add to cart
+                                                        button.me-2.btn.btn-outline-primary View revenue
+                                                        button.me-2.btn.btn-outline-primary Other
 
 
     script.

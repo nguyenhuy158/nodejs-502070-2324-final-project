@@ -7,19 +7,19 @@
       span Tech
       | Hut
   ul.side-menu
-    li.active
+    li(class= sideLink == 'Home' ? 'active' : '')
       a(href='/')
         i.bx.bxs-dashboard
         | Dashboard
-    li
+    li(class= sideLink == 'Product' ? 'active' : '')
       a(href='/products')
         i.bx.bx-store-alt
         | Shop
-    li
+    li(class= sideLink == 'Checkout' ? 'active' : '')
       a(href='/checkout')
         i.bx.bx-analyse
-        | Analytics
-    li
+        | Checkout
+    li(class= sideLink == 'User' ? 'active' : '')
       a(href='/users')
         i.bx.bx-group
         | Users

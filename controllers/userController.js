@@ -136,7 +136,7 @@ exports.getUsers = async function (req, res, next) {
         };
         res.render("pages/users/list", {
             ...response,
-            navLink: process.env.NAVBAR_USER
+            sideLink: process.env.SIDEBAR_USER
         });
     } catch (error) {
         console.error("Error fetching users:", error);

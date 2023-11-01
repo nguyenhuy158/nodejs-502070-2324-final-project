@@ -6,7 +6,7 @@ exports.get = async (req, res, next) => {
     try {
         const carts = await Cart.find();
         console.log("🚀 ~ file: checkoutController.js:8 ~ exports.get= ~ carts:", carts);
-        return res.render('pages/checkouts/home', { carts });
+        return res.render('pages/checkouts/home', { carts, sideLink: process.env.SIDEBAR_CHECKOUT });
     } catch (error) {
         console.log("🚀 ~ file: checkoutController.js:8 ~ exports.get= ~ error:", error);
         next(error);
