@@ -1,94 +1,95 @@
 extends ../layout.pug
 
 block content
-    .row
-        .col
-            a.btn.btn-outline-primary(href="/users/create-account") Create salespeople
+    .content
+        .row
+            .col
+                a.btn.btn-outline-primary(href="/users/create-account") Create salespeople
 
-        .col-2.form-floating
-            select#floatingSelect.form-select(onchange='updatePerPage(this)')
-                option(selected='' value='0') select
-                option(value='1') 1
-                option(value='2') 2
-                option(value='3') 3
-                option(value='4') 4
-                option(value='5') 5
-            label(for='floatingSelect') Users per page
+            .col-2.form-floating
+                select#floatingSelect.form-select(onchange='updatePerPage(this)')
+                    option(selected='' value='0') select
+                    option(value='1') 1
+                    option(value='2') 2
+                    option(value='3') 3
+                    option(value='4') 4
+                    option(value='5') 5
+                label(for='floatingSelect') Users per page
 
 
-    div.container
-        h2 User List
-        table.table.table-sm.table-striped.table-bordered
-            thead
-                tr
-                    th STT
-                    th Avatar
-                    th Email
-                    th Username
-                    th Full Name
-                    th Role
-                    th Creation Date
-                    th Last Update Date
-                    th First Login
-                    th Inactivate Status
-                    th Locked Status
-                    th Handle
-
-            tbody
-            if users && users.length > 0
-                each user, index in users
+        div.container
+            h2 User List
+            table.table.table-sm.table-striped.table-bordered
+                thead
                     tr
-                        td= index + 1
-                        td
-                            +renderProfilePicture(user.profilePicture)
-                        td
-                            a.text-decoration-none(href=`/users/${user._id}`)=user.email
-                        td= user.username
-                        td= user.fullName
-                        td= user.role
-                        td= user.createdAtFormatted
-                        td= user.updatedAtFormatted
-                        td= user.isFirstLogin
-                        td= user.inactivateStatus
-                        td= user.lockedStatus
-                        td
-                            a.my-1.btn.btn-primary(href=`/users/${user._id}`) View
-                            br
-                            a.my-1.btn.btn-success(href=`/users/${user._id}/edit`) Update
-                            br
-                            button.my-1.btn.btn-danger.delete-btn(
-                                data-user-name=`${user.fullName}`
-                                data-user-id=`${user._id}`
-                            ) Delete
-                            br
-                            a.my-1.btn.btn-secondary(href=`/users/${user._id}/resend`) Resend Email
-                            br
-                            if user.lockedStatus
-                                button.my-1.btn.btn-warning.unlock-btn(
+                        th STT
+                        th Avatar
+                        th Email
+                        th Username
+                        th Full Name
+                        th Role
+                        th Creation Date
+                        th Last Update Date
+                        th First Login
+                        th Inactivate Status
+                        th Locked Status
+                        th Handle
+
+                tbody
+                if users && users.length > 0
+                    each user, index in users
+                        tr
+                            td= index + 1
+                            td
+                                +renderProfilePicture(user.profilePicture)
+                            td
+                                a.text-decoration-none(href=`/users/${user._id}`)=user.email
+                            td= user.username
+                            td= user.fullName
+                            td= user.role
+                            td= user.createdAtFormatted
+                            td= user.updatedAtFormatted
+                            td= user.isFirstLogin
+                            td= user.inactivateStatus
+                            td= user.lockedStatus
+                            td
+                                a.my-1.btn.btn-primary(href=`/users/${user._id}`) View
+                                br
+                                a.my-1.btn.btn-success(href=`/users/${user._id}/edit`) Update
+                                br
+                                button.my-1.btn.btn-danger.delete-btn(
                                     data-user-name=`${user.fullName}`
                                     data-user-id=`${user._id}`
-                                ) Unlock
-                            else
-                                button.my-1.btn.btn-info.lock-btn(
-                                    data-user-name=`${user.fullName}`
-                                    data-user-id=`${user._id}`
-                                ) Lock
-            else
-                tr
-                    td.text-center.p-5.h4(colspan='11') No users found.
+                                ) Delete
+                                br
+                                a.my-1.btn.btn-secondary(href=`/users/${user._id}/resend`) Resend Email
+                                br
+                                if user.lockedStatus
+                                    button.my-1.btn.btn-warning.unlock-btn(
+                                        data-user-name=`${user.fullName}`
+                                        data-user-id=`${user._id}`
+                                    ) Unlock
+                                else
+                                    button.my-1.btn.btn-info.lock-btn(
+                                        data-user-name=`${user.fullName}`
+                                        data-user-id=`${user._id}`
+                                    ) Lock
+                else
+                    tr
+                        td.text-center.p-5.h4(colspan='11') No users found.
 
 
-    // Display the message
-    p Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
+        // Display the message
+        p Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
 
-    // Pagination
-    +pagination('/users', current, count, perPage)
+        // Pagination
+        +pagination('/users', current, count, perPage)
 
-    // Confirm modal
-    include ../../partials/confirm-delete-modal
+        // Confirm modal
+        include ../../partials/confirm-delete-modal
 
-    #flash-alert.alert.alert-danger(style="display: none")
-        span Flash alert message
+        #flash-alert.alert.alert-danger(style="display: none")
+            span Flash alert message
 
     // Script for confirming delete
     script.
