@@ -148,3 +148,8 @@ public/uploads/*.svg
 
 package-lock.json
 yarn.lock
+.vscode/keybindings.json
+.vscode/keybindings.json
+.vscode/keybindings.json
+.vscode/settings.json
+.vscode/setup-keybindings.bat
