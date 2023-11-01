@@ -3,7 +3,7 @@ require("dotenv")
 const express = require("express");
 const router = require("./routes");
 const cookieParser = require("cookie-parser");
-const connectDb = require("./server/config/db");
+const connectDb = require("./middlewares/server/config/db");
 const logger = require("./middlewares/handler");
 const sassMiddleware = require("node-sass-middleware");
 const path = require("path");
@@ -70,21 +70,7 @@ passport.use(new LocalStrategy(async function (username, password, done) {
     try {
         const user = await User.findOne({ username: username });
         
-        if (!user) {
-            return done(null, false, { message: "Incorrect username." });
-        }
-        
-        if (user.token) {
-            return done(null, false, {
-                message: "Please login by clicking on the link in your email"
-            });
-        }
-        
-        const isPasswordValid = await user.validPassword(password);
-        
-        if (!isPasswordValid) {
-            return done(null, false, { message: "Incorrect password." });
-        }
+        pu
         
         return done(null, user, { message: "Login successfully." });
     } catch (err) {
