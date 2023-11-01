@@ -1,11 +1,21 @@
-const User = require("../models/user");
-const { faker } = require("@faker-js/faker");
-const moment = require("moment");
-const bcrypt = require("bcryptjs");
+const User              = require("../models/user");
+const { faker }         = require("@faker-js/faker");
+const moment            = require("moment");
+const bcrypt            = require("bcryptjs");
 const { cookieOptions } = require("../config/config");
-const { generateToken, sendEmail } = require("../middlewares/utils");
-const { sentMail } = require("./routerController");
-require("dotenv").config();
+const {
+          generateToken,
+          sendEmail
+      }                 = require("../middlewares/utils");
+const { sentMail }      = require("./routerController");
+require("dotenv")
+    .config();
+const {
+          query,
+          body,
+          param,
+          validationResult
+      } = require("express-validator");
 
 exports.ensureAuthenticated = function (req, res, next) {
     if (req.isAuthenticated()) {
@@ -23,7 +33,8 @@ exports.checkAdmin = async function (req, res, next) {
 };
 
 exports.logger = async function (req, res, next) {
-    const timestamp = moment().format("DD/MM/yyyy HH:mm");
+    const timestamp = moment()
+        .format("DD/MM/yyyy HH:mm");
     console.log("Timestamp: ", timestamp);
     next();
 };
@@ -45,7 +56,7 @@ exports.get = async function (req, res, next) {
                 return res.redirect("/login");
             }
             
-            salesperson.token = undefined;
+            salesperson.token           = undefined;
             salesperson.tokenExpiration = undefined;
             await salesperson.save();
             
@@ -80,23 +91,23 @@ exports.passwordReset = async (req, res, next) => {
             return res.render("pages/auth/password-reset", { email });
         }
         
-        const resetToken = generateToken();
+        const resetToken        = generateToken();
         const resetTokenExpires = new Date(Date.now() + 10 * 60 * 1000);
         
-        user.token = resetToken;
+        user.token           = resetToken;
         user.tokenExpiration = resetTokenExpires;
         user.isPasswordReset = true;
-        user.isFirstLogin = false;
+        user.isFirstLogin    = false;
         await user.save();
         
-        const resetLink = `${req.protocol + "://" + req.get("host")}/email-confirm?token=${resetToken}`;
+        const resetLink   = `${req.protocol + "://" + req.get("host")}/email-confirm?token=${resetToken}`;
         const mailOptions = {
-            from: process.env.FROM_EMAIL,
-            to: email,
+            from   : process.env.FROM_EMAIL,
+            to     : email,
             subject: "Password Reset Request",
-            text: `You are receiving this email because you (or someone else) requested a password reset for your account.\n\n`
-                + `Please click on the following link, or paste this into your browser to reset your password:\n\n`
-                + resetLink
+            text   : `You are receiving this email because you (or someone else) requested a password reset for your account.\n\n`
+                     + `Please click on the following link, or paste this into your browser to reset your password:\n\n`
+                     + resetLink
         };
         sendEmail(req, user, resetToken, mailOptions);
         req.flash("success", "Reset success, please check mail to login.");
@@ -132,7 +143,7 @@ exports.emailConfirm = async (req, res, next) => {
                 }
                 req.flash("info", "Welcome Now you are salespeople.");
                 
-                salesperson.token = undefined;
+                salesperson.token           = undefined;
                 salesperson.tokenExpiration = undefined;
                 await salesperson.save();
                 return res.redirect("/");
@@ -151,25 +162,29 @@ exports.createUser = async function (req, res, next) {
     const { email } = req.body;
     try {
         const newUser = new User({
-            email,
-            username: req.body.username,
-            password: req.body.password,
-            role: "salespeople",
-        });
+                                     email,
+                                     username: req.body.username,
+                                     password: req.body.password,
+                                     role    : "salespeople",
+                                 });
         
         const existingUser = await User.findOne({ email });
         
         if (existingUser) {
             return res.render("pages/auth/form", {
                 isRegister: true,
-                status: "failed",
-                data: [],
-                message: "It seems you already have an account, please log in instead.",
+                status    : "failed",
+                data      : [],
+                message   : "It seems you already have an account, please log in instead.",
             });
         }
         
         const savedUser = await newUser.save();
-        const { password, role, ...user_data } = savedUser._doc;
+        const {
+                  password,
+                  role,
+                  ...user_data
+              }         = savedUser._doc;
         return res.redirect("/login");
     } catch (err) {
         next(err);
@@ -177,14 +192,19 @@ exports.createUser = async function (req, res, next) {
 };
 
 exports.checkUser = async function (req, res, next) {
-    const { username, password } = req.body;
+    const {
+              username,
+              password
+          } = req.body;
     try {
-        const user = await User.findOne({ username }).select("+password");
+        const user = await User.findOne({ username })
+                               .select("+password");
         
         if (user) {
             if (!user.lockedStatus) {
                 if (user.token) {
-                    if (moment(user.tokenExpiration).isBefore(moment())) {
+                    if (moment(user.tokenExpiration)
+                        .isBefore(moment())) {
                         // flash.addFlash(
                         //     req,
                         //     "warning",
@@ -241,7 +261,7 @@ exports.logout = function (req, res, next) {
         } else {
             req.flash("info", "Logout successfully.");
             req.session = null;
-            res.locals = null;
+            res.locals  = null;
             res.clearCookie(process.env.COOKIE_NAME);
             res.cookies = null;
             res.redirect("/login");
@@ -255,39 +275,54 @@ exports.getRegister = async function (req, res, next) {
 
 exports.changePassword = async function (req, res, next) {
     console.log("=>(authController.js:257) req.user.isPasswordReset", req.user.isPasswordReset);
-    if (req.user.isPasswordReset) return res.render("pages/auth/change-password", { isReset: true });
+    if (req.user.isPasswordReset) {
+        return res.render("pages/auth/change-password", { isReset: true });
+    }
     return res.render("pages/auth/change-password");
 };
 
 exports.postChangePassword = async function (req, res, next) {
-    const { currentPassword, newPassword, confirmPassword } = req.body;
+    const result = validationResult(req);
     
-    try {
-        const user = req.user;
+    if (result.errors.length === 0) {
+        const {
+                  currentPassword,
+                  newPassword,
+                  confirmPassword
+              } = req.body;
         
-        if (!user.isPasswordReset) {
-            const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        try {
+            const user = req.user;
             
-            if (!isPasswordValid) {
-                req.flash("error", "Change password fail: Password is not correct.");
-                return res.status(401).redirect("/change-password");
+            if (!user.isPasswordReset) {
+                const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+                
+                if (!isPasswordValid) {
+                    req.flash("error", "Change password fail: Password is not correct.");
+                    return res.status(401)
+                              .redirect("/change-password");
+                }
             }
+            
+            if (newPassword !== confirmPassword) {
+                req.flash("error", "Change password fail: Password not match.");
+                return res.status(400)
+                          .redirect("/change-password");
+            }
+            
+            user.password        = newPassword;
+            user.isFirstLogin    = false;
+            user.isPasswordReset = false;
+            await user.save();
+            req.session.user = user;
+            req.flash("success", "Change password success: Password changed.");
+            res.redirect("/");
+        } catch (error) {
+            console.log("=>(authController.js:285) error", error);
+            next(error);
         }
-        
-        if (newPassword !== confirmPassword) {
-            req.flash("error", "Change password fail: Password not match.");
-            return res.status(400).redirect("/change-password");
-        }
-        
-        user.password = newPassword;
-        user.isFirstLogin = false;
-        user.isPasswordReset = false;
-        await user.save();
-        req.session.user = user;
-        req.flash("success", "Change password success: Password changed.");
-        res.redirect("/");
-    } catch (error) {
-        console.log("=>(authController.js:285) error", error);
-        next(error);
+    } else {
+        req.flash("error", result.errors[0].msg);
+        res.redirect("change-password");
     }
 };

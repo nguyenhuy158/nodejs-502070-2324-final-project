@@ -1,28 +1,29 @@
-const express           = require("express");
-const router            = express.Router();
-const userController    = require("../controllers/userController");
-const routerController  = require("../controllers/routerController");
-const errors            = require("./errors");
-const { UserValidator } = require("../middlewares/validator");
-const { upload }        = require("../config/upload");
-const authRoutes        = require("./auth");
-const userRouter        = require("./user");
-const checkoutRouter    = require("./checkout");
-const customerRouter    = require("./customer");
-const productRouter     = require("./product");
-const { autoViews }     = require("../middlewares/auto-views");
-const { flashMiddleWare } = require("../middlewares/flash");
-const logger            = require("../middlewares/handler");
-const { logRequestDetails } = require("../middlewares/access-log");
-const { winstonLog }    = require("../controllers/appController");
-const path              = require("path");
-const config            = require("../config/config");
-const { updateCurrentUser } = require("../middlewares/authentication");
+const express                 = require("express");
+const router                  = express.Router();
+const userController          = require("../controllers/userController");
+const routerController        = require("../controllers/routerController");
+const errors                  = require("./errors");
+const { UserValidator }       = require("../middlewares/validator");
+const { upload }              = require("../config/upload");
+const authRoutes              = require("./auth");
+const userRouter              = require("./user");
+const checkoutRouter          = require("./checkout");
+const customerRouter          = require("./customer");
+const productRouter           = require("./product");
+const { autoViews }           = require("../middlewares/auto-views");
+const { flashMiddleWare }     = require("../middlewares/flash");
+const logger                  = require("../middlewares/handler");
+const { logRequestDetails }   = require("../middlewares/access-log");
+const { winstonLog }          = require("../controllers/appController");
+const path                    = require("path");
+const config                  = require("../config/config");
+const { updateCurrentUser }   = require("../middlewares/authentication");
 const { ensureAuthenticated } = require("../controllers/authController");
-const authController    = require("../controllers/authController");
-const { limiter }       = require("../config/config");
-const { requireRole }   = require("../middlewares/authorization");
-const { categories } = require("../controllers/productCategoryController");
+const authController          = require("../controllers/authController");
+const { limiter }             = require("../config/config");
+const { requireRole }         = require("../middlewares/authorization");
+const { categories }          = require("../controllers/productCategoryController");
+const { body }                = require("express-validator");
 
 // other middleware and server
 
@@ -45,7 +46,31 @@ router
     .use(authRoutes)
     .use(ensureAuthenticated)
     .get("/change-password", authController.changePassword)
-    .post("/change-password", authController.postChangePassword)
+    .post("/change-password",
+          body("password")
+              .notEmpty()
+              .withMessage("Password cannot be empty!")
+              .isLength({ min: 6 })
+              .withMessage("Password must have at least 6 characters!"),
+          body("newPassword")
+              .notEmpty()
+              .withMessage("Password cannot be empty!")
+              .isLength({ min: 6 })
+              .withMessage("Password must have at least 6 characters!")
+              .custom((value, { req }) => {
+                  return value !== req.body.password;
+              })
+              .withMessage("Don't use old password!"),
+          body("confirmPassword")
+              .notEmpty()
+              .withMessage("Password cannot be empty!")
+              .isLength({ min: 6 })
+              .withMessage("Password must have at least 6 characters!")
+              .custom((value, { req }) => {
+                  return value === req.body.newPassword;
+              })
+              .withMessage("Confirm Password not match!"),
+          authController.postChangePassword)
     
     // other middleware and server
     .use(routerController.checkFirstLogin)
