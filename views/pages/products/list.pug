@@ -1,85 +1,85 @@
 extends ../layout.pug
 
 block content
+    .content
+        .row
+            .col
+                a.btn.btn-primary(href="/products/add") Add product
 
-    .row
-        .col
-            a.btn.btn-primary(href="/products/add") Add product
-
-        .col-2.form-floating
-            select#floatingSelect.form-select(onchange='updatePerPage(this)')
-                option(selected='' value='10') 10
-                option(value='20') 20
-                option(value='30') 30
-                option(value='40') 40
-                option(value='50') 50
-            label(for='floatingSelect') Product per page
+            .col-2.form-floating
+                select#floatingSelect.form-select(onchange='updatePerPage(this)')
+                    option(selected='' value='10') 10
+                    option(value='20') 20
+                    option(value='30') 30
+                    option(value='40') 40
+                    option(value='50') 50
+                label(for='floatingSelect') Product per page
 
 
-    // Pagination
-    +pagination('/products', current, count, perPage)
+        // Pagination
+        +pagination('/products', current, count, perPage)
 
-    // Table list
-    div.container
-        h2 Product List
-        // Display the message
-        p Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
-        table.table.table-striped.table-bordered
-            thead
-                tr
-                    th STT
-                    th Barcode
-                    th Product Name
-                    th Import Price
-                    th Retail Price
-                    th Category
-                    th Thumbnail
-                    th
-
-            tbody
-            if products && products.length > 0
-                each product, index in products
+        // Table list
+        div.container
+            h2 Product List
+            // Display the message
+            p Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
+            table.table.table-striped.table-bordered
+                thead
                     tr
-                        td= index + 1
-                        td= product.barcode
-                        td= product.productName
-                        td= product.importPrice
-                        td= product.retailPrice
-                        td= product.category.name
-                        td
-                            +renderProfilePicture(product.imageUrls[0])
-                        td
-                            a.my-1.btn.btn-primary(href=`/products/${product._id}`) View
-                            button.my-1.btn.btn-success.btn-edit(
-                                data-product-id=`${product._id}`
-                                data-href=`/products/${product._id}/edit`
-                            ) Update
-                            button.my-1.btn.btn-danger.delete-btn(
-                                data-product-name=`${product.productName}`
-                                data-product-id=`${product._id}`
-                            ) Delete
-            else
-                tr
-                    td.text-center.p-5.h4(colspan='12') No products found.
+                        th STT
+                        th Barcode
+                        th Product Name
+                        th Import Price
+                        th Retail Price
+                        th Category
+                        th Thumbnail
+                        th
 
-    // Confirm modal
-    include ../../partials/confirm-delete-modal
+                tbody
+                if products && products.length > 0
+                    each product, index in products
+                        tr
+                            td= index + 1
+                            td= product.barcode
+                            td= product.productName
+                            td= product.importPrice
+                            td= product.retailPrice
+                            td= product.category.name
+                            td
+                                +renderProfilePicture(product.imageUrls[0])
+                            td
+                                a.my-1.btn.btn-primary(href=`/products/${product._id}`) View
+                                button.my-1.btn.btn-success.btn-edit(
+                                    data-product-id=`${product._id}`
+                                    data-href=`/products/${product._id}/edit`
+                                ) Update
+                                button.my-1.btn.btn-danger.delete-btn(
+                                    data-product-name=`${product.productName}`
+                                    data-product-id=`${product._id}`
+                                ) Delete
+                else
+                    tr
+                        td.text-center.p-5.h4(colspan='12') No products found.
 
-    // Confirm modal
-    include ../../partials/product-edit-modal
+        // Confirm modal
+        include ../../partials/confirm-delete-modal
 
-    #flash-alert.alert.alert-danger(style="display: none")
-        span Flash alert message
+        // Confirm modal
+        include ../../partials/product-edit-modal
 
-    // Script for confirming delete
-    script(src="js/products/confirm-delete.js")
-    script(src="js/products/product-edit-modal.js")
-    // End script for confirming delete
+        #flash-alert.alert.alert-danger(style="display: none")
+            span Flash alert message
 
-    script.
-        function updatePerPage(select) {
-            const selectedValue = select.value;
-            window.location.href = `/products?page=#{current}&perPage=${selectedValue}`;
-        }
+        // Script for confirming delete
+        script(src="js/products/confirm-delete.js")
+        script(src="js/products/product-edit-modal.js")
+        // End script for confirming delete
+
+        script.
+            function updatePerPage(select) {
+                const selectedValue = select.value;
+                window.location.href = `/products?page=#{current}&perPage=${selectedValue}`;
+            }
 
 

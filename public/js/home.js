@@ -1,3 +1,4 @@
+//Focus element on sidebar
 const sideLinks = document.querySelectorAll(
 	".sidebar .side-menu li a:not(.logout)"
 );
@@ -12,6 +13,7 @@ sideLinks.forEach((item) => {
 	});
 });
 
+//Toggle sidebar
 const menuBar = document.querySelector(".content nav .bx.bx-menu");
 const sideBar = document.querySelector(".sidebar");
 
@@ -19,6 +21,7 @@ menuBar.addEventListener("click", () => {
 	sideBar.classList.toggle("close");
 });
 
+//Search Bar
 const searchBtn = document.querySelector(
 	".content nav form .form-input button"
 );
