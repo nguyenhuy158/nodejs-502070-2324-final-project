@@ -1,0 +1,330 @@
+// -------------------------------------- 
+// ***************  VARIABLE  
+// -------------------------------------- 
+
+
+:root {
+
+    // ** Color **
+
+    --onyx: hsl(0, 0%, 25%);
+    --azure: hsl(219, 77%, 60%);
+    --white: hsl(0, 0%, 100%);
+    --platinum: hsl(0, 0%, 91%);
+    --gainsboro: hsl(0, 0%, 90%);
+    --red-salsa: hsl(0, 77%, 60%);
+    --dim-gray: hsl(0, 0%, 39%);
+    --davys-gray: hsl(0, 0%, 30%);
+    --spanish-gray: hsl(0, 0%, 62%);
+    --quick-silver: hsl(0, 0%, 64%);
+
+    // ** Typography **
+
+    --fs-28: 28px;
+    --fs-24: 24px;
+    --fs-18: 18px;
+    --fs-15: 15px;
+    --fs-14: 14px;
+
+    --fw-5: 500;
+    --fw-6: 600;
+    --fw-7: 700;
+
+    // ** Others **
+
+    --px: 60px;
+    --radius: 5px;
+}
+
+
+// -------------------------------------- 
+// ***************  RESET  
+// -------------------------------------- 
+
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font: inherit;
+}
+
+ion-icon,
+span {
+    display: inline-block;
+}
+
+label,
+img {
+    display: block;
+}
+
+input {
+    font: inherit;
+    width: 100%;
+    border: none;
+}
+
+input:focus {
+    outline: 2px solid var(--azure);
+}
+
+// ** Remove number input up and down btn
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+}
+
+
+// -------------------------------------- 
+// ***************  MAIN STYLE  
+// -------------------------------------- 
+
+// ** Main container
+
+.container {
+    max-width: fit-content;
+    min-height: fit-content;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.heading {
+    font-size: var(--fs-28);
+    font-weight: var(--fw-6);
+    color: var(--onyx);
+    border-bottom: 1px solid var(--gainsboro);
+    padding: 20px var(--px);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.heading ion-icon {
+    font-size: 40px;
+}
+
+.item-flex {
+    display: flex;
+    flex-grow: 1;
+}
+
+
+// ********** Checkout
+
+
+.checkout {
+    width: 70%;
+    padding: 40px var(--px);
+    background: var(--white);
+    border-right: 1px solid var(--gainsboro);
+}
+
+.section-heading {
+    color: var(--onyx);
+    margin-bottom: 30px;
+    font-size: var(--fs-24);
+    font-weight: var(--fw-5);
+}
+
+.payment-form {
+    margin-bottom: 40px;
+}
+
+.label-default {
+    padding-left: 10px;
+    margin-bottom: 5px;
+    font-size: var(--fs-14);
+    color: var(--spanish-gray);
+}
+
+.input-default {
+    background: var(--platinum);
+    border-radius: var(--radius);
+    color: var(--davys-gray);
+}
+
+.payment-form input {
+    padding: 10px 15px;
+    font-size: var(--fs-18);
+    font-weight: var(--fw-5);
+}
+
+.phoneNumber-form,
+.fullName-form,
+.address-form,
+.note-form {
+    margin-bottom: 20px;
+}
+
+.phoneNumber-form input {
+    letter-spacing: 3px;
+}
+
+.btn {
+    border-radius: var(--radius);
+}
+
+.btn:active {
+    transform: scale(0.99);
+}
+
+.btn:focus {
+    color: var(--white);
+    background: var(--azure);
+    outline: 2px solid var(--azure);
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    background: var(--azure);
+    font-weight: var(--fw-5);
+    color: var(--white);
+    padding: 13px 45px;
+}
+
+
+// ********** Cart
+
+
+.cart {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    margin: 0px 60px;
+    // background: var(--azure);
+    // color: var(--white);
+}
+
+.cart-item-box {
+    padding-left: 40px var(--px);
+    margin-bottom: auto;
+}
+
+.product-card:not(:last-child) {
+    margin-bottom: 20px;
+}
+
+.product-card .card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.card .product-img {
+    border-radius: var(--radius);
+}
+
+.card .detail .product-name {
+    font-weight: var(--fw-6);
+    font-size: var(--fs-15);
+    color: var(--dim-gray);
+    margin-bottom: 10px;
+}
+
+.card .detail .wrapper {
+    display: flex;
+    gap: 20px;
+}
+
+.product-qty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.product-qty button {
+    background: var(--platinum);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.product-qty button:active,
+.product-close-btn:active ion-icon {
+    transform: scale(0.95);
+}
+
+.product-qty button ion-icon {
+    --ionicon-stroke-width: 60px;
+    font-size: 10px;
+}
+
+
+.product-close-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.product-close-btn ion-icon {
+    font-size: 25px;
+    color: var(--quick-silver);
+}
+
+.product-close-btn:hover ion-icon {
+    color: var(--red-salsa);
+}
+
+.discount-token {
+    padding: 40px var(--px);
+    margin-top: 10px;
+    border-top: 1px solid var(--gainsboro);
+    border-bottom: 1px solid var(--gainsboro);
+}
+
+.wrapper-flex {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.wrapper-flex input {
+    padding: 12px 15px;
+    font-weight: var(--fw-6);
+    letter-spacing: 2px;
+}
+
+.btn-outline {
+    padding: 10px 25px;
+    border: 1px solid var(--azure);
+    color: var(--white);
+}
+
+.amount {
+    padding: 40px var(--px);
+}
+
+.amount>div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.amount>div:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.amount .total {
+    font-size: var(--fs-18);
+    font-weight: var(--fw-7);
+    color: var(--onyx);
+}
