@@ -14,6 +14,10 @@ block content
                     p Username: #{user.username}
                     p Full Name: #{user.fullName}
                     p Role: #{user.role}
+                    p Time
+                        input.timepicker
+                        input.datepicker
+                        input.datetimepicker
 
             .row
                 .col-2
@@ -40,4 +44,19 @@ block content
 
     script.
         $(document).ready(function () {
+            $('input.timepicker').timepicker({
+                timeFormat: 'hh:mm',
+                interval: 10,
+                minTime: '10',
+                maxTime: '6:00pm',
+                defaultTime: '11',
+                startTime: '10:00',
+                dynamic: true,
+                dropdown: true,
+                scrollbar: false
+            });
+
+            $("input.datepicker").datepicker();
+            $("input.datetimepicker").datetimepicker();
+
         });
