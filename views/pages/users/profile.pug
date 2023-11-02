@@ -1,4 +1,3 @@
-
 extends ../layout.pug
 
 block content
@@ -7,7 +6,8 @@ block content
         .card-body
             .row.mb-4
                 .col-md-4
-                    +renderProfilePicture(user.profilePicture)
+                    a.image-popup(href=user.profilePicture title=user.fullName)
+                        +renderProfilePicture(user.profilePicture)
 
                 .col-md-8
                     p Email: #{user.email}
@@ -15,11 +15,12 @@ block content
                     p Full Name: #{user.fullName}
                     p Role: #{user.role}
 
-            .row 
+            .row
                 .col-2
                     a.btn.btn-primary(href="/change-password") change password
                 .col-2
                     button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#changeProfilePicModal') Change Picture
+
 
     // Change Picture Modal
     .modal.fade(id='changeProfilePicModal' tabindex='-1' aria-labelledby='changeProfilePicModalLabel' aria-hidden='true')
@@ -34,3 +35,9 @@ block content
                     .modal-footer
                         button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
                         button.btn.btn-primary(type='submit') Save
+
+
+
+    script.
+        $(document).ready(function () {
+        });
