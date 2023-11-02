@@ -14,20 +14,24 @@ html
         //- Auto remove flash message - KEEP IT
         script.
             setTimeout(() => {
-                $(".toast")
-                    .each((index, value) => {
-                        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(value)
-                        toastBootstrap.show()
-                    })
+                $(".toast").each((index, value) => {
+                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(value)
+                    toastBootstrap.show()
+                })
             }, 1000);
 
         script.
-            $(document)
-                .ready(function () {
-                    $("img")
-                        .on("error", function () {
-                            $(this)
-                                .attr("src", "https://placehold.co/200?text=Not+available&font=roboto");
-                        });
+            $(document).ready(function () {
+                $("img").on("error", function () {
+                    $(this).attr("src", "https://placehold.co/200?text=Not+available&font=roboto");
                 });
+            });
+
+        script(type=module src="/js/base64/constance.js")
+        script(type=module src="/js/lazy-image-loading.js")
+        script(type=module src="/js/magnific-popup.js")
+        script.
+            lazyImageLoading()
+            magnificPopup();
+
 

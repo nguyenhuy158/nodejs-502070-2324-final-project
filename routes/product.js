@@ -1,8 +1,8 @@
-const express    = require("express");
-const router     = express.Router();
+const express = require("express");
+const router = express.Router();
 const productController = require("../controllers/productController");
 const authController = require("../controllers/authController");
-const { upload } = require("../config/upload");
+const {upload} = require("../config/upload");
 
 router
     // .get('/', authController.checkAdmin, productController.gets)
@@ -17,6 +17,6 @@ router
     .get("/about", productController.gets)
     .post("/:id/imageUrls", upload.array("imageUrls", 5), productController.addThumbnails)
     .put("/:id/imageUrls", productController.removeThumbnails)
-    .put("/:id/main-thumbnail", productController.mainThumbnail)
+    .put("/:id/main-thumbnail", productController.mainThumbnail);
 
 module.exports = router;

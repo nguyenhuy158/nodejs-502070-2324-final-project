@@ -7,11 +7,11 @@ link(rel="stylesheet", href="https://unicons.iconscout.com/release/v2.1.9/css/un
 .login-card
     h2 Login
     h3 Enter your account
-    form(method='post')
+    form#login(method='post')
         .login-form
             input(type='text' name='username' placeholder='User Name' autocomplete='off')
             input(type='password' name='password' placeholder='Password' autocomplete='off')
-       
+
             button(type='submit') Login
             a(href='/password-reset')
                 | Forgot your password?
@@ -20,4 +20,19 @@ link(rel="stylesheet", href="https://unicons.iconscout.com/release/v2.1.9/css/un
 script.
     $(document).ready(function () {
         $('#username').focus();
+        // $("#login").validate({
+        //     rules: {
+        //         username: {
+        //             required: true,
+        //             normalizer: function (value) {
+        //                 return $.trim(value);
+        //             }
+        //         }
+        //     },
+        //     submitHandler: function (form) {
+        //         console.log('submit')
+        //         $(form).submit();
+        //     },
+        //     errorElement: "span"
+        // });
     });
