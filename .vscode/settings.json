@@ -93,7 +93,7 @@
     "editor.tabSize": 4,
     "editor.unicodeHighlight.includeComments": "inUntrustedWorkspace",
     "editor.unicodeHighlight.nonBasicASCII": "inUntrustedWorkspace",
-    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrap": "off",
     "files.autoSave": "onFocusChange",
     "files.simpleDialog.enable": false,
     "git.enableSmartCommit": true,
@@ -118,7 +118,7 @@
     "terminal.integrated.fontWeight": "normal",
     "terminal.integrated.scrollback": 10000,
     "terminal.integrated.smoothScrolling": true,
-    "window.zoomLevel": 0,
+    "window.zoomLevel": -1,
     "workbench.activityBar.iconClickBehavior": "toggle",
     "workbench.colorTheme": "GitHub Dark",
     "workbench.editor.enablePreview": false,
@@ -207,5 +207,23 @@
         "fragment": true,
         "doubleQuotes": true,
         "commas": true,
-    }
+    },
+    "editor.autoIndent": "full",
+    "editor.foldingStrategy": "indentation",
+    "editor.guides.highlightActiveIndentation": "always",
+    "html.format.indentHandlebars": true,
+    "advancedNewFile.exclude": {
+        "node_modules": true,
+        "node_modules_electron": true,
+        ".idea": true,
+        ".vscode": true,
+        "dev": true,
+        "dist": true
+    },
+    "advancedNewFile.showInformationMessages": true,
+    "advancedNewFile.convenienceOptions": [
+        "last",
+        "current",
+        "root"
+    ]
 }
