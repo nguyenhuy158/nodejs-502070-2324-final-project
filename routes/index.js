@@ -8,6 +8,7 @@ const {upload} = require("../config/upload");
 const authRoutes = require("./auth");
 const userRouter = require("./user");
 const apiProductRouter = require("./apiProduct");
+const apiUserRouter = require("./apiUser");
 const checkoutRouter = require("./checkout");
 const customerRouter = require("./customer");
 const productRouter = require("./product");
@@ -101,7 +102,8 @@ router
     .use("/products", requireRole(process.env.ROLE_ADMIN), productRouter)
     .use("/customers", customerRouter)
     .use("/checkout", checkoutRouter)
-    .use("/api/products", apiProductRouter);
+    .use("/api/products", apiProductRouter)
+    .use("/api/products", apiUserRouter);
 
 // error router
 router

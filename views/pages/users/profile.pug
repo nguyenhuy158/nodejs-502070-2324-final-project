@@ -1,47 +1,42 @@
 extends ../layout.pug
-
 block content
-    h1 User Information
-    .card
-        .card-body
-            .row.mb-4
-                .col-md-4
-                    a.image-popup(href=user.profilePicture title=user.fullName)
-                        +renderProfilePicture(user.profilePicture)
-
-                .col-md-8
-                    p Email: #{user.email}
-                    p Username: #{user.username}
-                    p Full Name: #{user.fullName}
-                    p Role: #{user.role}
-                    p Time
-                        input.timepicker
-                        input.datepicker
-                        input.datetimepicker
-
-            .row
-                .col-2
-                    a.btn.btn-primary(href="/change-password") change password
-                .col-2
-                    button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#changeProfilePicModal') Change Picture
-
-
-    // Change Picture Modal
-    .modal.fade(id='changeProfilePicModal' tabindex='-1' aria-labelledby='changeProfilePicModalLabel' aria-hidden='true')
-        .modal-dialog.modal-dialog-centered
-            .modal-content
-                form(action='/upload-profile-pic' method='POST' enctype='multipart/form-data' autocomplete="off")
-                    .modal-header
-                        h5.modal-title#changeProfilePicModalLabel Change Profile Picture
-                        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-                    .modal-body
-                        input.form-control(type='file' name='profilePic' accept='image/*', required)
-                    .modal-footer
-                        button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
-                        button.btn.btn-primary(type='submit') Save
-
-
-
+    .content   
+        include ../../partials/nav
+        .container 
+            h2 User Information
+            .card
+                .card-body
+                    .row.mb-4
+                        .col-md-4
+                            a.image-popup(href=user.profilePicture title=user.fullName)
+                                +renderProfilePicture(user.profilePicture)
+                        .col-md-8
+                            p Email: #{user.email}
+                            p Username: #{user.username}
+                            p Full Name: #{user.fullName}
+                            p Role: #{user.role}
+                            p Time
+                                input.timepicker
+                                input.datepicker
+                                input.datetimepicker
+                    .row
+                        .col-2
+                            a.btn.btn-primary(href="/change-password") change password
+                        .col-2
+                            button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#changeProfilePicModal') Change Picture
+            // Change Picture Modal
+            .modal.fade(id='changeProfilePicModal' tabindex='-1' aria-labelledby='changeProfilePicModalLabel' aria-hidden='true')
+                .modal-dialog.modal-dialog-centered
+                    .modal-content
+                        form(action='/upload-profile-pic' method='POST' enctype='multipart/form-data' autocomplete="off")
+                            .modal-header
+                                h5.modal-title#changeProfilePicModalLabel Change Profile Picture
+                                button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                            .modal-body
+                                input.form-control(type='file' name='profilePic' accept='image/*', required)
+                            .modal-footer
+                                button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+                                button.btn.btn-primary(type='submit') Save
     script.
         $(document).ready(function () {
             $('input.timepicker').timepicker({
@@ -55,8 +50,6 @@ block content
                 dropdown: true,
                 scrollbar: false
             });
-
             $("input.datepicker").datepicker();
             $("input.datetimepicker").datetimepicker();
-
         });

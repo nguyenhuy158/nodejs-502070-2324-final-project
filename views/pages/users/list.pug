@@ -1,12 +1,10 @@
 extends ../layout.pug
-
 block content
     .content
         include ../../partials/nav
         .row
             .col
                 a.btn.btn-outline-primary(href="/users/create-account") Create salespeople
-
             .col-2.form-floating
                 select#floatingSelect.form-select(onchange='updatePerPage(this)')
                     option(selected='' value='0') select
@@ -16,8 +14,6 @@ block content
                     option(value='4') 4
                     option(value='5') 5
                 label(for='floatingSelect') Users per page
-
-
         div.container
             h2 User List
             table.table.table-sm.table-striped.table-bordered
@@ -35,7 +31,6 @@ block content
                         th Inactivate Status
                         th Locked Status
                         th Handle
-
                 tbody
                 if users && users.length > 0
                     each user, index in users
@@ -78,20 +73,14 @@ block content
                 else
                     tr
                         td.text-center.p-5.h4(colspan='11') No users found.
-
-
         // Display the message
         p Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
-
         // Pagination
         +pagination('/users', current, count, perPage)
-
         // Confirm modal
         include ../../partials/confirm-delete-modal
-
         #flash-alert.alert.alert-danger(style="display: none")
             span Flash alert message
-
     // Script for confirming delete
     script.
         $(document).ready(function () {
@@ -99,7 +88,6 @@ block content
             const modalTitle = $("#modalDelete .modal-title");
             const confirmModalBody = $("#modalDelete .modal-body");
             const confirmButton = $("#modalDelete .btn.btn-danger");
-
             deleteButtons.click(function () {
                 const fullname = $(this).data("user-name");
                 const userId = $(this).data("user-id");
@@ -109,7 +97,6 @@ block content
                 confirmModalBody.html(`Are you sure you want to delete
                 <strong>${fullname}</strong>?`);
                 $('#modalDelete').modal('show');
-
                 confirmButton.click(function () {
                     $('#modalDelete').modal('hide');
                     console.log('click');
@@ -129,7 +116,6 @@ block content
             });
         });
     // End script for confirming delete
-
     // Script for confirming lock/unlock
     script.
         $(document).ready(function () {
@@ -138,8 +124,6 @@ block content
             const confirmModalBody = $("#modalDelete .modal-body");
             const confirmButton = $("#modalDelete .btn.btn-danger");
             const modalTitle = $("#modalDelete .modal-title");
-
-
             function handleLockUnlock(button, isLock) {
                 button.click(function () {
                     const fullname = button.data("user-name");
@@ -150,7 +134,6 @@ block content
                     confirmModalBody.html(`Are you sure you want to ${action} the account for
                        <strong>${fullname}</strong>?`);
                     $('#modalDelete').modal('show');
-
                     confirmButton.click(function () {
                         $('#modalDelete').modal('hide');
                         fetch(`/users/${userId}/${action}`, {
@@ -166,17 +149,88 @@ block content
                     });
                 });
             }
-
             handleLockUnlock(lockButtons, true);
             handleLockUnlock(unlockButtons, false);
         });
     // End script for confirming lock/unlock
-
     script.
-        function updatePerPage(select) {
-            const selectedValue = select.value;
-            // Update the URL with the selected users per page value
-            window.location.href = `/users?page=#{current}&perPage=${selectedValue}`;
-        }
-
-
+        $(() => {
+            let table = $("#product-table")
+                .DataTable({
+                    responsive: true,
+                    rowId: '_id',
+                    fixedHeader: true,
+                    search: {
+                        caseInsensitive: false,
+                        regex: true
+                    },
+                    language: {
+                        zeroRecords: "No records to display",
+                        emptyTable: "No data available in table",
+                        decimal: '.',
+                        thousands: ','
+                    },
+                    retrieve: true,
+                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                    stateSave: true,
+                    scrollX: true,
+                    scrollY: "50vh",
+                    scrollCollapse: true,
+                    order: [[0, 'asc']],
+                    processing: true,
+                    autoWidth: true,
+                    ajax: {
+                        url: '/api/users',
+                        dataSrc: ''
+                    },
+                    columns: [
+                        {
+                            data: null,
+                            render: function (data, type, row, meta) {
+                                return meta.row + 1;
+                            },
+                            orderable: false
+                        },
+                        {
+                            data: 'profilePicture',
+                            render: function (data, type, row) {
+                                return `<a class="image-popup" href=${data[0]} title="${row.productName}">
+                                            <img class="lazy" width="100" height="100" data-src="${data}"/>
+                                        </a>`;
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function (data, type, row, meta) {
+                                return '';
+                            }
+                        },
+                    ]
+                });
+            table.on('draw.dt', function () {
+                var info = table.page.info();
+                table.column(0, {search: 'applied'})
+                    .nodes()
+                    .each(function (cell, i) {
+                        cell.innerHTML = i + 1 + info.start;
+                    });
+                lazyImageLoading();
+                magnificPopup();
+            });
+            $("#product-table")
+                .DataTable({
+                    retrieve: true,
+                    stateSave: true,
+                    stateSaveCallback: function (settings, data) {
+                        localStorage.setItem('DataTables_' + settings.sInstance, JSON.stringify(data))
+                    },
+                    stateLoadCallback: function (settings) {
+                        return JSON.parse(localStorage.getItem('DataTables_' + settings.sInstance))
+                    }
+                });
+            function updatePerPage(select) {
+                const selectedValue = select.value;
+                // Update the URL with the selected users per page value
+                window.location.href = `/users?page=#{current}&perPage=${selectedValue}`;
+            }
+        });
