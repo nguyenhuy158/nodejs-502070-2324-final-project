@@ -101,6 +101,7 @@ $(() => {
 
         lazyImageLoading();
         magnificPopup();
+        asignDeleteEvent();
     });
 
     $("#product-table")

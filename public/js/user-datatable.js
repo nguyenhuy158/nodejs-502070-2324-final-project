@@ -35,7 +35,12 @@ $(() => {
                     },
                     width: "20%"
                 },
-                { data: 'username' },
+                {
+                    data: 'username',
+                    render: function (data, type, row) {
+                        return `<a href="/users/${row._id}">${data}</a>`;
+                    }
+                },
                 { data: 'fullName' },
                 { data: 'role' },
                 { data: 'isFirstLogin' },
