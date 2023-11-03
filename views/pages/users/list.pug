@@ -2,21 +2,15 @@ extends ../layout.pug
 block content
     .content
         include ../../partials/nav
-        .row
-            .col
-                a.btn.btn-outline-primary(href="/users/create-account") Create salespeople
-            .col-2.form-floating
-                select#floatingSelect.form-select(onchange='updatePerPage(this)')
-                    option(selected='' value='0') select
-                    option(value='1') 1
-                    option(value='2') 2
-                    option(value='3') 3
-                    option(value='4') 4
-                    option(value='5') 5
-                label(for='floatingSelect') Users per page
+        .container
+            .row
+                .col.my-3
+                    a.btn.btn-primary(href="/users/create-account") Create salespeople
+                    a#reload-user-table.btn.btn-primary.ms-3 Reload
+
         div.container
             h2 User List
-            table.table.table-sm.table-striped.table-bordered
+            table#user-table.table.table-sm.table-striped.table-bordered
                 thead
                     tr
                         th STT
@@ -25,58 +19,56 @@ block content
                         th Username
                         th Full Name
                         th Role
-                        th Creation Date
-                        th Last Update Date
                         th First Login
                         th Inactivate Status
                         th Locked Status
                         th Handle
                 tbody
-                if users && users.length > 0
-                    each user, index in users
-                        tr
-                            td= index + 1
-                            td
-                                +renderProfilePicture(user.profilePicture)
-                            td
-                                a.text-decoration-none(href=`/users/${user._id}`)=user.email
-                            td= user.username
-                            td= user.fullName
-                            td= user.role
-                            td= user.createdAtFormatted
-                            td= user.updatedAtFormatted
-                            td= user.isFirstLogin
-                            td= user.inactivateStatus
-                            td= user.lockedStatus
-                            td
-                                a.my-1.btn.btn-primary(href=`/users/${user._id}`) View
-                                br
-                                a.my-1.btn.btn-success(href=`/users/${user._id}/edit`) Update
-                                br
-                                button.my-1.btn.btn-danger.delete-btn(
-                                    data-user-name=`${user.fullName}`
-                                    data-user-id=`${user._id}`
-                                ) Delete
-                                br
-                                a.my-1.btn.btn-secondary(href=`/users/${user._id}/resend`) Resend Email
-                                br
-                                if user.lockedStatus
-                                    button.my-1.btn.btn-warning.unlock-btn(
-                                        data-user-name=`${user.fullName}`
-                                        data-user-id=`${user._id}`
-                                    ) Unlock
-                                else
-                                    button.my-1.btn.btn-info.lock-btn(
-                                        data-user-name=`${user.fullName}`
-                                        data-user-id=`${user._id}`
-                                    ) Lock
-                else
-                    tr
-                        td.text-center.p-5.h4(colspan='11') No users found.
-        // Display the message
-        p Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
-        // Pagination
-        +pagination('/users', current, count, perPage)
+                //if users && users.length > 0
+                //    each user, index in users
+                //        tr
+                //            td= index + 1
+                //            td
+                //                +renderProfilePicture(user.profilePicture)
+                //            td
+                //                a.text-decoration-none(href=`/users/${user._id}`)=user.email
+                //            td= user.username
+                //            td= user.fullName
+                //            td= user.role
+                //            td= user.createdAtFormatted
+                //            td= user.updatedAtFormatted
+                //            td= user.isFirstLogin
+                //            td= user.inactivateStatus
+                //            td= user.lockedStatus
+                //            td
+                //                a.my-1.btn.btn-primary(href=`/users/${user._id}`) View
+                //                br
+                //                a.my-1.btn.btn-success(href=`/users/${user._id}/edit`) Update
+                //                br
+                //                button.my-1.btn.btn-danger.delete-btn(
+                //                    data-user-name=`${user.fullName}`
+                //                    data-user-id=`${user._id}`
+                //                ) Delete
+                //                br
+                //                a.my-1.btn.btn-secondary(href=`/users/${user._id}/resend`) Resend Email
+                //                br
+                //                if user.lockedStatus
+                //                    button.my-1.btn.btn-warning.unlock-btn(
+                //                        data-user-name=`${user.fullName}`
+                //                        data-user-id=`${user._id}`
+                //                    ) Unlock
+                //                else
+                //                    button.my-1.btn.btn-info.lock-btn(
+                //                        data-user-name=`${user.fullName}`
+                //                        data-user-id=`${user._id}`
+                //                    ) Lock
+                //else
+                //    tr
+                //        td.text-center.p-5.h4(colspan='11') No users found.
+        //// Display the message
+        //p Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
+        //// Pagination
+        //+pagination('/users', current, count, perPage)
         // Confirm modal
         include ../../partials/confirm-delete-modal
         #flash-alert.alert.alert-danger(style="display: none")
@@ -124,6 +116,7 @@ block content
             const confirmModalBody = $("#modalDelete .modal-body");
             const confirmButton = $("#modalDelete .btn.btn-danger");
             const modalTitle = $("#modalDelete .modal-title");
+
             function handleLockUnlock(button, isLock) {
                 button.click(function () {
                     const fullname = button.data("user-name");
@@ -149,13 +142,16 @@ block content
                     });
                 });
             }
+
             handleLockUnlock(lockButtons, true);
             handleLockUnlock(unlockButtons, false);
         });
     // End script for confirming lock/unlock
+
+    // Script Datatables plugin
     script.
         $(() => {
-            let table = $("#product-table")
+            let table = $("#user-table")
                 .DataTable({
                     responsive: true,
                     rowId: '_id',
@@ -171,7 +167,7 @@ block content
                         thousands: ','
                     },
                     retrieve: true,
-                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                    lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "All"]],
                     stateSave: true,
                     scrollX: true,
                     scrollY: "50vh",
@@ -194,11 +190,18 @@ block content
                         {
                             data: 'profilePicture',
                             render: function (data, type, row) {
-                                return `<a class="image-popup" href=${data[0]} title="${row.productName}">
+                                return `<a class="image-popup" href=${data} title="${row.fullName}">
                                             <img class="lazy" width="100" height="100" data-src="${data}"/>
                                         </a>`;
                             }
                         },
+                        {data: 'email'},
+                        {data: 'username'},
+                        {data: 'fullName'},
+                        {data: 'role'},
+                        {data: 'isFirstLogin'},
+                        {data: 'inactivateStatus'},
+                        {data: 'lockedStatus'},
                         {
                             data: null,
                             render: function (data, type, row, meta) {
@@ -228,9 +231,16 @@ block content
                         return JSON.parse(localStorage.getItem('DataTables_' + settings.sInstance))
                     }
                 });
+
             function updatePerPage(select) {
                 const selectedValue = select.value;
                 // Update the URL with the selected users per page value
                 window.location.href = `/users?page=#{current}&perPage=${selectedValue}`;
             }
+
+            $('#reload-user-table').on('click', () => {
+                $('#user-table').DataTable().ajax.reload(function (json) {
+                    console.log("The data has been refreshed:", json);
+                });
+            });
         });

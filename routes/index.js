@@ -103,7 +103,7 @@ router
     .use("/customers", customerRouter)
     .use("/checkout", checkoutRouter)
     .use("/api/products", apiProductRouter)
-    .use("/api/products", apiUserRouter);
+    .use("/api/users", apiUserRouter);
 
 // error router
 router
