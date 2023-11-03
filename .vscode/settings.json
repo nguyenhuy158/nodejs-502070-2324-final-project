@@ -96,7 +96,6 @@
     "editor.wordWrap": "wordWrapColumn",
     "files.autoSave": "onFocusChange",
     "files.simpleDialog.enable": false,
-    "git.confirmSync": false,
     "git.enableSmartCommit": true,
     "html.autoClosingTags": true,
     "html.format.enable": true,
@@ -180,5 +179,33 @@
         "*.log": true,
         "*.lock": true,
         "setting.json": true
+    },
+    "turboConsoleLog.addSemicolonInTheEnd": true,
+    "turboConsoleLog.delimiterInsideMessage": "🚀",
+    "turboConsoleLog.insertEmptyLineAfterLogMessage": false,
+    "turboConsoleLog.insertEmptyLineBeforeLogMessage": false,
+    "turboConsoleLog.quote": "`",
+    "turboConsoleLog.logType": "log",
+    "turboConsoleLog.wrapLogMessage": true,
+    "turboConsoleLog.logMessageSuffix": "",
+    "turboConsoleLog.includeFileNameAndLineNum": true,
+    "todo-tree.tree.buttons.export": true,
+    "auto-rename-tag.activationOnLanguage": [
+        "*"
+    ],
+    "git.autofetch": true,
+    "git.autofetchPeriod": 3600,
+    "git.mergeEditor": true,
+    "github-enterprise.uri": "https://gitlab.duthu.net/",
+    "npm.packageManager": "yarn",
+    "npm-intellisense.showBuildInLibs": true,
+    "path-intellisense.showHiddenFiles": true,
+    "prettier.tabWidth": 4,
+    "prettier.trailingComma": "all",
+    "html2pug": {
+        "tabs": false,
+        "fragment": true,
+        "doubleQuotes": true,
+        "commas": true,
     }
 }
