@@ -118,7 +118,6 @@
     "terminal.integrated.fontWeight": "normal",
     "terminal.integrated.scrollback": 10000,
     "terminal.integrated.smoothScrolling": true,
-    "window.zoomLevel": -1,
     "workbench.activityBar.iconClickBehavior": "toggle",
     "workbench.colorTheme": "GitHub Dark",
     "workbench.editor.enablePreview": false,
@@ -225,5 +224,8 @@
         "last",
         "current",
         "root"
-    ]
+    ],
+    "window.density.editorTabHeight": "compact",
+    "window.titleSeparator": "👻",
+    "window.title": "${dirty}${separator}${activeFolderMedium}${separator}${activeEditorShort}"
 }
