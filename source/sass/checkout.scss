@@ -125,14 +125,15 @@ input::-webkit-outer-spin-button {
 }
 
 
-// ********** Checkout
+// ********** Section Checkout
 
 
 .checkout {
     width: 70%;
-    padding: 40px var(--px);
+    padding: 40px 60px 20px;
     background: var(--white);
     border-right: 1px solid var(--gainsboro);
+    
 }
 
 .section-heading {
@@ -147,7 +148,6 @@ input::-webkit-outer-spin-button {
 }
 
 .label-default {
-    padding-left: 10px;
     margin-bottom: 5px;
     font-size: var(--fs-14);
     color: var(--spanish-gray);
@@ -176,7 +176,7 @@ input::-webkit-outer-spin-button {
     letter-spacing: 3px;
 }
 
-.btn {
+.checkout .btn {
     border-radius: var(--radius);
 }
 
@@ -196,10 +196,11 @@ input::-webkit-outer-spin-button {
     font-weight: var(--fw-5);
     color: var(--white);
     padding: 13px 45px;
+    width: 100%;
 }
 
 
-// ********** Cart
+// ********** Section Cart
 
 
 .cart {
@@ -207,9 +208,8 @@ input::-webkit-outer-spin-button {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 20px;
-    margin: 0px 60px;
-    // background: var(--azure);
+    padding: 40px 60px 0px;
+    background: var(--white);
     // color: var(--white);
 }
 
@@ -223,8 +223,8 @@ input::-webkit-outer-spin-button {
 }
 
 .product-card .card {
-    position: relative;
     display: flex;
+    flex-direction: row;
     align-items: center;
     gap: 20px;
 }
@@ -257,6 +257,7 @@ input::-webkit-outer-spin-button {
     height: 20px;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .product-qty button:active,
@@ -286,7 +287,7 @@ input::-webkit-outer-spin-button {
 }
 
 .discount-token {
-    padding: 40px var(--px);
+    padding: 40px 0px;
     margin-top: 10px;
     border-top: 1px solid var(--gainsboro);
     border-bottom: 1px solid var(--gainsboro);
@@ -307,7 +308,7 @@ input::-webkit-outer-spin-button {
 .btn-outline {
     padding: 10px 25px;
     border: 1px solid var(--azure);
-    color: var(--white);
+    color: var(--davys-gray);
 }
 
 .amount {
@@ -327,4 +328,71 @@ input::-webkit-outer-spin-button {
     font-size: var(--fs-18);
     font-weight: var(--fw-7);
     color: var(--onyx);
+}
+
+
+
+// -------------------------------------- 
+// ***************  RESPONSIVE 
+// -------------------------------------- 
+
+@media (max-width: 1200px){
+    .item-flex{
+        flex-direction: column-reverse;
+    }
+
+    
+    // ********** Section checkout
+
+
+    .checkout{
+        width: 100%;
+        border-right: none;
+    }
+
+    .btn-primary{
+        width: 100%;
+    }
+
+    
+    // ********** Section cart
+
+
+    .cart{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+        border-bottom: 1px solid var(--gainsboro);
+    }
+
+    .cart .wrapper{
+        margin-top: auto;
+    }
+
+    .cart .cart-item-box{
+        border-right: 1px solid var(--gainsboro);
+        margin-bottom: 0;
+    }
+}
+
+
+@media (max-width: 768px){
+    :root {
+        --px: 40px;
+    }
+
+    .cart{
+        grid-template-columns: 1fr;
+    }
+
+    .wrapper-flex{
+        gap: 20px;
+    }
+}
+
+
+@media (max-width: 567px){
+    :root{
+        --px: 20px;
+    }
 }
