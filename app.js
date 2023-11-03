@@ -14,16 +14,18 @@ const session = require("express-session");
 const User = require("./models/user");
 const moment = require("moment/moment");
 // const flash = require("./middlewares/flash");
+const { currentTime } = require("./middlewares/format");
+
 const bcrypt = require("bcryptjs");
 const {
-          cookieOptions,
-          cloudinaryConfig
-      }    = require("./config/config");
+    cookieOptions,
+    cloudinaryConfig
+} = require("./config/config");
 const LocalStrategy = require("passport-local").Strategy;
 const flash = require("connect-flash");
 
 const { v2: cloudinary } = require("cloudinary");
-const { uploadImage }    = require("./middlewares/utils");
+const { uploadImage } = require("./middlewares/utils");
 
 // process.on("uncaughtException", (error) => {
 //     winstonLogger.error("Uncaught Exception:", error);
@@ -45,16 +47,24 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(require("express-session")({
-                                       secret           : "keyboard cat",
-                                       resave           : false,
-                                       saveUninitialized: false
-                                   }));
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
 app.use((req, res, next) => {
-    console.log("|||||||||===============================new request===============================|||||||||");
+    console.log("[NEW REQUEST].-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-[NEW REQUEST]");
+    const { method, originalUrl, xhr } = req;
+    const accessTime = currentTime();
+    const fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
+
+    console.log(`[ACCESS-LOG]\t${fullUrl}`);
+    console.log(`[ACCESS-LOG]\t${method}\t[${accessTime}]\t${originalUrl}`);
+    console.log(`[ACCESS-LOG]\t${method}\t[${accessTime}]\txhr: ${xhr}`);
+
     res.locals.message = req.flash();
     console.log("=>(app.js:51) req.flash()", req.flash());
     console.log("=>(app.js:52) res.locals.message", res.locals.message);
@@ -69,23 +79,23 @@ cloudinary.config(cloudinaryConfig);
 passport.use(new LocalStrategy(async function (username, password, done) {
     try {
         const user = await User.findOne({ username: username });
-        
+
         if (!user) {
             return done(null, false, { message: "Incorrect username." });
         }
-        
+
         if (user.token) {
             return done(null, false, {
                 message: "Please login by clicking on the link in your email"
             });
         }
-        
+
         const isPasswordValid = await user.validPassword(password);
-        
+
         if (!isPasswordValid) {
             return done(null, false, { message: "Incorrect password." });
         }
-        
+
         return done(null, user, { message: "Login successfully." });
     } catch (err) {
         return done(err);
