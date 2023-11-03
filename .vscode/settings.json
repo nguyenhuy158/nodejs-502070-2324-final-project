@@ -161,4 +161,24 @@
         100
     ],
     "editor.guides.bracketPairs": true,
+    "editor.renderWhitespace": "all",
+    "[Log]": {
+        "editor.fontSize": 15
+    },
+    "files.exclude": {
+        ".idea/": true,
+        ".vscode/": true,
+        "node_modules/": true,
+        "*.log": true,
+        "*.lock": true,
+        "setting.json": true
+    },
+    "search.exclude": {
+        ".idea/": true,
+        ".vscode/": true,
+        "node_modules/": true,
+        "*.log": true,
+        "*.lock": true,
+        "setting.json": true
+    }
 }
