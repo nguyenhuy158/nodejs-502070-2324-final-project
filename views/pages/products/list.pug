@@ -23,7 +23,6 @@ block content
 						th Category
 						th Thumbnail
 						th
-
 				tbody
 
 
@@ -43,12 +42,6 @@ block content
 
 
 	script(src="/js/product-datatable.js") 
-	script.
-		$(() => {
-			function updatePerPage(select) {
-				const selectedValue = select.value;
-				window.location.href = `/products?page=#{current}&perPage=${selectedValue}`;
-			}
-		});
+
 
 

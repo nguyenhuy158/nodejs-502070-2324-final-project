@@ -105,13 +105,3 @@ block content
 
 	// Script Datatables plugin
 	script(src="/js/user-datatable.js") 
-	script.
-		$(() => {
-
-
-			function updatePerPage(select) {
-				const selectedValue = select.value;
-				window.location.href = `/users?page=#{current}&perPage=${selectedValue}`;
-			}
-
-		});
