@@ -68,3 +68,15 @@ toggler.addEventListener("change", function () {
 function reloadTable() {
 	$('span:contains("Reload")').click();
 }
+
+function formatCurrency(input) {
+	const numericValue = input.value.replace(/[^0-9.]/g, '');
+
+	const formattedValue = new Intl.NumberFormat('vi-VN', {
+		style: 'currency',
+		currency: 'VND',
+		minimumFractionDigits: 0,
+	}).format(numericValue);
+
+	input.value = formattedValue;
+}

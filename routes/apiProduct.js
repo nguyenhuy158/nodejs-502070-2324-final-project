@@ -7,6 +7,14 @@ const { upload } = require("../config/upload");
 router
     .get("/",
         productApiController.getApiProducts)
+    .post("/")
+    .get("/:id",
+        productApiController.checkAndParseObjectId,
+        productApiController.getApiProduct)
+    .put("/:id",
+        productApiController.checkAndParseObjectId,
+        productApiController.putApiProduct
+    )
     .delete("/:id",
         productApiController.checkAndParseObjectId,
         productApiController.deleteApiProductsById);

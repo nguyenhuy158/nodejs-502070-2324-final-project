@@ -149,7 +149,8 @@ $(() => {
 
         lazyImageLoading();
         magnificPopup();
-        asignDeleteEvent();
+        assignDeleteEvent();
+        assignEditEvent();
     });
 
     table.buttons().container().appendTo($('#button-container'));

@@ -22,16 +22,49 @@ exports.getApiProducts = async (req, res) => {
     }
 };
 
+exports.getApiProduct = async (req, res) => {
+    try {
+        const id = req.id;
+        const product = await Product.findOne(id).populate("category");
+        res.json(product);
+    } catch (error) {
+        res.json({});
+    }
+};
+
+exports.putApiProduct = async (req, res) => {
+    try {
+        const id = req.id;
+        console.log(`🚀 --------------------------------------------------------------------------------------🚀`);
+        console.log(`🚀 🚀 file: productApiController.js:40 🚀 exports.putApiProduct= 🚀 req.body`, req.body);
+        console.log(`🚀 --------------------------------------------------------------------------------------🚀`);
+
+        const product = await Product.findOneAndUpdate(id, { $set: req.body }, { new: true });
+        res.json(product);
+    } catch (error) {
+        res.json({});
+    }
+};
+
 exports.checkAndParseObjectId = async (req, res, next) => {
     const id = req.params.id;
     if (ObjectId.isValid(id)) {
         req.id = new ObjectId(id);
-        return next();
+        try {
+            await Product.findOne(req.id).populate("category");
+            return next();
+        } catch (error) {
+            res.status(400).json({
+                error: true,
+                message: 'Id not found! please reload and try again!'
+            });
+        }
+    } else {
+        res.status(400).json({
+            error: true,
+            message: 'Id not valid! please reload and try again!'
+        });
     }
-    return res.status(400).json({
-        error: true,
-        message: 'Id not valid! please reload and try again!'
-    });
 };
 
 exports.deleteApiProductsById = async (req, res) => {
