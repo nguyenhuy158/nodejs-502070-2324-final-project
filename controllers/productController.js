@@ -2,8 +2,8 @@ const Product = require("../models/product");
 const ProductCategory = require("../models/productCategory");
 const {faker} = require("@faker-js/faker");
 const moment = require("moment");
-const {ObjectId} = require("mongodb");
 const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs");
@@ -454,11 +454,3 @@ exports.mainThumbnail = async (req, res) => {
     }
 };
 
-exports.getApiProducts = async (req, res) => {
-    try {
-        const products = await Product.find().populate("category");
-        res.json(products);
-    } catch (error) {
-        res.json({});
-    }
-};

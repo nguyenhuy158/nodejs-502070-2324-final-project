@@ -48,7 +48,7 @@
     "editor.codeLensFontSize": 16,
     "editor.colorDecoratorsActivatedOn": "hover",
     "editor.columnSelection": false,
-    "editor.cursorBlinking": "expand",
+    "editor.cursorBlinking": "smooth",
     "editor.cursorSmoothCaretAnimation": "on",
     "editor.cursorWidth": 0,
     "editor.detectIndentation": true,
@@ -227,5 +227,18 @@
     ],
     "window.density.editorTabHeight": "compact",
     "window.titleSeparator": "👻",
-    "window.title": "${dirty}${separator}${activeFolderMedium}${separator}${activeEditorShort}"
+    "window.title": "${dirty}${separator}${activeFolderMedium}${separator}${activeEditorShort}",
+    "git-graph.commitDetailsView.location": "Docked to Bottom",
+    "git-graph.defaultColumnVisibility": {
+        "Date": true,
+        "Author": true,
+        "Commit": true
+    },
+    "git-graph.dialog.addTag.pushToRemote": true,
+    "git-graph.repository.commits.fetchAvatars": true,
+    "highlightSelections.borderStyle": "inset",
+    "highlightSelections.borderColor": "#D7E5CA",
+    "highlightSelections.borderWidth": "2px",
+    "color-highlight.markerType": "dot-before",
+    "color-highlight.matchWords": true,
 }

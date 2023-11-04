@@ -63,3 +63,8 @@ toggler.addEventListener("change", function () {
 		document.body.classList.remove("dark");
 	}
 });
+
+
+function reloadTable() {
+	$('span:contains("Reload")').click();
+}

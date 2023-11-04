@@ -4,31 +4,31 @@ function asignDeleteEvent() {
     const confirmModalBody = $("#modalDelete .modal-body");
     const confirmDeleteButton = $("#modalDelete .btn.btn-danger");
     deleteButtons.on('click', function () {
-
         const productName = $(this).parent().siblings()[2].textContent;
         const productId = $(this).parents()[1].id;
 
-        confirmModalBody.html(`Are you sure you want to delete
-                    <strong>${productName}</strong>?`);
+        confirmModalBody.html(`Are you sure you want to delete <strong>${productName}</strong>?`);
+
         $("#modalDelete")
             .modal("show");
 
-        confirmDeleteButton.on('click', function () {
-            $("#modalDelete")
-                .modal("hide");
-            console.log("click");
+        confirmDeleteButton.off('click').on('click', function () {
+            $("#modalDelete").modal("hide");
+
             console.log(`/products/${productId}`);
-            fetch(`/products/${productId}`, {
-                method: "DELETE"
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("=>(list.pug:113) data", data);
-                    location.reload();
-                })
-                .catch(error => {
-                    console.log("Error in deleting:", error);
-                });
+            $.ajax(
+                {
+                    url: `/api/products/${productId}`,
+                    type: 'DELETE',
+                    success: (data) => {
+                        showToast("success", 'Deleted successfully');
+                        reloadTable();
+                    },
+                    error: (error) => {
+                        showToast("error", "Delete fail! please try again!");
+                    }
+                }
+            );
         });
     });
 }

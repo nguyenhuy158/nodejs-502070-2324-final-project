@@ -1,10 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const productController = require("../controllers/productController");
+const productApiController = require("../controllers/productApiController.js");
 const authController = require("../controllers/authController");
-const {upload} = require("../config/upload");
+const { upload } = require("../config/upload");
 
 router
-    .get("/", productController.getApiProducts);
+    .get("/",
+        productApiController.getApiProducts)
+    .delete("/:id",
+        productApiController.checkAndParseObjectId,
+        productApiController.deleteApiProductsById);
 
 module.exports = router;

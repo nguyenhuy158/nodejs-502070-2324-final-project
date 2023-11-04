@@ -8,7 +8,8 @@ const path = require("path");
 const fs = require("fs");
 require("dotenv")
     .config();
-const { ObjectId } = require("mongodb");
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const Product = require("../models/product");
 const {
     generateToken,
