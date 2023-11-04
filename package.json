@@ -75,6 +75,7 @@
   "author": "huy.ntq <huy.ntq02@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^8.53.0",
     "sass": "^1.69.4"
   }
 }
