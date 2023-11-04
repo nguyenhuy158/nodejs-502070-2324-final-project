@@ -1,21 +1,21 @@
-const User              = require("../models/user");
-const { faker }         = require("@faker-js/faker");
-const moment            = require("moment");
-const bcrypt            = require("bcryptjs");
+const User = require("../models/user");
+const { faker } = require("@faker-js/faker");
+const moment = require("moment");
+const bcrypt = require("bcryptjs");
 const { cookieOptions } = require("../config/config");
 const {
-          generateToken,
-          sendEmail
-      }                 = require("../middlewares/utils");
-const { sentMail }      = require("./routerController");
+    generateToken,
+    sendEmail
+} = require("../middlewares/utils");
+const { sentMail } = require("./routerController");
 require("dotenv")
     .config();
 const {
-          query,
-          body,
-          param,
-          validationResult
-      } = require("express-validator");
+    query,
+    body,
+    param,
+    validationResult
+} = require("express-validator");
 
 exports.ensureAuthenticated = function (req, res, next) {
     if (req.isAuthenticated()) {
@@ -40,13 +40,13 @@ exports.logger = async function (req, res, next) {
 };
 
 exports.get = async function (req, res, next) {
-    
+
     const { token } = req.query;
-    
+
     if (token) {
         try {
             const salesperson = await User.findOne({ token });
-            
+
             if (!salesperson || salesperson.tokenExpiration < moment()) {
                 // flash.addFlash(
                 //     req,
@@ -55,16 +55,16 @@ exports.get = async function (req, res, next) {
                 // );
                 return res.redirect("/login");
             }
-            
-            salesperson.token           = undefined;
+
+            salesperson.token = undefined;
             salesperson.tokenExpiration = undefined;
             await salesperson.save();
-            
+
             // flash.addFlash(req, "success", "Welcome Now you are salespeople.");
-            
+
             const token = salesperson.generateAccessJWT();
             res.cookie(process.env.COOKIE_NAME, token, cookieOptions);
-            
+
             res.redirect("/");
         } catch (error) {
             // flash.addFlash(req, "warning", "An error occurred while logging in.");
@@ -77,37 +77,33 @@ exports.get = async function (req, res, next) {
     }
 };
 
-exports.passwordResetGet = async (req, res, next) => {
+exports.getPasswordReset = async (req, res, next) => {
     return res.render("pages/auth/password-reset");
 };
 
-exports.passwordReset = async (req, res, next) => {
+exports.postPasswordReset = async (req, res, next) => {
     const { email } = req.body;
-    
+
     try {
         const user = await User.findOne({ email });
-        
-        if (!user) {
-            return res.render("pages/auth/password-reset", { email });
-        }
-        
-        const resetToken        = generateToken();
+
+        const resetToken = generateToken();
         const resetTokenExpires = new Date(Date.now() + 10 * 60 * 1000);
-        
-        user.token           = resetToken;
+
+        user.token = resetToken;
         user.tokenExpiration = resetTokenExpires;
         user.isPasswordReset = true;
-        user.isFirstLogin    = false;
+        user.isFirstLogin = false;
         await user.save();
-        
-        const resetLink   = `${req.protocol + "://" + req.get("host")}/email-confirm?token=${resetToken}`;
+
+        const resetLink = `${req.protocol + "://" + req.get("host")}/email-confirm?token=${resetToken}`;
         const mailOptions = {
-            from   : process.env.FROM_EMAIL,
-            to     : email,
+            from: process.env.FROM_EMAIL,
+            to: email,
             subject: "Password Reset Request",
-            text   : `You are receiving this email because you (or someone else) requested a password reset for your account.\n\n`
-                     + `Please click on the following link, or paste this into your browser to reset your password:\n\n`
-                     + resetLink
+            text: `You are receiving this email because you (or someone else) requested a password reset for your account.\n\n`
+                + `Please click on the following link, or paste this into your browser to reset your password:\n\n`
+                + resetLink
         };
         sendEmail(req, user, resetToken, mailOptions);
         req.flash("success", "Reset success, please check mail to login.");
@@ -121,34 +117,34 @@ exports.passwordReset = async (req, res, next) => {
 exports.emailConfirm = async (req, res, next) => {
     const token = req.query.token;
     console.log("=>(authController.js:70) token", token);
-    
+
     if (token) {
         try {
             const salesperson = await User.findOne({ token });
-            
+
             if (!salesperson) {
                 req.flash("info", "Link invalid, please try again.");
                 return res.redirect("/login");
             }
-            
+
             if (salesperson && salesperson.tokenExpiration < moment()) {
                 req.flash("info", "Link expired, please try again. ");
                 return res.redirect("/login");
             }
-            
+
             req.login(salesperson, async (err) => {
                 console.log("=>(authController.js:138) err", err);
                 if (err) {
                     return next(err);
                 }
                 req.flash("info", "Welcome Now you are salespeople.");
-                
-                salesperson.token           = undefined;
+
+                salesperson.token = undefined;
                 salesperson.tokenExpiration = undefined;
                 await salesperson.save();
                 return res.redirect("/");
             });
-            
+
         } catch (error) {
             req.flash("error", "An error occurred while logging in.");
             next(error);
@@ -162,29 +158,29 @@ exports.createUser = async function (req, res, next) {
     const { email } = req.body;
     try {
         const newUser = new User({
-                                     email,
-                                     username: req.body.username,
-                                     password: req.body.password,
-                                     role    : "salespeople",
-                                 });
-        
+            email,
+            username: req.body.username,
+            password: req.body.password,
+            role: "salespeople",
+        });
+
         const existingUser = await User.findOne({ email });
-        
+
         if (existingUser) {
             return res.render("pages/auth/form", {
                 isRegister: true,
-                status    : "failed",
-                data      : [],
-                message   : "It seems you already have an account, please log in instead.",
+                status: "failed",
+                data: [],
+                message: "It seems you already have an account, please log in instead.",
             });
         }
-        
+
         const savedUser = await newUser.save();
         const {
-                  password,
-                  role,
-                  ...user_data
-              }         = savedUser._doc;
+            password,
+            role,
+            ...user_data
+        } = savedUser._doc;
         return res.redirect("/login");
     } catch (err) {
         next(err);
@@ -193,13 +189,13 @@ exports.createUser = async function (req, res, next) {
 
 exports.checkUser = async function (req, res, next) {
     const {
-              username,
-              password
-          } = req.body;
+        username,
+        password
+    } = req.body;
     try {
         const user = await User.findOne({ username })
-                               .select("+password");
-        
+            .select("+password");
+
         if (user) {
             if (!user.lockedStatus) {
                 if (user.token) {
@@ -241,7 +237,7 @@ exports.checkUser = async function (req, res, next) {
                 });
             }
         }
-        
+
         return res.render("pages/auth/form", {
             username,
             password,
@@ -254,14 +250,14 @@ exports.checkUser = async function (req, res, next) {
 };
 
 exports.logout = function (req, res, next) {
-    
+
     req.logout(function (err) {
         if (err) {
             res.redirect("/error");
         } else {
             req.flash("info", "Logout successfully.");
             req.session = null;
-            res.locals  = null;
+            res.locals = null;
             res.clearCookie(process.env.COOKIE_NAME);
             res.cookies = null;
             res.redirect("/login");
@@ -283,35 +279,35 @@ exports.changePassword = async function (req, res, next) {
 
 exports.postChangePassword = async function (req, res, next) {
     const result = validationResult(req);
-    
+
     if (result.errors.length === 0) {
         const {
-                  currentPassword,
-                  newPassword,
-                  confirmPassword
-              } = req.body;
-        
+            currentPassword,
+            newPassword,
+            confirmPassword
+        } = req.body;
+
         try {
             const user = req.user;
-            
+
             if (!user.isPasswordReset) {
                 const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
-                
+
                 if (!isPasswordValid) {
                     req.flash("error", "Change password fail: Password is not correct.");
                     return res.status(401)
-                              .redirect("/change-password");
+                        .redirect("/change-password");
                 }
             }
-            
+
             if (newPassword !== confirmPassword) {
                 req.flash("error", "Change password fail: Password not match.");
                 return res.status(400)
-                          .redirect("/change-password");
+                    .redirect("/change-password");
             }
-            
-            user.password        = newPassword;
-            user.isFirstLogin    = false;
+
+            user.password = newPassword;
+            user.isFirstLogin = false;
             user.isPasswordReset = false;
             await user.save();
             req.session.user = user;
@@ -325,4 +321,17 @@ exports.postChangePassword = async function (req, res, next) {
         req.flash("error", result.errors[0].msg);
         res.redirect("change-password");
     }
+};
+
+
+exports.resultValidate = (url) => {
+    return (req, res, next) => {
+        const result = validationResult(req);
+        if (result.errors.length === 0) {
+            next();
+        } else {
+            req.flash("success", result.errors[0].msg);
+            res.redirect(url);
+        }
+    };
 };
