@@ -381,7 +381,12 @@ exports.unlockAccount = async (req, res) => {
     }
 };
 
-exports.apiUpdateSetting = async (req, res) => {
+
+exports.getApiSetting = async (req, res) => {
+    res.json({ ...req.user.settings });
+};
+
+exports.postApiSetting = async (req, res) => {
     try {
         const userId = req.user._id;
         const { darkMode } = req.body;

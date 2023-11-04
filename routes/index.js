@@ -85,7 +85,8 @@ router
     .get("/random-product", routerController.randomProduct)
     .get("/create-sample-data", routerController.createSampleData)
     .get("/search", routerController.searchResults)
-    .post("/update-settings", userController.apiUpdateSetting);
+    .post("/api/setting", userController.postApiSetting)
+    .get("/api/setting", userController.getApiSetting);
 
 // main router
 router
