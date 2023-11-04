@@ -252,4 +252,7 @@
     "errorLens.statusBarMessageEnabled": true,
     "editor.defaultFormatter": "GitHub.copilot",
     "editor.defaultFoldingRangeProvider": "GitHub.copilot",
+    "[jade]": {
+        "editor.defaultFormatter": "ducfilan.pug-formatter"
+    },
 }
