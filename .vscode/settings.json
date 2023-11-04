@@ -254,4 +254,5 @@
     "[jade]": {
         "editor.defaultFormatter": "ducfilan.pug-formatter"
     },
+    "editor.mouseWheelZoom": true,
 }
