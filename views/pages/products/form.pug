@@ -1,78 +1,80 @@
 extends ../layout
 
 block content
-    .container
-        a.btn.btn-primary(href="/products") Back to product list
+	.content
+		include ../../partials/nav
+		.container
+			a.btn.btn-primary(href="/products") Back to product list
 
-        h2 #{product && product.id ? 'Edit Product' : 'Create Product'}
-        form#add-product(method='POST', action=product && product.id ? `/products/${product._id}/edit` :
-        '/products' autocomplete="off" enctype="multipart/form-data")
+			h2 #{product && product.id ? 'Edit Product' : 'Create Product'}
+			form#add-product(method='POST', action=product && product.id ? `/products/${product._id}/edit` :
+			'/products' autocomplete="off" enctype="multipart/form-data")
 
-            .mb-3(class=product && product.id ? 'd-none' : '')
-                label(for='barcode' class='form-label') Barcode:
-                input#barcode.form-control(type='text' name='barcode', value=product ? product.barcode : '',readonly=product ? true : false, required)
+				.mb-3(class=product && product.id ? 'd-none' : '')
+					label(for='barcode' class='form-label') Barcode:
+					input#barcode.form-control(type='text' name='barcode', value=product ? product.barcode : '',readonly=product ? true : false, required)
 
-            .mb-3
-                label(for='productName' class='form-label') Product Name:
-                input#productName.form-control(type='text' name='productName', value=product ? product.productName : '', required)
+				.mb-3
+					label(for='productName' class='form-label') Product Name:
+					input#productName.form-control(type='text' name='productName', value=product ? product.productName : '', required)
 
-            .mb-3
-                label(for='importPrice' class='form-label') Import Price:
-                input#importPrice.form-control(type='number' name='importPrice', value=product ? product.importPrice : '' min='1000')
+				.mb-3
+					label(for='importPrice' class='form-label') Import Price:
+					input#importPrice.form-control(type='number' name='importPrice', value=product ? product.importPrice : '' min='1000')
 
-            .mb-3
-                label(for='retailPrice' class='form-label') Retail Price:
-                input#retailPrice.form-control(type='number' name='retailPrice', value=product ? product.retailPrice : '' min='1000')
+				.mb-3
+					label(for='retailPrice' class='form-label') Retail Price:
+					input#retailPrice.form-control(type='number' name='retailPrice', value=product ? product.retailPrice : '' min='1000')
 
-            .mb-3
-                label(for='imageUrls' class='form-label') Image URLs:
-                input#imageUrls.form-control(type='file' name='imageUrls', multiple)
-            // Add image preview for editing
-            if product && product.imageUrls.length > 0
-                .mb-3
-                    label(class='form-label') Current Image:
-                    each imageUrl in product.imageUrls
-                        img(src=imageUrl, alt='Current Image' height='100' width='100' class='img-preview')
+				.mb-3
+					label(for='imageUrls' class='form-label') Image URLs:
+					input#imageUrls.form-control(type='file' name='imageUrls', multiple)
+				// Add image preview for editing
+				if product && product.imageUrls.length > 0
+					.mb-3
+						label(class='form-label') Current Image:
+						each imageUrl in product.imageUrls
+							img(src=imageUrl, alt='Current Image' height='100' width='100' class='img-preview')
 
-            .mb-3
-                label(for='category' class='form-label') Category:
-                select#category.form-select(name='category')
-                    each category in categories
-                        if product
-                            - const areEqual = String(product.category) === String(category._id)
-                        else
-                            - const areEqual = false
-                        option(value=category._id, selected=areEqual)= category.name
+				.mb-3
+					label(for='category' class='form-label') Category:
+					select#category.form-select(name='category')
+						each category in categories
+							if product
+								- const areEqual = String(product.category) === String(category._id)
+							else
+								- const areEqual = false
+							option(value=category._id, selected=areEqual)= category.name
 
-            button.btn(type='submit', class=`${product ? 'btn-success' : 'btn-primary'}`) #{product ? 'Save' : 'Create'}
-            a.btn.btn-secondary(href='/products') Cancel
+				button.btn(type='submit', class=`${product ? 'btn-success' : 'btn-primary'}`) #{product ? 'Save' : 'Create'}
+				a.btn.btn-secondary(href='/products') Cancel
 
-    script.
-        $(document)
-            .ready(function () {
-                const addForm = $('#add-product');
+	script.
+		$(document)
+			.ready(function () {
+				const addForm = $('#add-product');
 
-                addForm.on('submit', function (e) {
-                    e.preventDefault();
+				addForm.on('submit', function (e) {
+					e.preventDefault();
 
-                    const formData = new FormData(this);
-                    console.log("=>(form.pug:59) formData", formData);
+					const formData = new FormData(this);
+					console.log("=>(form.pug:59) formData", formData);
 
-                    $.ajax({
-                               url        : addForm.attr('action'),
-                               type       : addForm.attr('method'),
-                               data       : formData,
-                               processData: false,
-                               contentType: false,
-                               success    : function (response) {
-                                   console.log("Response:", response);
-                                   showToast(response.message, 'success')
-                                   window.location = '/products'
-                               },
-                               error      : function (error) {
-                                   console.log("Error:", error);
-                                   showToast(error, 'success')
-                               }
-                           });
-                });
-            });
+					$.ajax({
+						url        : addForm.attr('action'),
+						type       : addForm.attr('method'),
+						data       : formData,
+						processData: false,
+						contentType: false,
+						success    : function (response) {
+							console.log("Response:", response);
+							showToast(response.message, 'success')
+							window.location = '/products'
+						},
+						error      : function (error) {
+							console.log("Error:", error);
+							showToast(error, 'success')
+						}
+					});
+				});
+			});
