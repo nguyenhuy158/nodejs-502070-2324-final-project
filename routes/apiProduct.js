@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const productApiController = require("../controllers/productApiController.js");
-const authController = require("../controllers/authController");
 const { upload } = require("../config/upload");
 
 router
     .get("/",
         productApiController.getApiProducts)
-    .post("/")
+    .post("/",
+        upload.array("imageUrls", 5),
+        productApiController.postApiProduct)
     .get("/:id",
         productApiController.checkAndParseObjectId,
         productApiController.getApiProduct)

@@ -61,8 +61,8 @@ block content
 					console.log("=>(form.pug:59) formData", formData);
 
 					$.ajax({
-						url        : addForm.attr('action'),
-						type       : addForm.attr('method'),
+						url        : '/api/products',
+						type       : 'POST',
 						data       : formData,
 						processData: false,
 						contentType: false,

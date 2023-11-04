@@ -3,7 +3,7 @@ require("dotenv")
 const express = require("express");
 const router = require("./routes");
 const cookieParser = require("cookie-parser");
-const connectDb = require("./middlewares/server/config/db");
+const { connectDb } = require("./middlewares/server/config/db");
 const logger = require("./middlewares/handler");
 const sassMiddleware = require("node-sass-middleware");
 const path = require("path");
@@ -37,6 +37,8 @@ const { uploadImage } = require("./middlewares/utils");
 // });
 
 
+connectDb();
+
 const app = express();
 app.locals.moment = require("moment");
 app.locals.title = process.env.APP_NAME;
@@ -56,7 +58,7 @@ app.use(passport.session());
 app.use(flash());
 
 app.use((req, res, next) => {
-    console.log("[NEW REQUEST].-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-[NEW REQUEST]");
+    console.log("[👻NEW REQUEST👻]👻👻👻👻👻👻👻👻👻👻👻[👻NEW REQUEST👻]");
     const { method, originalUrl, xhr } = req;
     const accessTime = currentTime();
     const fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
@@ -66,12 +68,10 @@ app.use((req, res, next) => {
     console.log(`[ACCESS-LOG]\t${method}\t[${accessTime}]\txhr: ${xhr}`);
 
     res.locals.message = req.flash();
-    console.log("=>(app.js:51) req.flash()", req.flash());
-    console.log("=>(app.js:52) res.locals.message", res.locals.message);
+    console.log("[FLASH] ", res.locals.message);
     next();
 });
 
-app.use(connectDb);
 cloudinary.config(cloudinaryConfig);
 // console.log("=>(app.js:65) cloudinary.config()", cloudinary.config());
 // uploadImage("C:\\Users\\ADMIN\\Desktop\\nodejs-502070-2324-final-project\\public\\favicon.ico");

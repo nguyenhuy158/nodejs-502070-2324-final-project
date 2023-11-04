@@ -12,6 +12,38 @@ const {
     removeImageByUrl
 } = require("../middlewares/utils");
 const { categories } = require("./productCategoryController");
+const { processImageUrlsBeforeStore } = require('./productController');
+
+exports.postApiProduct = async (req, res) => {
+    try {
+        const {
+            barcode,
+            productName,
+            importPrice,
+            retailPrice,
+            category
+        } = req.body;
+        const imageUrls = await processImageUrlsBeforeStore(req.files);
+
+        const product = new Product({
+            barcode,
+            productName,
+            importPrice,
+            retailPrice,
+            imageUrls,
+            category,
+        });
+
+        await product.save();
+
+        res.status(201).json(product);
+    } catch (error) {
+        console.log(`🚀 ---------------------------------------------------------------------------------🚀`);
+        console.log(`🚀 🚀 file: productApiController.js:41 🚀 exports.postApiProduct= 🚀 error`, error);
+        console.log(`🚀 ---------------------------------------------------------------------------------🚀`);
+        res.status(500).json({ error: true, message: 'Could not create the product' });
+    }
+};
 
 exports.getApiProducts = async (req, res) => {
     try {
@@ -35,9 +67,6 @@ exports.getApiProduct = async (req, res) => {
 exports.putApiProduct = async (req, res) => {
     try {
         const id = req.id;
-        console.log(`🚀 --------------------------------------------------------------------------------------🚀`);
-        console.log(`🚀 🚀 file: productApiController.js:40 🚀 exports.putApiProduct= 🚀 req.body`, req.body);
-        console.log(`🚀 --------------------------------------------------------------------------------------🚀`);
 
         const product = await Product.findOneAndUpdate(id, { $set: req.body }, { new: true });
         res.json(product);
@@ -71,18 +100,12 @@ exports.deleteApiProductsById = async (req, res) => {
     try {
         const id = req.id;
         const product = await Product.findByIdAndDelete(id);
-        console.log(`🚀 -------------------------------------------------------------------------------------------🚀`);
-        console.log(`🚀 🚀 file: productApiController.js:41 🚀 exports.deleteApiProductsById 🚀 product`, product);
-        console.log(`🚀 -------------------------------------------------------------------------------------------🚀`);
         return res.json({
             error: false,
             product,
             message: "Deleted successfully"
         });
     } catch (error) {
-        console.log(`🚀 ---------------------------------------------------------------------------------------🚀`);
-        console.log(`🚀 🚀 file: productApiController.js:50 🚀 exports.deleteApiProductsById 🚀 error`, error);
-        console.log(`🚀 ---------------------------------------------------------------------------------------🚀`);
         return res.status(400).json({
             error: true,
             message: 'Please reload and try again!'
