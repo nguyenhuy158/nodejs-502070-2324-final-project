@@ -71,7 +71,7 @@ exports.get = async function (req, res, next) {
             next(error);
         }
     } else {
-        return res.render("pages/auth/form", {
+        return res.render("pages/auth/login", {
             messages: req.flash("info"),
         });
     }
@@ -167,7 +167,7 @@ exports.createUser = async function (req, res, next) {
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
-            return res.render("pages/auth/form", {
+            return res.render("pages/auth/login", {
                 isRegister: true,
                 status: "failed",
                 data: [],
@@ -230,7 +230,7 @@ exports.checkUser = async function (req, res, next) {
                     return res.redirect("/");
                 }
             } else {
-                return res.render("pages/auth/form", {
+                return res.render("pages/auth/login", {
                     username,
                     password,
                     error: `You can contact the administrator's support unlock account link.`,
@@ -238,7 +238,7 @@ exports.checkUser = async function (req, res, next) {
             }
         }
 
-        return res.render("pages/auth/form", {
+        return res.render("pages/auth/login", {
             username,
             password,
             error: "Username or Password is not correct",
@@ -266,7 +266,7 @@ exports.logout = function (req, res, next) {
 };
 
 exports.getRegister = async function (req, res, next) {
-    res.render("pages/auth/form", { isRegister: true });
+    res.render("pages/auth/login", { isRegister: true });
 };
 
 exports.changePassword = async function (req, res, next) {

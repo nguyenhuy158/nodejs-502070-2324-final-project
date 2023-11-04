@@ -1,6 +1,47 @@
 const { query, body, param, validationResult } = require('express-validator');
 const User = require('../models/user');
 
+exports.validateCreateAccount = [
+    body("fullName")
+        .trim()
+        .notEmpty()
+        .withMessage("Full name cannot be empty!")
+        .custom((value) => {
+            const words = value.split(" ");
+            if (words.length >= 2) {
+                return true;
+            } else {
+                throw new Error("Full name must contain at least two words");
+            }
+        }),
+    body("email")
+        .trim()
+        .notEmpty()
+        .withMessage("Email cannot be empty!")
+        .isEmail()
+        .withMessage("Not a valid e-mail address")
+        .custom(async (value) => {
+            const user = await User.findOne({ email: value });
+            if (user) {
+                throw new Error("E-mail exits! Please user another email!");
+            }
+            return true;
+        }),
+    (req, res, next) => {
+        const result = validationResult(req);
+        if (result.errors.length === 0) {
+            next();
+        } else {
+            return res
+                .status(500)
+                .json({
+                    error: true, message: result.errors[0].msg
+                });
+        }
+    }
+];
+
+
 exports.validateCreateProduct = [
     body('name').notEmpty().isString(),
     body('price').isNumeric(),

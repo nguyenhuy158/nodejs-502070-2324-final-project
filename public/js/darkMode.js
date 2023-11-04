@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const changeMode = (isChecked) => {
     isChecked ? $('#theme-toggle').click() : '';
 };

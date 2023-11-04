@@ -291,7 +291,7 @@ exports.gets = async function (req, res, next) {
             perPage,
             nextPage: hasNextPage ? nextPage : null
         };
-        res.render("pages/products/list", {
+        res.render("pages/products/home", {
             ...output,
             sideLink: process.env.SIDEBAR_PRODUCT
         });

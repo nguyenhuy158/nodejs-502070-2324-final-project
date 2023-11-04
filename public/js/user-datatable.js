@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 $(() => {
     let table = $("#user-table")
         .DataTable({
@@ -7,9 +8,9 @@ $(() => {
             autoFill: false,
             buttons: [
                 {
-                    text: 'Add product',
+                    text: 'New Sale People',
                     action: function (e, dt, node, config) {
-                        window.location = '/users/create-user';
+                        window.location = '/users/create-account';
                     }
                 },
                 {

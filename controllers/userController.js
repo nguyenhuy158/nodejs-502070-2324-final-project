@@ -1,6 +1,5 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
 const flash = require("../middlewares/flash");
 const moment = require("moment");
 const sharp = require("sharp");
@@ -135,7 +134,7 @@ exports.getUsers = async function (req, res, next) {
             perPage,
             nextPage: hasNextPage ? nextPage : null
         };
-        res.render("pages/users/list", {
+        res.render("pages/users/home", {
             ...response,
             sideLink: process.env.SIDEBAR_USER
         });
@@ -176,7 +175,7 @@ exports.resendEmail = async function resendEmail(req, res, next) {
         const user = await User.findById(id);
 
         if (!user) {
-            // return res.render('pages/auth/form', {
+            // return res.render('pages/auth/login', {
             //     isRegister: false,
             //     status: 'failed',
             //     message: 'No user found with the provided email address.',
@@ -196,7 +195,7 @@ exports.resendEmail = async function resendEmail(req, res, next) {
         flash.addFlash(req, "success", "Email has been resent. Please check your email for further instructions.");
         res.redirect("/users");
 
-        // res.render('pages/auth/form', {
+        // res.render('pages/auth/login', {
         //     isRegister: false,
         //     status: 'success',
         //     message: 'Email has been resent. Please check your email for further instructions.',
@@ -208,14 +207,11 @@ exports.resendEmail = async function resendEmail(req, res, next) {
 };
 
 exports.getCreateAccount = (req, res) => {
-    res.render("pages/auth/create-account");
+    res.render("pages/users/create-account");
 };
 
 exports.createAccount = async (req, res, next) => {
-    const {
-        fullName,
-        email
-    } = req.body;
+    const { fullName, email } = req.body;
 
     try {
         const existingUser = await User.findOne({ email });
@@ -258,7 +254,7 @@ exports.login = async (req, res, next) => {
             return res.redirect("/login");
         }
 
-        res.render("pages/auth/form", { token });
+        res.render("pages/auth/login", { token });
     } catch (error) {
         flash.addFlash(req, "warning", "An error occurred while logging in.");
         next(error);
@@ -408,11 +404,4 @@ exports.postApiSetting = async (req, res) => {
     }
 };
 
-exports.getApiUsers = async (req, res) => {
-    try {
-        const users = await User.find();
-        res.json(users);
-    } catch (error) {
-        res.json({});
-    }
-};
+

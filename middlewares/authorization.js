@@ -7,7 +7,7 @@ exports.requireRole = function (role) {
         if (req.user && req.user.role === role) {
             next();
         } else {
-            res.status(403).render("pages/permission-denied");
+            res.status(403).redirect("/permission-denied");
         }
     };
 };

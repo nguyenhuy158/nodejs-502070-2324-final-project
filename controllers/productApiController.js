@@ -1,17 +1,6 @@
-const Product = require("../models/product");
-const ProductCategory = require("../models/productCategory");
-const { faker } = require("@faker-js/faker");
-const moment = require("moment");
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
-const sharp = require("sharp");
-const path = require("path");
-const fs = require("fs");
-const {
-    uploadImage,
-    removeImageByUrl
-} = require("../middlewares/utils");
-const { categories } = require("./productCategoryController");
+const Product = require("../models/product");
 const { processImageUrlsBeforeStore } = require('./productController');
 
 exports.postApiProduct = async (req, res) => {
@@ -96,7 +85,7 @@ exports.checkAndParseObjectId = async (req, res, next) => {
     }
 };
 
-exports.deleteApiProductsById = async (req, res) => {
+exports.deleteApiProductById = async (req, res) => {
     try {
         const id = req.id;
         const product = await Product.findByIdAndDelete(id);

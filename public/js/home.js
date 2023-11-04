@@ -80,3 +80,19 @@ function formatCurrency(input) {
 
 	input.value = formattedValue;
 }
+
+function formDataToJson(formData) {
+	const json = {};
+	formData.forEach((value, key) => {
+		if (json[key]) {
+			if (Array.isArray(json[key])) {
+				json[key].push(value);
+			} else {
+				json[key] = [json[key], value];
+			}
+		} else {
+			json[key] = value;
+		}
+	});
+	return json;
+}

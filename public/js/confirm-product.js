@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 function assignEditEvent() {
     const editButton = $(".btn-edit");
     const editModal = $("#modal-product-edit");
@@ -91,20 +92,4 @@ function assignDeleteEvent() {
             );
         });
     });
-}
-
-function formDataToJson(formData) {
-    const json = {};
-    formData.forEach((value, key) => {
-        if (json[key]) {
-            if (Array.isArray(json[key])) {
-                json[key].push(value);
-            } else {
-                json[key] = [json[key], value];
-            }
-        } else {
-            json[key] = value;
-        }
-    });
-    return json;
 }

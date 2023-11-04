@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const productApiController = require("../controllers/productApiController.js");
+const productApiController = require("../controllers/productApiController");
 const { upload } = require("../config/upload");
 
 router
@@ -18,6 +18,6 @@ router
     )
     .delete("/:id",
         productApiController.checkAndParseObjectId,
-        productApiController.deleteApiProductsById);
+        productApiController.deleteApiProductById);
 
 module.exports = router;

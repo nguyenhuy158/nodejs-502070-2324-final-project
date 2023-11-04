@@ -60,10 +60,6 @@ exports.about = (req, res) => {
     res.render("pages/about", { navLink: "About" });
 };
 
-exports.permissionDenied = (req, res) => {
-    res.render("pages/permission-denied");
-};
-
 exports.randomProduct = (req, res) => {
     productController.seedDatabaseV1();
     res.redirect("/");
