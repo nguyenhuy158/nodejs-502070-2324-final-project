@@ -1,6 +1,47 @@
 $(() => {
     let table = $("#user-table")
         .DataTable({
+            colReorder: {
+                realtime: false
+            },
+            autoFill: false,
+            buttons: [
+                {
+                    text: 'Add product',
+                    action: function (e, dt, node, config) {
+                        window.location = '/users/create-user';
+                    }
+                },
+                {
+                    text: 'Reload',
+                    action: function (e, dt, node, config) {
+                        dt.ajax.reload();
+                    }
+                },
+                'spacer',
+                {
+                    extend: 'collection',
+                    className: 'custom-html-collection',
+                    buttons: [
+                        '<h3>Export</h3>',
+                        'copy',
+                        'pdf',
+                        'csv',
+                        'excel',
+                        'print',
+                        '<h3 class="not-top-heading">Column Visibility</h3>',
+                        'columnsToggle'
+                    ]
+                },
+            ],
+            dom: "B<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            responsive: {
+                details: {
+                    type: 'inline'
+                }
+            },
             rowId: '_id',
             scrollY: "50vh",
             scrollX: true,
@@ -26,7 +67,8 @@ $(() => {
                         return `<a class="image-popup" href=${data} title="${row.fullName}">
 									<img class="lazy" width="100" height="100" data-src="${data}"/>
 									</a>`;
-                    }
+                    },
+                    "defaultContent": "https://placehold.co/200"
                 },
                 {
                     data: 'email',
@@ -95,7 +137,11 @@ $(() => {
         lazyImageLoading();
         magnificPopup();
     });
-    $("#product-table")
+
+    table.buttons().container().appendTo($('#button-container'));
+
+
+    $("#user-table")
         .DataTable({
             retrieve: true,
             stateSave: true,

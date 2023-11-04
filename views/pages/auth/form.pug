@@ -2,37 +2,37 @@ include ../../partials/html
 include ../../partials/flash
 
 link(rel="stylesheet" href="/css/form.css")
-link(rel="stylesheet", href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css")
+link(rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css")
 
 .login-card
-    h2 Login
-    h3 Enter your account
-    form#login(method='post')
-        .login-form
-            input(type='text' name='username' placeholder='User Name' autocomplete='off')
-            input(type='password' name='password' placeholder='Password' autocomplete='off')
+	h2 Login
+	h3 Enter your account
+	form#login(method='post')
+		.login-form
+			input(type='text' name='username' placeholder='User Name' autocomplete='off')
+			input(type='password' name='password' placeholder='Password' autocomplete='off')
 
-            button(type='submit') Login
-            a(href='/password-reset')
-                | Forgot your password?
+			button(type='submit') Login
+			a(href='/password-reset')
+				| Forgot your password?
 
 
 script.
-    $(document).ready(function () {
-        $('#username').focus();
-        // $("#login").validate({
-        //     rules: {
-        //         username: {
-        //             required: true,
-        //             normalizer: function (value) {
-        //                 return $.trim(value);
-        //             }
-        //         }
-        //     },
-        //     submitHandler: function (form) {
-        //         console.log('submit')
-        //         $(form).submit();
-        //     },
-        //     errorElement: "span"
-        // });
-    });
+	$(document).ready(function () {
+		$('#username').focus();
+		// $("#login").validate({
+		//     rules: {
+		//         username: {
+		//             required: true,
+		//             normalizer: function (value) {
+		//                 return $.trim(value);
+		//             }
+		//         }
+		//     },
+		//     submitHandler: function (form) {
+		//         console.log('submit')
+		//         $(form).submit();
+		//     },
+		//     errorElement: "span"
+		// });
+	});

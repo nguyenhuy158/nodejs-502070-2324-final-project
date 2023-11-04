@@ -1,9 +1,48 @@
 $(() => {
     let table = $("#product-table")
         .DataTable({
-            responsive: true,
+            colReorder: {
+                realtime: false
+            },
+            autoFill: false,
+            buttons: [
+                {
+                    text: 'Add product',
+                    action: function (e, dt, node, config) {
+                        window.location = '/products/add';
+                    }
+                },
+                {
+                    text: 'Reload',
+                    action: function (e, dt, node, config) {
+                        dt.ajax.reload();
+                    }
+                },
+                'spacer',
+                {
+                    extend: 'collection',
+                    className: 'custom-html-collection',
+                    buttons: [
+                        '<h3>Export</h3>',
+                        'copy',
+                        'pdf',
+                        'csv',
+                        'excel',
+                        'print',
+                        '<h3 class="not-top-heading">Column Visibility</h3>',
+                        'columnsToggle'
+                    ]
+                },
+            ],
+            dom: "B<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            responsive: {
+                details: {
+                    type: 'inline'
+                }
+            },
             rowId: '_id',
-            fixedHeader: true,
             search: {
                 caseInsensitive: false,
                 regex: true
@@ -20,13 +59,22 @@ $(() => {
             scrollX: true,
             scrollY: "50vh",
             scrollCollapse: true,
+            fixedHeader: true,
             order: [[0, 'asc']],
             processing: true,
             autoWidth: true,
+            //- deferRender: true,
+            //- scroller: true,
             ajax: {
                 url: '/api/products',
                 dataSrc: ''
             },
+            columnDefs: [
+                {
+                    targets: [1, 2, 3, 4, 5, 6],
+                    render: DataTable.render.hyperLink('Download', 'popup', 1000, 500)
+                }
+            ],
             columns: [
                 {
                     data: null,
@@ -39,7 +87,7 @@ $(() => {
                 {
                     data: 'productName',
                     render: function (data, type, row) {
-                        return `<a href="/products/${row._id}">${data}</a>`;
+                        return `<a href="/products/${row._id}">${DataTable.render.ellipsis(20, true)(data, type, row)}</a>`;
                     }
                 },
                 {
@@ -66,23 +114,23 @@ $(() => {
                 {
                     data: 'imageUrls',
                     render: function (data, type, row) {
-                        return `<a class="image-popup" href=${data[0]} title="${row.productName}">
-									<img class="lazy" width="100" height="100" data-src="${data[0]}"/>
-									</a>`;
+                        return `<a class="image-popup d-block" href=${data[0]} title="${row.productName}">
+                        <img class="lazy" width="100" height="100" data-src="${data[0]}"/>
+                        </a>`;
                     }
                 },
                 {
                     data: null,
                     render: function (data, type, row, meta) {
                         const viewBtn = `<a class="my-1 btn btn-primary" href="/products/${row._id}">
-									<span class="iconify" data-icon="carbon:view"></span>
-									</a>`;
+                        <span class="iconify" data-icon="carbon:view"></span>
+                        </a>`;
                         const updateBtn = `<button class="my-1 btn btn-success btn-edit">
-								<span class="iconify" data-icon="mingcute:edit-line"></span>
-								</button>`;
+                        <span class="iconify" data-icon="mingcute:edit-line"></span>
+                        </button>`;
                         const deleteBtn = `<button class="my-1 btn btn-danger delete-btn">
-								<span class="iconify" data-icon="mdi:delete-outline"></span>
-								</button>`;
+                        <span class="iconify" data-icon="mdi:delete-outline"></span>
+                        </button>`;
                         const demo = ``;
 
 
@@ -103,6 +151,8 @@ $(() => {
         magnificPopup();
         asignDeleteEvent();
     });
+
+    table.buttons().container().appendTo($('#button-container'));
 
     $("#product-table")
         .DataTable({
