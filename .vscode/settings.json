@@ -185,7 +185,6 @@
     "turboConsoleLog.insertEmptyLineBeforeLogMessage": false,
     "turboConsoleLog.quote": "`",
     "turboConsoleLog.logType": "log",
-    "turboConsoleLog.wrapLogMessage": true,
     "turboConsoleLog.logMessageSuffix": "",
     "turboConsoleLog.includeFileNameAndLineNum": true,
     "todo-tree.tree.buttons.export": true,
