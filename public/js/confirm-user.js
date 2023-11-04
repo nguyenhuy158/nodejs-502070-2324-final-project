@@ -3,21 +3,66 @@ function assignEditEvent() {
 
 }
 
-function assignLockEvent() {
+function handleLockUnlock(button, isLock) {
+    const confirmModalBody = $("#modalDelete .modal-body");
+    const confirmButton = $("#modalDelete .btn.btn-submit");
+    const modalTitle = $("#modalDelete .modal-title");
 
+    button.off('click').on('click', function () {
+
+        const fullname = $(this).parent().siblings()[2].textContent;
+        const userId = $(this).parents()[1].id;
+
+        const action = isLock ? "lock" : "unlock";
+
+        modalTitle.text("Lock/Unlock confirm");
+
+        confirmButton.text("Lock/Unlock");
+
+        confirmModalBody.html(`Are you sure you want to ${action} the account for <strong>${fullname}</strong>?`);
+        $('#modalDelete').modal('show');
+
+        confirmButton.off('click').on('click', function () {
+            $('#modalDelete').modal('hide');
+            $.ajax({
+                url: `/api/users/${userId}/${action}`,
+                type: 'PUT',
+                success: (response) => {
+                    console.log(`🚀 ------------------------------------------------------🚀`);
+                    console.log(`🚀 🚀 file: 🚀 response`, response);
+                    console.log(`🚀 ------------------------------------------------------🚀`);
+                    showToast('success', response.message);
+                    reloadTable();
+                },
+                error: (error) => {
+                    console.log(`🚀 ------------------------------------------------🚀`);
+                    console.log(`🚀 🚀 file: 🚀 error`, error.responseJSON);
+                    console.log(`🚀 ------------------------------------------------🚀`);
+                    showToast('error', error.responseJSON?.message);
+                }
+            });
+        });
+    });
+}
+
+function assignLockEvent() {
+    const lockButtons = $(".lock-btn");
+    handleLockUnlock(lockButtons, true);
 }
 
 function assignUnLockEvent() {
-
+    const unlockButtons = $(".unlock-btn");
+    handleLockUnlock(unlockButtons, false);
 }
 
 function assignResentEmailEvent() {
     const resentButtons = $(".resent-btn");
     const modalTitle = $("#modalDelete .modal-title");
     const confirmModalBody = $("#modalDelete .modal-body");
-    const confirmButton = $("#modalDelete .btn.btn-danger");
+    const confirmButton = $("#modalDelete .btn.btn-submit");
 
-    confirmButton.removeClass('btn-danger').addClass('btn-secondary');
+    // confirmButton.removeClass('btn-danger').addClass('btn-secondary');
+    confirmButton.text("Resent");
 
     resentButtons.off('click').on('click', function () {
         const fullname = $(this).parent().siblings()[2].textContent;
@@ -57,7 +102,7 @@ function assignDeleteEvent() {
     const deleteButtons = $(".delete-btn");
     const modalTitle = $("#modalDelete .modal-title");
     const confirmModalBody = $("#modalDelete .modal-body");
-    const confirmButton = $("#modalDelete .btn.btn-danger");
+    const confirmButton = $("#modalDelete .btn.btn-submit");
 
     deleteButtons.off('click').on('click', function () {
         const fullname = $(this).parent().siblings()[2].textContent;
@@ -68,6 +113,7 @@ function assignDeleteEvent() {
 
         modalTitle.text('Delete confirm');
         confirmButton.text('Delete');
+
         confirmModalBody.html(`Are you sure you want to delete<strong>${fullname}</strong>?`);
 
         $('#modalDelete').modal('show');
@@ -96,42 +142,3 @@ function assignDeleteEvent() {
         });
     });
 }
-
-// $(() => {
-//     $(document).ready(function () {
-//         const lockButtons = $(".lock-btn");
-//         const unlockButtons = $(".unlock-btn");
-//         const confirmModalBody = $("#modalDelete .modal-body");
-//         const confirmButton = $("#modalDelete .btn.btn-danger");
-//         const modalTitle = $("#modalDelete .modal-title");
-
-//         function handleLockUnlock(button, isLock) {
-//             button.click(function () {
-//                 const fullname = button.data("user-name");
-//                 const userId = button.data("user-id");
-//                 const action = isLock ? "lock" : "unlock";
-//                 modalTitle.text(isLock ? "Lock confirm" : "Unlock confirm");
-//                 confirmButton.text(isLock ? "Lock" : "Unlock");
-//                 confirmModalBody.html(`Are you sure you want to ${action} the account for
-//                     <strong>${fullname}</strong>?`);
-//                 $('#modalDelete').modal('show');
-//                 confirmButton.click(function () {
-//                     $('#modalDelete').modal('hide');
-//                     fetch(`/users/${userId}/${action}`, {
-//                         method: "PUT"
-//                     })
-//                         .then(response => response.json())
-//                         .then(data => {
-//                             location.reload();
-//                         })
-//                         .catch(error => {
-//                             console.log(`Error in ${action}ing the account:`, error);
-//                         });
-//                 });
-//             });
-//         }
-
-//         handleLockUnlock(lockButtons, true);
-//         handleLockUnlock(unlockButtons, false);
-//     });
-// });

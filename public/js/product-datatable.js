@@ -123,14 +123,14 @@ $(() => {
                 {
                     data: null,
                     render: function (data, type, row, meta) {
-                        const viewBtn = `<a class="my-1 btn btn-primary" href="/products/${row._id}">
-                        <span class="iconify" data-icon="carbon:view"></span>
+                        const viewBtn = `<a class="my-1 btn btn-sm btn-primary" href="/products/${row._id}">
+                            <i class='bx bx-detail'></i>
                         </a>`;
-                        const updateBtn = `<button class="my-1 btn btn-success btn-edit">
-                        <span class="iconify" data-icon="mingcute:edit-line"></span>
+                        const updateBtn = `<button class="my-1 btn btn-sm btn-success btn-edit">
+                            <i class='bx bx-edit'></i>
                         </button>`;
-                        const deleteBtn = `<button class="my-1 btn btn-danger delete-btn">
-                        <span class="iconify" data-icon="mdi:delete-outline"></span>
+                        const deleteBtn = `<button class="my-1 btn btn-sm btn-danger delete-btn">
+                            <i class='bx bx-trash-alt'></i>
                         </button>`;
                         const demo = ``;
 

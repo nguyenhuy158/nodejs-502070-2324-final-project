@@ -58,7 +58,8 @@ exports.checkAndParseObjectId = async (req, res, next) => {
     if (ObjectId.isValid(id)) {
         req.id = new ObjectId(id);
         try {
-            await User.findOne(req.id);
+            const apiUser = await User.findOne(req.id);
+            req.apiUser = apiUser;
             return next();
         } catch (error) {
             res.status(400).json({
@@ -172,6 +173,37 @@ exports.getApiSentMail = async (req, res) => {
         return res.json({
             error: false,
             message: "Sent success, please check mail to login."
+        });
+    } catch (error) {
+        return res.json({
+            error: true,
+            message: error
+        });
+    }
+};
+
+exports.putApiLockAccount = async (req, res) => {
+    try {
+        req.apiUser.lockedStatus = true;
+        await req.apiUser.save();
+        return res.json({
+            error: false,
+            message: `${req.apiUser.fullName} is locked`
+        });
+    } catch (error) {
+        return res.json({
+            error: true,
+            message: error
+        });
+    }
+};
+exports.putApiUnLockAccount = async (req, res) => {
+    try {
+        req.apiUser.lockedStatus = false;
+        await req.apiUser.save();
+        return res.json({
+            error: false,
+            message: `${req.apiUser.fullName} is unlocked`
         });
     } catch (error) {
         return res.json({

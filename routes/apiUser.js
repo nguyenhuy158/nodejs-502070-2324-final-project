@@ -31,6 +31,13 @@ router
         userApiController.getApiResentMail)
     .get("/sent/:id",
         userApiController.checkAndParseObjectId,
-        userApiController.getApiSentMail);
+        userApiController.getApiSentMail)
+    .put("/:id/lock",
+        userApiController.checkAndParseObjectId,
+        userApiController.putApiLockAccount)
+    .put("/:id/unlock",
+        userApiController.checkAndParseObjectId,
+        userApiController.putApiUnLockAccount);
+
 
 module.exports = router;
