@@ -1,4 +1,4 @@
-//Focus element on sidebar
+//Focus el	ement on sidebar
 const sideLinks = document.querySelectorAll(
 	".sidebar .side-menu li a:not(.logout)"
 );

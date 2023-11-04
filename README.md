@@ -1,8 +1,8 @@
 # 2024 HK1 NodeJS
 
-- [Word & Requirement](https://docs.google.com/document/d/18qz7kYLfw5KGSXSY8gE0WBfDcJHhPkkWN8lmfBqbEag/edit#heading=h.us8o10oowfcd)
+-   [Word & Requirement](https://docs.google.com/document/d/18qz7kYLfw5KGSXSY8gE0WBfDcJHhPkkWN8lmfBqbEag/edit#heading=h.us8o10oowfcd)
 
-- [Requirement](https://docs.google.com/document/d/13biAcC49Pkg3FuyOmL-IW5c5hTNQRvzO/edit)
+-   [Requirement](https://docs.google.com/document/d/13biAcC49Pkg3FuyOmL-IW5c5hTNQRvzO/edit)
 
 ```
 - command export tree.txt
@@ -69,12 +69,12 @@ flash.addFlashMessage(req, 'success', 'Success', 'message success flash');
 flash.addFlashMessage(req, 'warning', 'Error', 'message error flash');
 ```
 
-[//]: # (https://chat.openai.com/share/f4645e84-8141-44bd-b9a5-aa4235dd2bab)
+[//]: # 'https://chat.openai.com/share/f4645e84-8141-44bd-b9a5-aa4235dd2bab'
 
 ### Jquery plug in
 
 | Name           | website                        |
-|----------------|--------------------------------|
+| -------------- | ------------------------------ |
 | jQuery UI      |                                |
 | DataTables     |                                |
 | Slick          |                                |
@@ -85,3 +85,12 @@ flash.addFlashMessage(req, 'warning', 'Error', 'message error flash');
 | Lazy Load      | http://jquery.eisbehr.de/lazy/ |
 | Select2        |                                |
 | Select2        |                                |
+
+## Force restart nodemon
+
+```
+npm install -g nodemon     # Install nodemon globally if not already done
+pkill -f nodemon           # Stop nodemon (use a different command if you're not on Unix-like systems)
+rm -rf .nodemon-cache      # Delete the nodemon cache
+nodemon                     # Restart nodemon
+```

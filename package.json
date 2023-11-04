@@ -5,6 +5,13 @@
     "debug": "nodemon --inspect app.js",
     "debugAndDev": "DEBUG=express:* node app.js"
   },
+  "nodemonConfig": {
+    "verbose": true,
+    "ext": "js, json",
+    "ignore": [
+      "**/js/**"
+    ]
+  },
   "dependencies": {
     "@faker-js/faker": "^8.1.0",
     "@popperjs/core": "^2.11.8",
