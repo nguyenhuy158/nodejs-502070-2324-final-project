@@ -4,8 +4,8 @@ const User = require('../models/user');
 const moment = require("moment");
 const {
     generateToken,
+    getFullUrlForMailConfirm,
     sendEmail,
-    uploadImage
 } = require("../middlewares/utils");
 
 exports.getApiUsers = async (req, res) => {
@@ -18,29 +18,29 @@ exports.getApiUsers = async (req, res) => {
 };
 
 exports.postApiUser = async (req, res) => {
-    const { fullName, email } = req.body;
-
     try {
-        const existingUser = await User.findOne({ email });
-
-        if (existingUser) {
-            req.flash("error", "Email already exists Please use a different email address.");
-            return res.redirect("/user/create-account");
-        }
-
-        const token = generateToken();
-        const tokenExpiration = moment()
-            .add(1, "minutes");
-
-        const salesperson = new User({
-            fullName,
-            email,
-            token,
-            tokenExpiration
-        });
-
+        const { fullName, email } = req.body;
+        const salesperson = new User({ fullName, email });
         await salesperson.save();
-        await sendEmail(req, existingUser, token);
+
+        const resetToken = generateToken();
+
+        salesperson.sentMail(resetToken);
+
+        const resetLink = getFullUrlForMailConfirm(req, resetToken);
+
+        const mailOptions = {
+            from: process.env.FROM_EMAIL,
+            to: salesperson.email,
+            subject: "Welcome to Tech Hut - Activate Sales Account [Retail Store]",
+            text: `Dear ${salesperson.fullName}\n\n` +
+                `An account has been created for you in the Sales System. To log in, please click the following link within 1 minute:\n\n` +
+                `${resetLink}\n\n` +
+                `Best regards,` +
+                `${req.user.fullName}`,
+        };
+
+        sendEmail(req, salesperson, resetToken, mailOptions);
 
         res.status(201).json({
             error: false,
@@ -49,10 +49,7 @@ exports.postApiUser = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(`🚀 ---------------------------------------------------------------------------🚀`);
-        console.log(`🚀 🚀 file: userApiController.js:48 🚀 exports.postApiUser= 🚀 error`, error);
-        console.log(`🚀 ---------------------------------------------------------------------------🚀`);
-        res.status(500).json({ error: true, message: 'Could not create the product' });
+        res.status(500).json({ error: true, message: 'Could not create the user account' + error });
     }
 };
 
@@ -113,5 +110,73 @@ exports.deleteApiUserById = async (req, res) => {
             message: 'Please reload and try again!'
         });
     }
-}
+};
 
+exports.getApiResentMail = async (req, res) => {
+    try {
+        const user = await User.findById(req.id);
+
+        const resetToken = generateToken();
+
+        user.reSentMail(resetToken);
+
+        const resetLink = getFullUrlForMailConfirm(req, resetToken);
+
+        const mailOptions = {
+            from: process.env.FROM_EMAIL,
+            to: user.email,
+            subject: "Welcome to Tech Hut - Activate Sales Account [Retail Store]",
+            text: `Dear ${user.fullName}\n\n` +
+                `An account has been created for you in the Sales System. To log in, please click the following link within 1 minute:\n\n` +
+                `${resetLink}\n\n` +
+                `Best regards,` +
+                `${req.user.fullName}`,
+        };
+
+        sendEmail(req, user, resetToken, mailOptions);
+        return res.json({
+            error: false,
+            message: "Resent success, please check mail to login."
+        });
+    } catch (error) {
+        return res.json({
+            error: true,
+            message: error
+        });
+    }
+};
+
+exports.getApiSentMail = async (req, res) => {
+    try {
+        const user = await User.findById(req.id);
+
+        const resetToken = generateToken();
+
+        user.reSentMail(resetToken);
+
+        const resetLink = getFullUrlForMailConfirm(req, resetToken);
+
+        const mailOptions = {
+            from: process.env.FROM_EMAIL,
+            to: user.email,
+            subject: "Welcome to Tech Hut - Activate Sales Account [Retail Store]",
+            text: `Dear ${user.fullName}\n\n` +
+                `An account has been created for you in the Sales System. To log in, please click the following link within 1 minute:\n\n` +
+                `${resetLink}\n\n` +
+                `Best regards,` +
+                `${req.user.fullName}`,
+        };
+
+
+        sendEmail(req, user, resetToken, mailOptions);
+        return res.json({
+            error: false,
+            message: "Sent success, please check mail to login."
+        });
+    } catch (error) {
+        return res.json({
+            error: true,
+            message: error
+        });
+    }
+};

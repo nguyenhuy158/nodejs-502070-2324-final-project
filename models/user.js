@@ -88,6 +88,21 @@ const userSchema = new Schema({
     timestamps: true,
 });
 
+userSchema.methods.sentMail = async function (token) {
+    this.token = token;
+    this.tokenExpiration = new Date(Date.now() + 1 * 60 * 1000);
+    this.isPasswordReset = false;
+    this.isFirstLogin = true;
+    await this.save();
+};
+
+userSchema.methods.reSentMail = async function (token) {
+    this.token = token;
+    this.tokenExpiration = new Date(Date.now() + 1 * 60 * 1000);
+    this.isPasswordReset = false;
+    await this.save();
+};
+
 userSchema.methods.updateProfilePicture = function (newProfilePicture) {
     this.profilePicture = newProfilePicture;
     return this.save();

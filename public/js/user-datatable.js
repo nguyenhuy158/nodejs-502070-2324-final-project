@@ -101,26 +101,30 @@ $(() => {
                     data: null,
                     render: function (data, type, row, meta) {
                         const viewBtn = `<a class="my-1 btn btn-primary" href="/users/${row._id}">
-								<span class="iconify" data-icon="carbon:view"></span>
+								    <span class="iconify" data-icon="carbon:view"></span>
 								</a>`;
 
                         const updateBtn = `<button class="my-1 btn btn-success btn-edit">
-								<span class="iconify" data-icon="mingcute:edit-line"></span>
+								    <span class="iconify" data-icon="mingcute:edit-line"></span>
 								</button>`;
 
                         const deleteBtn = `<button class="my-1 btn btn-danger delete-btn">
-								<span class="iconify" data-icon="mdi:delete-outline"></span>
+								    <span class="iconify" data-icon="mdi:delete-outline"></span>
 								</button>`;
 
                         const lockBtn = `<button class="my-1 btn btn-warning lock-btn">
-								<span class="iconify" data-icon="material-symbols:lock-outline"></span>
+                                    <i class='bx bx-lock-alt'></i>
 								</button>`;
 
                         const unLockBtn = `<button class="my-1 btn btn-info unlock-btn">
-								<span class="iconify" data-icon="basil:unlock-outline"></span>
+                                    <i class='bx bx-lock-open-alt' ></i>
 								</button>`;
 
-                        return `${viewBtn} ${updateBtn} ${deleteBtn} ${row.lockedStatus ? unLockBtn : lockBtn}`;
+                        const resentBtn = `<button class="my-1 btn btn-secondary resent-btn">
+                                    <i class='bx bx-mail-send'></i>
+								</button>`;
+
+                        return `${viewBtn} ${updateBtn} ${deleteBtn} ${row.lockedStatus ? unLockBtn : lockBtn} ${resentBtn}`;
                     }
                 },
             ]
@@ -136,6 +140,10 @@ $(() => {
         magnificPopup();
 
         assignDeleteEvent();
+        assignEditEvent();
+        assignLockEvent();
+        assignUnLockEvent();
+        assignResentEmailEvent();
     });
 
     table.buttons().container().appendTo($('#button-container'));

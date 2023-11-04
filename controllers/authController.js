@@ -7,7 +7,6 @@ const {
     generateToken,
     sendEmail
 } = require("../middlewares/utils");
-const { sentMail } = require("./routerController");
 require("dotenv")
     .config();
 const {

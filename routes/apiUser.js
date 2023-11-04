@@ -25,6 +25,12 @@ router
     )
     .delete("/:id",
         userApiController.checkAndParseObjectId,
-        userApiController.deleteApiUserById);
+        userApiController.deleteApiUserById)
+    .get("/resent/:id",
+        userApiController.checkAndParseObjectId,
+        userApiController.getApiResentMail)
+    .get("/sent/:id",
+        userApiController.checkAndParseObjectId,
+        userApiController.getApiSentMail);
 
 module.exports = router;

@@ -78,7 +78,6 @@ router
     .use(routerController.checkFirstLogin)
     .use(autoViews)
     .get("/log", logger.morganLog)
-    .get("/sent-test-mail", routerController.sentMail)
     .get("/", routerController.home)
     .get("/profile", userController.viewProfile)
     .post("/upload-profile-pic", upload.single("profilePic"), userController.changeProfilePicture)

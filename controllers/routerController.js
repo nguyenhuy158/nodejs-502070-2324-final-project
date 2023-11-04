@@ -27,24 +27,6 @@ exports.checkFirstLogin = (req, res, next) => {
     next();
 };
 
-exports.sentMail = (req, res) => {
-    const mailOptions = {
-        from: process.env.FROM_EMAIL,
-        to: "quocanh01062002@gmail.com",
-        subject: "TEST MESSAGE",
-        html: compiledFunction(emailData)
-    };
-    
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error("Error:", error);
-        } else {
-            console.log("Email sent:", info.response);
-        }
-        res.redirect("/");
-    });
-};
-
 exports.home = async (req, res) => {
     
     res.render("pages/home", {

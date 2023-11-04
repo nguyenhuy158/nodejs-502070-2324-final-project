@@ -2,9 +2,58 @@
 function assignEditEvent() {
 
 }
-function assignDeleteEvent() {
-    console.log('confirm - user');
 
+function assignLockEvent() {
+
+}
+
+function assignUnLockEvent() {
+
+}
+
+function assignResentEmailEvent() {
+    const resentButtons = $(".resent-btn");
+    const modalTitle = $("#modalDelete .modal-title");
+    const confirmModalBody = $("#modalDelete .modal-body");
+    const confirmButton = $("#modalDelete .btn.btn-danger");
+
+    confirmButton.removeClass('btn-danger').addClass('btn-secondary');
+
+    resentButtons.off('click').on('click', function () {
+        const fullname = $(this).parent().siblings()[2].textContent;
+        const userId = $(this).parents()[1].id;
+
+        modalTitle.text('Resent email confirm');
+        confirmButton.text('Resent');
+        confirmModalBody.html(`Are you sure you want to resent email to: <strong>${fullname}</strong>?`);
+
+        $('#modalDelete').modal('show');
+
+        confirmButton.off('click').on('click', function () {
+            $('#modalDelete').modal('hide');
+
+            $.ajax({
+                url: `/api/users/resent/${userId}`,
+                type: 'GET',
+                success: (response) => {
+                    console.log(`🚀 ------------------------------------------------------🚀`);
+                    console.log(`🚀 🚀 file: 🚀 response`, response);
+                    console.log(`🚀 ------------------------------------------------------🚀`);
+                    showToast('success', response.message);
+                    reloadTable();
+                },
+                error: (error) => {
+                    console.log(`🚀 ------------------------------------------------🚀`);
+                    console.log(`🚀 🚀 file: 🚀 error`, error.responseJSON);
+                    console.log(`🚀 ------------------------------------------------🚀`);
+                    showToast('error', error.responseJSON?.message);
+                }
+            });
+        });
+    });
+}
+
+function assignDeleteEvent() {
     const deleteButtons = $(".delete-btn");
     const modalTitle = $("#modalDelete .modal-title");
     const confirmModalBody = $("#modalDelete .modal-body");
