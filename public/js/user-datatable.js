@@ -120,9 +120,6 @@ $(() => {
 								<span class="iconify" data-icon="basil:unlock-outline"></span>
 								</button>`;
 
-                        const demo = ``;
-
-
                         return `${viewBtn} ${updateBtn} ${deleteBtn} ${row.lockedStatus ? unLockBtn : lockBtn}`;
                     }
                 },
@@ -137,10 +134,11 @@ $(() => {
             });
         lazyImageLoading();
         magnificPopup();
+
+        assignDeleteEvent();
     });
 
     table.buttons().container().appendTo($('#button-container'));
-
 
     $("#user-table")
         .DataTable({

@@ -17,14 +17,15 @@ block content
 						th Full Name
 						th Role
 						th First Login
-						th Inactivate
+						th Active
 						th 
 							span.iconify(data-icon="material-symbols:lock-outline")
 						th Handle
 				tbody
-				include ../../partials/confirm-delete-modal
-				#flash-alert.alert.alert-danger(style="display: none")
-					span Flash alert message
+
+		//- confirm modal
+		include ../../partials/confirm-delete-modal
+		include ../../partials/product-edit-modal
 
 	//- confirm script
 	script(src="/js/confirm-user.js") 

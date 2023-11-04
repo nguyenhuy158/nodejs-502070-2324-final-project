@@ -61,8 +61,7 @@ exports.checkAndParseObjectId = async (req, res, next) => {
     if (ObjectId.isValid(id)) {
         req.id = new ObjectId(id);
         try {
-            const user = await User.findOne(req.id);
-            req.api.user = user;
+            await User.findOne(req.id);
             return next();
         } catch (error) {
             res.status(400).json({

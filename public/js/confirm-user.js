@@ -1,71 +1,88 @@
 /* eslint-disable no-undef */
-$(() => {
-    $(document).ready(function () {
-        const lockButtons = $(".lock-btn");
-        const unlockButtons = $(".unlock-btn");
-        const confirmModalBody = $("#modalDelete .modal-body");
-        const confirmButton = $("#modalDelete .btn.btn-danger");
-        const modalTitle = $("#modalDelete .modal-title");
+function assignEditEvent() {
 
-        function handleLockUnlock(button, isLock) {
-            button.click(function () {
-                const fullname = button.data("user-name");
-                const userId = button.data("user-id");
-                const action = isLock ? "lock" : "unlock";
-                modalTitle.text(isLock ? "Lock confirm" : "Unlock confirm");
-                confirmButton.text(isLock ? "Lock" : "Unlock");
-                confirmModalBody.html(`Are you sure you want to ${action} the account for
-                    <strong>${fullname}</strong>?`);
-                $('#modalDelete').modal('show');
-                confirmButton.click(function () {
-                    $('#modalDelete').modal('hide');
-                    fetch(`/users/${userId}/${action}`, {
-                        method: "PUT"
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            location.reload();
-                        })
-                        .catch(error => {
-                            console.log(`Error in ${action}ing the account:`, error);
-                        });
-                });
-            });
-        }
+}
+function assignDeleteEvent() {
+    console.log('confirm - user');
 
-        handleLockUnlock(lockButtons, true);
-        handleLockUnlock(unlockButtons, false);
-    });
-});
-$(() => {
     const deleteButtons = $(".delete-btn");
     const modalTitle = $("#modalDelete .modal-title");
     const confirmModalBody = $("#modalDelete .modal-body");
     const confirmButton = $("#modalDelete .btn.btn-danger");
-    deleteButtons.click(function () {
-        const fullname = $(this).data("user-name");
-        const userId = $(this).data("user-id");
-        console.log("=>(list.pug:99) userId", userId);
+
+    deleteButtons.off('click').on('click', function () {
+        const fullname = $(this).parent().siblings()[2].textContent;
+        const userId = $(this).parents()[1].id;
+
+        console.log(`🚀 🚀 file: confirm-user.js:17 🚀 userId`, userId);
+        console.log(`🚀 🚀 file: confirm-user.js:13 🚀 fullname`, fullname);
+
         modalTitle.text('Delete confirm');
         confirmButton.text('Delete');
-        confirmModalBody.html(`Are you sure you want to delete
-				<strong>${fullname}</strong>?`);
+        confirmModalBody.html(`Are you sure you want to delete<strong>${fullname}</strong>?`);
+
         $('#modalDelete').modal('show');
-        confirmButton.click(function () {
+
+        confirmButton.off('click').on('click', function () {
             $('#modalDelete').modal('hide');
-            console.log('click');
-            console.log(`/users/${userId}`);
-            fetch(`/users/${userId}`, {
-                method: "DELETE"
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("=>(list.pug:113) data", data);
-                    location.reload();
-                })
-                .catch(error => {
-                    console.log("Error in deleting:", error);
-                });
+
+
+            $.ajax({
+                url: `/api/users/${userId}`,
+                type: 'DELETE',
+                success: (response) => {
+                    console.log(`🚀 ------------------------------------------------------🚀`);
+                    console.log(`🚀 🚀 file: 🚀 response`, response);
+                    console.log(`🚀 ------------------------------------------------------🚀`);
+                    showToast('success', response.message);
+                    reloadTable();
+                },
+                error: (error) => {
+                    console.log(`🚀 ------------------------------------------------🚀`);
+                    console.log(`🚀 🚀 file: 🚀 error`, error.responseJSON);
+                    console.log(`🚀 ------------------------------------------------🚀`);
+                    showToast('error', error.responseJSON?.message);
+                }
+            });
         });
     });
-});
+}
+
+// $(() => {
+//     $(document).ready(function () {
+//         const lockButtons = $(".lock-btn");
+//         const unlockButtons = $(".unlock-btn");
+//         const confirmModalBody = $("#modalDelete .modal-body");
+//         const confirmButton = $("#modalDelete .btn.btn-danger");
+//         const modalTitle = $("#modalDelete .modal-title");
+
+//         function handleLockUnlock(button, isLock) {
+//             button.click(function () {
+//                 const fullname = button.data("user-name");
+//                 const userId = button.data("user-id");
+//                 const action = isLock ? "lock" : "unlock";
+//                 modalTitle.text(isLock ? "Lock confirm" : "Unlock confirm");
+//                 confirmButton.text(isLock ? "Lock" : "Unlock");
+//                 confirmModalBody.html(`Are you sure you want to ${action} the account for
+//                     <strong>${fullname}</strong>?`);
+//                 $('#modalDelete').modal('show');
+//                 confirmButton.click(function () {
+//                     $('#modalDelete').modal('hide');
+//                     fetch(`/users/${userId}/${action}`, {
+//                         method: "PUT"
+//                     })
+//                         .then(response => response.json())
+//                         .then(data => {
+//                             location.reload();
+//                         })
+//                         .catch(error => {
+//                             console.log(`Error in ${action}ing the account:`, error);
+//                         });
+//                 });
+//             });
+//         }
+
+//         handleLockUnlock(lockButtons, true);
+//         handleLockUnlock(unlockButtons, false);
+//     });
+// });
