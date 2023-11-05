@@ -122,12 +122,12 @@ exports.emailConfirm = async (req, res, next) => {
             const salesperson = await User.findOne({ token });
 
             if (!salesperson) {
-                req.flash("info", "Link invalid, please try again.");
+                req.flash("info", "Link invalid or used, please contact to admin and try again.");
                 return res.redirect("/login");
             }
 
             if (salesperson && salesperson.tokenExpiration < moment()) {
-                req.flash("info", "Link expired, please try again. ");
+                req.flash("info", "Link expired, please contact to admin and try again.");
                 return res.redirect("/login");
             }
 
@@ -264,14 +264,14 @@ exports.logout = function (req, res, next) {
     });
 };
 
-exports.getRegister = async function (req, res, next) {
+exports.getRegister = async function (req, res) {
     res.render("pages/auth/login", { isRegister: true });
 };
 
-exports.changePassword = async function (req, res, next) {
+exports.changePassword = async function (req, res) {
     console.log("=>(authController.js:257) req.user.isPasswordReset", req.user.isPasswordReset);
-    if (req.user.isPasswordReset) {
-        return res.render("pages/auth/change-password", { isReset: true });
+    if (req.user.isFirstLogin) {
+        return res.render("pages/auth/change-password", { isFirstLogin: true, currentPassword: req.user.username });
     }
     return res.render("pages/auth/change-password");
 };

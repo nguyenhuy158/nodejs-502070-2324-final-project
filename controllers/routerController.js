@@ -11,11 +11,6 @@ const Order            = require("../models/order");
 const Customer         = require("../models/customer");
 const User             = require("../models/user");
 
-const emailData = {
-    username: "Tech Hut",
-    password: "Tech Hut",
-};
-
 exports.checkFirstLogin = (req, res, next) => {
     const user = req.user;
     

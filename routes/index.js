@@ -25,7 +25,7 @@ const authController = require("../controllers/authController");
 const { limiter } = require("../config/config");
 const { requireRole } = require("../middlewares/authorization");
 const { categories } = require("../controllers/productCategoryController");
-const { body } = require("express-validator");
+const { validationChangePassword } = require('../middlewares/validation');
 
 // other middleware and server
 
@@ -49,29 +49,7 @@ router
     .use(ensureAuthenticated)
     .get("/change-password", authController.changePassword)
     .post("/change-password",
-        body("password")
-            .notEmpty()
-            .withMessage("Password cannot be empty!")
-            .isLength({ min: 6 })
-            .withMessage("Password must have at least 6 characters!"),
-        body("newPassword")
-            .notEmpty()
-            .withMessage("Password cannot be empty!")
-            .isLength({ min: 6 })
-            .withMessage("Password must have at least 6 characters!")
-            .custom((value, { req }) => {
-                return value !== req.body.password;
-            })
-            .withMessage("Don't use old password!"),
-        body("confirmPassword")
-            .notEmpty()
-            .withMessage("Password cannot be empty!")
-            .isLength({ min: 6 })
-            .withMessage("Password must have at least 6 characters!")
-            .custom((value, { req }) => {
-                return value === req.body.newPassword;
-            })
-            .withMessage("Confirm Password not match!"),
+        validationChangePassword,
         authController.postChangePassword)
 
     // other middleware and server

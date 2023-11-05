@@ -93,5 +93,34 @@ exports.validatePasswordReset = [
             }
             return true;
         })
+];
+
+exports.validationChangePassword = [
+    body("currentPassword")
+        .custom((value, { req }) => {
+            return req.user.isFirstLogin;
+        })
+        .notEmpty()
+        .withMessage("Password cannot be empty!")
+        .isLength({ min: 6 })
+        .withMessage("Password must have at least 6 characters!"),
+    body("newPassword")
+        .notEmpty()
+        .withMessage("Password cannot be empty!")
+        .isLength({ min: 6 })
+        .withMessage("Password must have at least 6 characters!")
+        .custom((value, { req }) => {
+            return value !== req.body.currentPassword;
+        })
+        .withMessage("Please don't use old password!"),
+    body("confirmPassword")
+        .notEmpty()
+        .withMessage("Password cannot be empty!")
+        .isLength({ min: 6 })
+        .withMessage("Password must have at least 6 characters!")
+        .custom((value, { req }) => {
+            return value === req.body.newPassword;
+        })
+        .withMessage("Confirm Password not match!"),
 ]
 
