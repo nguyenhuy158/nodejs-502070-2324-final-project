@@ -97,9 +97,6 @@ exports.validatePasswordReset = [
 
 exports.validationChangePassword = [
     body("currentPassword")
-        .custom((value, { req }) => {
-            return req.user.isFirstLogin;
-        })
         .notEmpty()
         .withMessage("Password cannot be empty!")
         .isLength({ min: 6 })
@@ -122,5 +119,13 @@ exports.validationChangePassword = [
             return value === req.body.newPassword;
         })
         .withMessage("Confirm Password not match!"),
+    (req, res, next) => {
+        const result = validationResult(req);
+        if (result.errors.length !== 0) {
+            req.flash("error", result.errors[0].msg);
+            res.redirect("/change-password");
+        }
+        next();
+    }
 ]
 

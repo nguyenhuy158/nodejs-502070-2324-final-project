@@ -105,7 +105,7 @@ exports.postPasswordReset = async (req, res, next) => {
                 + resetLink
         };
         sendEmail(req, user, resetToken, mailOptions);
-        req.flash("success", "Reset success, please check mail to login.");
+        req.flash("success", "Reset success, please check mail to login (if email exist).");
         res.redirect("/login");
     } catch (error) {
         console.log("=>(authController.js:104) error", error);
@@ -269,56 +269,44 @@ exports.getRegister = async function (req, res) {
 };
 
 exports.changePassword = async function (req, res) {
-    console.log("=>(authController.js:257) req.user.isPasswordReset", req.user.isPasswordReset);
-    if (req.user.isFirstLogin) {
+    if (req.user.isFirstLogin || req.user.isPasswordReset) {
         return res.render("pages/auth/change-password", { isFirstLogin: true, currentPassword: req.user.username });
     }
     return res.render("pages/auth/change-password");
 };
 
 exports.postChangePassword = async function (req, res, next) {
-    const result = validationResult(req);
+    const { currentPassword, newPassword, confirmPassword } = req.body;
 
-    if (result.errors.length === 0) {
-        const {
-            currentPassword,
-            newPassword,
-            confirmPassword
-        } = req.body;
+    try {
+        const user = req.user;
 
-        try {
-            const user = req.user;
+        if (!user.isPasswordReset && !user.isFirstLogin) {
+            const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
 
-            if (!user.isPasswordReset) {
-                const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
-
-                if (!isPasswordValid) {
-                    req.flash("error", "Change password fail: Password is not correct.");
-                    return res.status(401)
-                        .redirect("/change-password");
-                }
-            }
-
-            if (newPassword !== confirmPassword) {
-                req.flash("error", "Change password fail: Password not match.");
-                return res.status(400)
+            if (!isPasswordValid) {
+                req.flash("error", "Change password fail: Password is not correct.");
+                return res.status(401)
                     .redirect("/change-password");
             }
-
-            user.password = newPassword;
-            user.isFirstLogin = false;
-            user.isPasswordReset = false;
-            await user.save();
-            req.session.user = user;
-            req.flash("success", "Change password success: Password changed.");
-            res.redirect("/");
-        } catch (error) {
-            console.log("=>(authController.js:285) error", error);
-            next(error);
         }
-    } else {
-        req.flash("error", result.errors[0].msg);
-        res.redirect("change-password");
+
+        if (newPassword !== confirmPassword) {
+            req.flash("error", "Change password fail: Password not match.");
+            return res.status(400)
+                .redirect("/change-password");
+        }
+
+        user.password = newPassword;
+        user.isFirstLogin = false;
+        user.isPasswordReset = false;
+        await user.save();
+        req.session.user = user;
+        req.flash("success", "Change password success: Password changed.");
+        res.redirect("/");
+    } catch (error) {
+        console.log(`🚀 🚀 file: authController.js:308 🚀 error`, error);
+        next(error);
     }
 };
 

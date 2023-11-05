@@ -91,7 +91,7 @@ const userSchema = new Schema({
 userSchema.methods.sentMail = async function (token) {
     this.token = token;
     this.tokenExpiration = new Date(Date.now() + 1 * 60 * 1000);
-    this.isPasswordReset = false;
+    this.isPasswordReset = true;
     this.isFirstLogin = true;
     await this.save();
 };
@@ -99,7 +99,8 @@ userSchema.methods.sentMail = async function (token) {
 userSchema.methods.reSentMail = async function (token) {
     this.token = token;
     this.tokenExpiration = new Date(Date.now() + 1 * 60 * 1000);
-    this.isPasswordReset = false;
+    this.isFirstLogin = true;
+    this.isPasswordReset = true;
     await this.save();
 };
 
