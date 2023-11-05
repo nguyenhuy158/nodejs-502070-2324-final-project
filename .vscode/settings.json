@@ -19,15 +19,15 @@
     "[markdown]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
+    "[jade]": {
+        "editor.defaultFormatter": "ducfilan.pug-formatter"
+    },
     "eslint.validate": [
         "javascript",
         "javascriptreact",
         "typescript",
         "typescriptreact"
     ],
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": true,
-    },
     "breadcrumbs.enabled": true,
     "chat.editor.fontFamily": "Cascadia Code, Fira Code, Hasklig, VictorMono, Monoid, Consolas, 'Courier New', monospace",
     "cSpell.diagnosticLevel": "Hint",
@@ -46,7 +46,6 @@
     "editor.codeLens": true,
     "editor.codeLensFontFamily": "JetBrains Mono, Cascadia Code, Fira Code, Hasklig, VictorMono, Monoid, Consolas, 'Courier New', monospace",
     "editor.codeLensFontSize": 16,
-    "editor.colorDecoratorsActivatedOn": "hover",
     "editor.columnSelection": false,
     "editor.cursorBlinking": "smooth",
     "editor.cursorSmoothCaretAnimation": "on",
@@ -65,7 +64,9 @@
     "editor.formatOnSave": true,
     "editor.formatOnSaveMode": "modifications",
     "editor.hover.enabled": false,
-    "editor.inlayHints.enabled": "off",
+    "editor.inlayHints.enabled": "on",
+    "typescript.inlayHints.parameterNames.enabled": "all",
+    "javascript.inlayHints.parameterNames.enabled": "all",
     "editor.inlayHints.fontFamily": "Cascadia Code, Fira Code, Hasklig, VictorMono, Monoid, Consolas, 'Courier New', monospace",
     "editor.inlineSuggest.enabled": true,
     "editor.inlineSuggest.suppressSuggestions": true,
@@ -119,7 +120,7 @@
     "terminal.integrated.scrollback": 10000,
     "terminal.integrated.smoothScrolling": true,
     "workbench.activityBar.iconClickBehavior": "toggle",
-    "workbench.colorTheme": "GitHub Dark",
+    "workbench.colorTheme": "Default Dark Modern",
     "workbench.editor.enablePreview": false,
     "workbench.iconTheme": "material-icon-theme",
     "workbench.list.smoothScrolling": true,
@@ -154,9 +155,18 @@
     "pugFormatter.removeDiv": true,
     "path-intellisense.mappings": {},
     "editor.rulers": [
-        4,
-        80,
-        100
+        {
+            "column": 4,
+            "color": "#cb42b2"
+        },
+        {
+            "column": 80,
+            "color": "#cb42b2"
+        },
+        {
+            "column": 100,
+            "color": "#cb42b2"
+        },
     ],
     "editor.guides.bracketPairs": true,
     "editor.renderWhitespace": "all",
@@ -224,7 +234,7 @@
         "current",
         "root"
     ],
-    "window.density.editorTabHeight": "compact",
+    "window.density.editorTabHeight": "default",
     "window.titleSeparator": "👻",
     "window.title": "${dirty}${separator}${activeFolderMedium}${separator}${activeEditorShort}",
     "git-graph.commitDetailsView.location": "Docked to Bottom",
@@ -251,8 +261,21 @@
     "errorLens.statusBarMessageEnabled": true,
     "editor.defaultFormatter": "GitHub.copilot",
     "editor.defaultFoldingRangeProvider": "GitHub.copilot",
-    "[jade]": {
-        "editor.defaultFormatter": "ducfilan.pug-formatter"
-    },
     "editor.mouseWheelZoom": true,
+    "editor.linkedEditing": true,
+    "editor.defaultColorDecorators": true,
+    "workbench.activityBar.location": "top",
+    "editor.multiDocumentOccurrencesHighlight": true,
+    "workbench.editor.showTabs": "multiple",
+    "workbench.editor.pinnedTabsOnSeparateRow": true,
+    "audioCues.terminalQuickFix": "on",
+    "scm.experimental.showSyncView": true,
+    "debug.toolBarLocation": "commandCenter",
+    "diffEditor.experimental.showMoves": true,
+    "diffEditor.hideUnchangedRegions.enabled": true,
+    "terminal.integrated.hideOnStartup": "always",
+    "markdown.editor.pasteUrlAsFormattedLink.enabled": "smart",
+    "scm.alwaysShowActions": true,
+    "workbench.editor.doubleClickTabToToggleEditorGroupSizes": "maximize",
+    "terminal.integrated.enableImages": true,
 }
