@@ -9,6 +9,7 @@ const authRoutes = require("./auth");
 const userRouter = require("./user");
 const apiProductRouter = require("./apiProduct");
 const apiUserRouter = require("./apiUser");
+const apiProductCategoryRouter = require("./apiProductCategory");
 const checkoutRouter = require("./checkout");
 const customerRouter = require("./customer");
 const productRouter = require("./product");
@@ -16,7 +17,7 @@ const { autoViews } = require("../middlewares/auto-views");
 const { flashMiddleWare } = require("../middlewares/flash");
 const logger = require("../middlewares/handler");
 const { logRequestDetails } = require("../middlewares/access-log");
-const { winstonLog } = require("../controllers/appController");
+const { winstonLog, setLocalCategories } = require("../controllers/indexController");
 const path = require("path");
 const config = require("../config/config");
 const { updateCurrentUser } = require("../middlewares/authentication");
@@ -24,10 +25,7 @@ const { ensureAuthenticated } = require("../controllers/authController");
 const authController = require("../controllers/authController");
 const { limiter } = require("../config/config");
 const { requireRole } = require("../middlewares/authorization");
-const { categories } = require("../controllers/productCategoryController");
 const { validationChangePassword } = require('../middlewares/validation');
-
-// other middleware and server
 
 router
     .use(logRequestDetails)
@@ -67,21 +65,16 @@ router
 
 // main router
 router
-    .use(async (req, res, next) => {
-        try {
-            req.app.locals.categories = await categories();
-        } catch (e) {
-            console.log("=>(index.js:71) e", e);
-            req.app.locals.categories = [];
-        }
-        next();
-    })
+    .use(setLocalCategories)
     .use("/users", requireRole(process.env.ROLE_ADMIN), userRouter)
     .use("/products", requireRole(process.env.ROLE_ADMIN), productRouter)
     .use("/customers", customerRouter)
-    .use("/checkout", checkoutRouter)
+    .use("/checkout", checkoutRouter);
+
+router
     .use("/api/products", apiProductRouter)
-    .use("/api/users", apiUserRouter);
+    .use("/api/users", apiUserRouter)
+    .use("/api/productCategories", apiProductCategoryRouter);
 
 // error router
 router

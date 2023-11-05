@@ -1,19 +1,37 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const User = require('../models/user');
-const moment = require("moment");
-const {
-    generateToken,
-    getFullUrlForMailConfirm,
-    sendEmail,
-} = require("../middlewares/utils");
+const { generateToken, getFullUrlForMailConfirm, sendEmail } = require("../middlewares/utils");
+
+
+exports.checkAndParseObjectId = async (req, res, next) => {
+    const id = req.params.id;
+    if (ObjectId.isValid(id)) {
+        req.id = new ObjectId(id);
+        try {
+            const apiUser = await User.findOne(req.id);
+            req.apiUser = apiUser;
+            return next();
+        } catch (error) {
+            res.status(400).json({
+                error: true,
+                message: 'Id not found! please reload and try again!'
+            });
+        }
+    } else {
+        res.status(400).json({
+            error: true,
+            message: 'Id not valid! please reload and try again!'
+        });
+    }
+};
 
 exports.getApiUsers = async (req, res) => {
     try {
         const users = await User.find();
         res.json(users);
     } catch (error) {
-        res.json({});
+        res.status(500).json({ error: true, message: 'Could not gets the users' + error });
     }
 };
 
@@ -53,35 +71,13 @@ exports.postApiUser = async (req, res) => {
     }
 };
 
-exports.checkAndParseObjectId = async (req, res, next) => {
-    const id = req.params.id;
-    if (ObjectId.isValid(id)) {
-        req.id = new ObjectId(id);
-        try {
-            const apiUser = await User.findOne(req.id);
-            req.apiUser = apiUser;
-            return next();
-        } catch (error) {
-            res.status(400).json({
-                error: true,
-                message: 'Id not found! please reload and try again!'
-            });
-        }
-    } else {
-        res.status(400).json({
-            error: true,
-            message: 'Id not valid! please reload and try again!'
-        });
-    }
-};
-
 exports.getApiUser = async (req, res) => {
     try {
         const id = req.id;
         const user = await User.findOne(id);
         res.json(user);
     } catch (error) {
-        res.json({});
+        res.status(500).json({ error: true, message: 'Could not get the user' + error });
     }
 };
 
@@ -92,7 +88,7 @@ exports.putApiUser = async (req, res) => {
         const user = await User.findOneAndUpdate(id, { $set: req.body }, { new: true });
         res.json(user);
     } catch (error) {
-        res.json({});
+        res.status(500).json({ error: true, message: 'Could not update the user' + error });
     }
 };
 
@@ -106,10 +102,7 @@ exports.deleteApiUserById = async (req, res) => {
             message: "Deleted successfully"
         });
     } catch (error) {
-        return res.status(400).json({
-            error: true,
-            message: 'Please reload and try again!'
-        });
+        res.status(500).json({ error: true, message: 'Could not delete the user' + error });
     }
 };
 
