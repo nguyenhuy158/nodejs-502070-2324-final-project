@@ -1,6 +1,24 @@
 const { query, body, param, validationResult } = require('express-validator');
 const User = require('../models/user');
 
+
+exports.validateSearch = [
+    query('q')
+        .trim()
+        .notEmpty()
+        .withMessage("Search not empty!"),
+    (req, res, next) => {
+        const result = validationResult(req);
+        if (result.errors.length === 0) {
+            next();
+        } else {
+            req.flash('error', result.errors[0].msg);
+
+            return res.render('pages/search/search-results');
+        }
+    }
+];
+
 exports.validateCreateProduct = [
     body('name').notEmpty().isString(),
     body('price').isNumeric(),

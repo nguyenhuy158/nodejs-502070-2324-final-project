@@ -1,20 +1,17 @@
+
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
-const flash = require("../middlewares/flash"), addFlash = require('../utils/flash');
+const flash = require("../middlewares/flash");
+const addFlash = require('../utils/flash');
 const moment = require("moment");
 const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs");
-require("dotenv")
-    .config();
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const Product = require("../models/product");
-const {
-    generateToken,
-    sendEmail,
-    uploadImage
-} = require("../utils/utils");
+
+const { generateToken, sendEmail, uploadImage } = require("../utils/utils");
 
 exports.changeProfilePicture = async (req, res, next) => {
     const user = req.user;

@@ -100,29 +100,30 @@ block content
                                     span Display #{Math.min((current - 1) * perPage + 1, count)} to #{Math.min(current * perPage, count)} of #{count} data
 
                                     ol.list-group.list-group-numbered.mt-3
-                                        each product in products
-                                            li.list-group-item
-                                                .row
-                                                    .col.ms-2.me-auto
-                                                        a.fw-bold.text-decoration-none(href=`/products/${product._id}`) #{product.productName}
-                                                        p Code: #{product.barcode}
+                                        if products
+                                            each product in products
+                                                li.list-group-item
+                                                    .row
+                                                        .col.ms-2.me-auto
+                                                            a.fw-bold.text-decoration-none(href=`/products/${product._id}`) #{product.productName}
+                                                            p Code: #{product.barcode}
 
-                                                    if product.imageUrls.length > 0
-                                                        .col-3
-                                                            img(src=product.imageUrls[0] alt=product.productName width=100 height=100)
-                                                    .col-1
-                                                        .row.mb-1
-                                                            span.badge.bg-warning.w-auto.text-wrap.lh-sm.p-1.overflow-hidden.text-truncate #{product.category.name}
-                                                        if user.isAdmin()
+                                                        if product.imageUrls.length > 0
+                                                            .col-3
+                                                                img(src=product.imageUrls[0] alt=product.productName width=100 height=100)
+                                                        .col-1
                                                             .row.mb-1
-                                                                span.badge.bg-info.rounded-pill.w-auto #{product.importPrice}
-                                                        .row.mb-1
-                                                            span.badge.bg-primary.rounded-pill.w-auto #{product.retailPrice}
-                                                .row
-                                                    .col
-                                                        button.me-2.btn.btn-outline-primary Add to cart
-                                                        button.me-2.btn.btn-outline-primary View revenue
-                                                        button.me-2.btn.btn-outline-primary Other
+                                                                span.badge.bg-warning.w-auto.text-wrap.lh-sm.p-1.overflow-hidden.text-truncate #{product.category.name}
+                                                            if user.isAdmin()
+                                                                .row.mb-1
+                                                                    span.badge.bg-info.rounded-pill.w-auto #{product.importPrice}
+                                                            .row.mb-1
+                                                                span.badge.bg-primary.rounded-pill.w-auto #{product.retailPrice}
+                                                    .row
+                                                        .col
+                                                            button.me-2.btn.btn-outline-primary Add to cart
+                                                            button.me-2.btn.btn-outline-primary View revenue
+                                                            button.me-2.btn.btn-outline-primary Other
 
 
     script.

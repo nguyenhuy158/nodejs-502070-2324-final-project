@@ -1,4 +1,3 @@
-const { TimeSeriesBucketTimestamp } = require('redis');
 const Customer = require('../models/customer');
 const Cart = require('../models/customer');
 

@@ -1,4 +1,4 @@
-const { currentTime } = require("../utils/format");
+
 exports.errorNotFound = function (req, res, next) {
     const { method, originalUrl } = req;
     console.error(`[ERROR][404] ${method}\t${originalUrl}`);

@@ -8,81 +8,26 @@ require("dotenv")
     .config();
 
 const userSchema = new Schema({
-    email: {
-        type: String,
-        unique: true,
-        required: true,
-        trim: true
-    },
-    gender: {
-        type: ['Male', 'Female', 'Unknown'],
-        default: 'Unknown'
-    },
-    username: {
-        type: String,
-        trim: true,
-        minlength: 1
-    },
-    fullName: {
-        type: String,
-        trim: true,
-        minlength: 2
-    },
-    role: {
-        type: String,
-        enum: [process.env.ROLE_ADMIN, process.env.ROLE_SALE],
-        default: process.env.ROLE_SALE,
-        lowercase: true
-    },
-    password: {
-        type: String,
-        trim: true,
-        minlength: 1
-    },
-    password_confirm: {
-        type: String,
-        trim: true,
-        minlength: 1,
-        select: false
-    },
-    token: { type: String },
+    email: { type: String, unique: true, required: true, trim: true },
+    gender: { type: String, enum: ['Male', 'Female', 'Unknown'], default: 'Unknown' },
+    username: { type: String, trim: true, minlength: 1 },
+    fullName: { type: String, trim: true, minlength: 2 },
+    role: { type: String, enum: [process.env.ROLE_ADMIN, process.env.ROLE_SALE], default: process.env.ROLE_SALE, lowercase: true },
+    password: { type: String, trim: true, minlength: 1 },
+    password_confirm: { type: String, trim: true, minlength: 1, select: false }, token: { type: String },
     tokenExpiration: { type: Date },
     passwordResetToken: String,
     passwordResetTokenExpires: Date,
-    isFirstLogin: {
-        type: Boolean,
-        default: true
-    },
-    isPasswordReset: {
-        type: Boolean,
-        default: false
-    },
+    isFirstLogin: { type: Boolean, default: true },
+    isPasswordReset: { type: Boolean, default: false },
     profilePicture: { type: String },
-    inactivateStatus: {
-        type: Boolean,
-        default: false
-    },
-    lockedStatus: {
-        type: Boolean,
-        default: false
-    },
+    inactivateStatus: { type: Boolean, default: false },
+    lockedStatus: { type: Boolean, default: false },
     settings: {
-        darkMode: {
-            type: Boolean,
-            default: false
-        },
-        notification: {
-            type: Boolean,
-            default: true
-        },
-        language: {
-            type: String,
-            default: "en"
-        },
-        fontSize: {
-            type: Number,
-            default: 16
-        }
+        darkMode: { type: Boolean, default: false },
+        notification: { type: Boolean, default: true },
+        language: { type: String, default: "en" },
+        fontSize: { type: Number, default: 16 }
     }
 }, {
     timestamps: true,

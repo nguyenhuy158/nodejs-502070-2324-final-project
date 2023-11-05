@@ -8,3 +8,9 @@ exports.requireRole = function (role) {
     };
 };
 
+exports.updateCurrentUser = async (req, res, next) => {
+    if (req.user) {
+        req.app.locals.user = req.user;
+    }
+    next();
+};

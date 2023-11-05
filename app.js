@@ -1,26 +1,26 @@
 require("dotenv").config();
+
 const express = require("express");
-const router = require("./routes");
 const cookieParser = require("cookie-parser");
-const { connectDb } = require("./config/db");
 const sassMiddleware = require("node-sass-middleware");
+
 const path = require("path");
+const router = require("./routes");
 const config = require("./config/config");
+const moment = require("moment/moment");
 const winstonLogger = require("./config/logger");
 const passport = require("passport");
 const session = require("express-session");
-const User = require("./models/user");
-const moment = require("moment/moment");
-// const flash = require("./middlewares/flash");
-const { currentTime } = require("./utils/format");
-
 const bcrypt = require("bcryptjs");
-const {
-    cookieOptions,
-    cloudinaryConfig
-} = require("./config/config");
-const LocalStrategy = require("passport-local").Strategy;
 const flash = require("connect-flash");
+
+const User = require("./models/user");
+
+const { connectDb } = require("./config/db");
+const { currentTime } = require("./utils/format");
+const { cookieOptions, cloudinaryConfig } = require("./config/config");
+
+const LocalStrategy = require("passport-local").Strategy;
 
 const { v2: cloudinary } = require("cloudinary");
 const { uploadImage } = require("./utils/utils");
@@ -46,11 +46,7 @@ app.disable("x-powered-by");
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(require("express-session")({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: false
-}));
+app.use(require("express-session")({ secret: "keyboard cat", resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -61,9 +57,9 @@ app.use((req, res, next) => {
     const accessTime = currentTime();
     const fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
 
-    console.log(`[ACCESS-LOG]\t${fullUrl}`);
-    console.log(`[ACCESS-LOG]\t${method}\t[${accessTime}]\t${originalUrl}`);
-    console.log(`[ACCESS-LOG]\t${method}\t[${accessTime}]\txhr: ${xhr}`);
+    console.log(`[LOG]\t${fullUrl}`);
+    console.log(`[LOG]\t${method}\t${originalUrl}\t[${accessTime}]`);
+    console.log(`[LOG]\t${method}\txhr: ${xhr}\t[${accessTime}]`);
 
     res.locals.message = req.flash();
     console.log("[FLASH] ", res.locals.message);

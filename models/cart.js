@@ -14,6 +14,20 @@ const cartSchema = new Schema({
     timestamps: true,
 });
 
+cartSchema.methods.calculateTotalPrice = async function () {
+    let total = 0;
+
+    for (const productItem of this.products) {
+        const product = await mongoose.model("Product").findById(productItem.product);
+
+        if (product) {
+            total += product.retailPrice * productItem.quantity;
+        }
+    }
+
+    return total;
+};
+
 cartSchema.methods.productExists = function (productId) {
     return this.products.some(item => item.product.equals(productId));
 };

@@ -1,5 +1,4 @@
-require("dotenv")
-    .config();
+
 const mongoose = require("mongoose");
 const User = require("../models/user");
 const ProductCategory = require("../models/productCategory");

@@ -1,17 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const userApiController = require("../controllers/userApiController");
-const { upload } = require("../config/upload");
 const { validateCreateAccount } = require('../middlewares/validation');
 
 router
-    .use((req, res, next) => {
-        console.log(`🚀 --------------------------------------------🚀`);
-        console.log(`🚀 🚀 file: apiUser.js:9 🚀 .use 🚀 req`, req.body);
-        console.log(`🚀 --------------------------------------------🚀`);
-
-        next();
-    })
     .get("/", userApiController.getApiUsers)
     .post("/",
         validateCreateAccount,

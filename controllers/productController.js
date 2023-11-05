@@ -1,15 +1,14 @@
 const Product = require("../models/product");
 const ProductCategory = require("../models/productCategory");
-const { faker } = require("@faker-js/faker");
+
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs");
-const {
-    uploadImage,
-    removeImageByUrl
-} = require("../utils/utils");
+
+const { faker } = require("@faker-js/faker");
+const { uploadImage, removeImageByUrl } = require("../utils/utils");
 const { categories } = require("./productCategoryController");
 
 

@@ -1,4 +1,3 @@
-const winstonLogger = require("../config/logger");
 
 exports.logRequestDetails = (req, res, next) => {
     console.log(`[USERNAME] ${res.app.locals.user?.username}`);

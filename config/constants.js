@@ -1,6 +1,6 @@
 module.exports = {
     USER_ROLES: {
-        ADMIN: 'admin',
-        SALE: 'salespeople',
+        ADMIN: process.env.ROLE_ADMIN,
+        SALE: process.env.ROLE_SALE,
     },
 };
