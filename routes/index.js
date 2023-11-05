@@ -1,33 +1,33 @@
 const express = require("express");
 const router = express.Router();
+
 const userController = require("../controllers/userController");
-const routerController = require("../controllers/routerController");
-const errors = require("./errors");
-const { UserValidator } = require("../middlewares/validator");
-const { upload } = require("../config/upload");
+const indexController = require("../controllers/indexController");
+const searchController = require("../controllers/searchController");
+
+const errorRouter = require("./error");
 const authRoutes = require("./auth");
 const userRouter = require("./user");
+const checkoutRouter = require("./checkout");
+const productRouter = require("./product");
+const authController = require("../controllers/authController");
+
 const apiProductRouter = require("./apiProduct");
 const apiUserRouter = require("./apiUser");
-const checkoutRouter = require("./checkout");
-const customerRouter = require("./customer");
-const productRouter = require("./product");
-const { autoViews } = require("../middlewares/auto-views");
-const { flashMiddleWare } = require("../middlewares/flash");
-const logger = require("../middlewares/handler");
-const { logRequestDetails } = require("../middlewares/access-log");
-const { winstonLog } = require("../controllers/appController");
-const path = require("path");
-const config = require("../config/config");
-const { updateCurrentUser } = require("../middlewares/authentication");
-const { ensureAuthenticated } = require("../controllers/authController");
-const authController = require("../controllers/authController");
-const { limiter } = require("../config/config");
-const { requireRole } = require("../middlewares/authorization");
-const { categories } = require("../controllers/productCategoryController");
-const { body } = require("express-validator");
+const apiProductCategoryRouter = require("./apiProductCategory");
+const apiCustomerRouter = require("./apiCustomer");
 
-// other middleware and server
+const { upload } = require("../config/upload");
+const { checkFirstLogin } = require("../controllers/indexController");
+const { updateCurrentUser } = require("../middlewares/auth");
+const { ensureAuthenticated } = require("../controllers/authController");
+const { autoViews } = require("../middlewares/auto-views");
+const { logRequestDetails } = require("../middlewares/log");
+const { limiter } = require("../config/config");
+const { morganLog } = require("../middlewares/log");
+const { requireRole } = require("../middlewares/auth");
+const { validationChangePassword, validateSearch } = require('../middlewares/validation');
+const { setLocalCategories } = require("../controllers/indexController");
 
 router
     .use(logRequestDetails)
@@ -41,72 +41,43 @@ router
         } catch (err) {
             next(err);
         }
-    });
-
-// auth router
-router
+    })
+    // auth router
     .use(authRoutes)
     .use(ensureAuthenticated)
     .get("/change-password", authController.changePassword)
     .post("/change-password",
-        body("password")
-            .notEmpty()
-            .withMessage("Password cannot be empty!")
-            .isLength({ min: 6 })
-            .withMessage("Password must have at least 6 characters!"),
-        body("newPassword")
-            .notEmpty()
-            .withMessage("Password cannot be empty!")
-            .isLength({ min: 6 })
-            .withMessage("Password must have at least 6 characters!")
-            .custom((value, { req }) => {
-                return value !== req.body.password;
-            })
-            .withMessage("Don't use old password!"),
-        body("confirmPassword")
-            .notEmpty()
-            .withMessage("Password cannot be empty!")
-            .isLength({ min: 6 })
-            .withMessage("Password must have at least 6 characters!")
-            .custom((value, { req }) => {
-                return value === req.body.newPassword;
-            })
-            .withMessage("Confirm Password not match!"),
+        validationChangePassword,
         authController.postChangePassword)
-
     // other middleware and server
-    .use(routerController.checkFirstLogin)
+    .use(checkFirstLogin)
     .use(autoViews)
-    .get("/log", logger.morganLog)
-    .get("/sent-test-mail", routerController.sentMail)
-    .get("/", routerController.home)
+    .use(setLocalCategories)
+    .get("/log", morganLog)
+    .get("/", indexController.home)
     .get("/profile", userController.viewProfile)
     .post("/upload-profile-pic", upload.single("profilePic"), userController.changeProfilePicture)
-    .get("/random-product", routerController.randomProduct)
-    .get("/create-sample-data", routerController.createSampleData)
-    .get("/search", routerController.searchResults)
-    .post("/update-settings", userController.apiUpdateSetting);
+    .get("/random-product", indexController.randomProduct)
+    .get("/create-sample-data", indexController.createSampleData)
+    .get("/search",
+        validateSearch,
+        searchController.searchResults)
+    .post("/api/setting", userController.postApiSetting)
+    .get("/api/setting", userController.getApiSetting)
 
-// main router
-router
-    .use(async (req, res, next) => {
-        try {
-            req.app.locals.categories = await categories();
-        } catch (e) {
-            console.log("=>(index.js:71) e", e);
-            req.app.locals.categories = [];
-        }
-        next();
-    })
+    // main router
     .use("/users", requireRole(process.env.ROLE_ADMIN), userRouter)
     .use("/products", requireRole(process.env.ROLE_ADMIN), productRouter)
-    .use("/customers", customerRouter)
     .use("/checkout", checkoutRouter)
-    .use("/api/products", apiProductRouter)
-    .use("/api/users", apiUserRouter);
 
-// error router
-router
-    .use(errors);
+    // api router
+    .use("/api/products", apiProductRouter)
+    .use("/api/users", apiUserRouter)
+    .use("/api/productCategories", apiProductCategoryRouter)
+    .use("/api/customers", apiCustomerRouter)
+
+    // error router
+    .use(errorRouter);
+
 
 module.exports = router;

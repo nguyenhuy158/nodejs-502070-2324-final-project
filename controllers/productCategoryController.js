@@ -2,4 +2,4 @@ const ProductCategory = require("../models/productCategory");
 
 
 exports.categories = () => ProductCategory.find()
-                                          .sort({ name: 1 });
+    .sort({ name: 1 });

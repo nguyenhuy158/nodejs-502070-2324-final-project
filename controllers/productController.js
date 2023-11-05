@@ -1,30 +1,26 @@
 const Product = require("../models/product");
 const ProductCategory = require("../models/productCategory");
-const {faker} = require("@faker-js/faker");
-const moment = require("moment");
-const {ObjectId} = require("mongodb");
+
 const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs");
-const {
-    uploadImage,
-    removeImageByUrl
-} = require("../middlewares/utils");
-const {categories} = require("./productCategoryController");
+
+const { faker } = require("@faker-js/faker");
+const { uploadImage, removeImageByUrl } = require("../utils/utils");
+const { categories } = require("./productCategoryController");
 
 
 function product(productId) {
     return Product.findById(productId);
 }
 
-exports.add = async function (req, res, next) {
-    res.render("pages/products/form", {categories: await categories()});
+exports.add = async function (req, res) {
+    res.render("pages/products/form", { categories: await categories() });
 };
 
-exports.create = async function (req, res, next) {
-    const categories = await ProductCategory.find()
-        .sort({name: 1});
+exports.create = async function (req, res) {
     const {
         barcode,
         productName,
@@ -64,7 +60,7 @@ exports.create = async function (req, res, next) {
 
 exports.createV1 = async function (req, res, next) {
     const categories = await ProductCategory.find()
-        .sort({name: 1});
+        .sort({ name: 1 });
 
     const productId = req.params.id;
     const {
@@ -93,7 +89,7 @@ exports.createV1 = async function (req, res, next) {
                 category,
                 creationDate,
                 lastUpdateDate,
-            }, {new: true});
+            }, { new: true });
         } else {
             // Creating a new product
             product = new Product({
@@ -150,7 +146,7 @@ exports.update = async function (req, res, next) {
                 retailPrice,
                 category,
                 desc
-            }, {new: true});
+            }, { new: true });
             console.log(`=>(productController.js:180) product`, product);
             req.flash("info", "Update products successfully");
             res.json({
@@ -184,11 +180,11 @@ exports.update = async function (req, res, next) {
 exports.edit = async function (req, res, next) {
     try {
         const categories = await ProductCategory.find()
-            .sort({name: 1});
+            .sort({ name: 1 });
 
         const id = req.params.id;
 
-        const product = await Product.findById({_id: id});
+        const product = await Product.findById({ _id: id });
 
         res.render("pages/products/form", {
             product,
@@ -205,14 +201,14 @@ exports.detail = async function (req, res, next) {
     try {
         const id = req.params.id;
 
-        const product = await Product.findById({_id: id});
+        const product = await Product.findById({ _id: id });
         if (req.xhr) {
             return res.json({
                 error: false,
                 product
             });
         } else {
-            res.render("pages/products/detail", {product});
+            res.render("pages/products/detail", { product });
         }
     } catch (error) {
         console.error("Error fetching products:", error);
@@ -277,7 +273,7 @@ exports.gets = async function (req, res, next) {
         //     .limit(perPage)
         //     .exec();
         const products = await Product.find()
-            .sort({creationDate: -1})
+            .sort({ creationDate: -1 })
             .skip(perPage * page - perPage)
             .limit(perPage)
             .populate("category")
@@ -294,7 +290,7 @@ exports.gets = async function (req, res, next) {
             perPage,
             nextPage: hasNextPage ? nextPage : null
         };
-        res.render("pages/products/list", {
+        res.render("pages/products/home", {
             ...output,
             sideLink: process.env.SIDEBAR_PRODUCT
         });
@@ -307,8 +303,8 @@ exports.gets = async function (req, res, next) {
 
 exports.seedDatabaseV1 = async function () {
     const products = [];
-    const phoneCategory = await ProductCategory.findOne({name: "Phone"});
-    const accessoriesCategory = await ProductCategory.findOne({name: "Accessories"});
+    const phoneCategory = await ProductCategory.findOne({ name: "Phone" });
+    const accessoriesCategory = await ProductCategory.findOne({ name: "Accessories" });
 
     for (let i = 0; i < 50; i++) {
         const product = {
@@ -339,7 +335,7 @@ exports.seedDatabaseV1 = async function () {
     }
 };
 
-function processImageUrlsBeforeStore(files) {
+exports.processImageUrlsBeforeStore = (files) => {
     return Promise.all(files
         .map((file) => file.path)
         .map(async file => {
@@ -352,7 +348,7 @@ function processImageUrlsBeforeStore(files) {
                     fit: sharp.fit.cover,
                     withoutEnlargement: true
                 })
-                .webp({quality: 80})
+                .webp({ quality: 80 })
                 .toFile(newFilePath);
             try {
                 await fs.promises.access(newFilePath);
@@ -364,14 +360,14 @@ function processImageUrlsBeforeStore(files) {
 
             return newFilePath;
         }));
-}
+};
 
 exports.addThumbnails = async (req, res) => {
     const imageUrls = await processImageUrlsBeforeStore(req.files);
     const productId = req.params.id;
     console.log(`=>(productController.js:369) productId`, productId);
     try {
-        const result = await Product.updateOne({_id: productId}, {$push: {imageUrls: {$each: imageUrls}}});
+        const result = await Product.updateOne({ _id: productId }, { $push: { imageUrls: { $each: imageUrls } } });
         console.log(`=>(productController.js:371) result`, result);
 
         return res.json({
@@ -391,7 +387,7 @@ exports.removeThumbnails = async (req, res) => {
     const imageUrls = req.body.imageUrls;
     const productId = req.params.id;
     try {
-        const result = await Product.updateOne({_id: productId}, {$pull: {imageUrls: imageUrls}});
+        const result = await Product.updateOne({ _id: productId }, { $pull: { imageUrls: imageUrls } });
         console.log(`=>(productController.js:371) result`, result);
         await removeImageByUrl(imageUrls);
 
@@ -423,7 +419,7 @@ exports.mainThumbnail = async (req, res) => {
             });
         }
 
-        const {imageUrls} = product;
+        const { imageUrls } = product;
 
         if (imageUrls.length < 2) {
             return res.json({
@@ -451,14 +447,5 @@ exports.mainThumbnail = async (req, res) => {
             error: true,
             message: "Error moving last image:" + error
         });
-    }
-};
-
-exports.getApiProducts = async (req, res) => {
-    try {
-        const products = await Product.find().populate("category");
-        res.json(products);
-    } catch (error) {
-        res.json({});
     }
 };

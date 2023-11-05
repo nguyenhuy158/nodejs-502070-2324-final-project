@@ -1,12 +1,10 @@
-const PORT = process.env.PORT;
-const winstonLogger = require("../config/logger");
 
-exports.listen = () => {
-    console.log(`[LISTEN] Server is running on http://localhost:${PORT}`);
+exports.logRequestDetails = (req, res, next) => {
+    console.log(`[USERNAME] ${res.app.locals.user?.username}`);
+    next();
 };
 
 exports.morganLog = (req, res) => {
-    
     let log;
     try {
         log = require("fs").readFileSync("access.log", "utf8");

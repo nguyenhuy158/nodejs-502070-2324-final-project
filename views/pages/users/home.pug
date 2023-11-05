@@ -1,0 +1,34 @@
+extends ../layout.pug
+
+block content
+	.content
+		include ../../partials/nav
+
+		.container
+			h2 User List
+			#button-container.mb-3
+
+			table#user-table.table.table-sm.table-striped.table-bordered(style="width:100%")
+				thead
+					tr
+						th STT
+						th Avatar
+						th Email
+						th Username
+						th Full Name
+						th Role
+						th First Login
+						th Active
+						th 
+							span.iconify(data-icon="material-symbols:lock-outline")
+						th Handle
+				tbody
+
+		//- confirm modal
+		include ../../partials/confirm-delete-modal
+		include ../../partials/product-edit-modal
+
+	//- confirm script
+	script(src="/js/confirm-user.js") 
+	//- script Datatables plugin
+	script(src="/js/user-datatable.js") 

@@ -1,37 +1,48 @@
+/* eslint-disable no-undef */
 const changeMode = (isChecked) => {
-    console.log("=>(darkMode.js:9) changeMode");
-    const htmlTag = $("html");
-    if (isChecked) {
-        htmlTag.attr("data-bs-theme", "dark");
-    } else {
-        htmlTag.attr("data-bs-theme", "light");
-    }
+    isChecked ? $('#theme-toggle').click() : '';
 };
 
-$(document)
-    .ready(function () {
-        const isDarkMode = $("#darkModeSwitch")
-            .prop("checked");
-        console.log("=>(darkMode.js:14) isDarkMode", isDarkMode);
-        changeMode(isDarkMode);
-        
-        $("#darkModeSwitch")
-            .change(function () {
-                changeMode(this.checked);
-                
-                const darkMode = $("#darkModeSwitch")
-                    .is(":checked");
-                $.ajax({
-                           url: `/update-settings`,
-                           method : "POST",
-                           data   : { darkMode: darkMode },
-                           success: function (data) {
-                               console.log("Settings updated:", data);
-                           },
-                           error  : function (error) {
-                               console.error("Error updating settings:", error);
-                           }
-                       });
-            });
+function getSetting() {
+    $.ajax({
+        url: `/api/setting`,
+        method: "GET",
+        success: function (data) {
+            console.log("Settings updated:", data.darkMode);
+            changeMode(data.darkMode);
+        },
+        error: function (error) {
+            console.error("Error updating settings:", error);
+            changeMode(false);
+        }
     });
+}
+
+function postSetting(darkMode) {
+    $.ajax({
+        url: `/api/setting`,
+        method: "POST",
+        data: { darkMode: darkMode },
+        success: function (data) {
+            console.log("Settings updated:", data);
+            return true;
+        },
+        error: function (error) {
+            console.error("Error updating settings:", error);
+            return false;
+        }
+    });
+}
+
+$(() => {
+    const btnDarkMode = $("#theme-toggle");
+
+    getSetting();
+
+    btnDarkMode
+        .on('change', function () {
+            changeMode(this.checked);
+            postSetting(this.checked);
+        });
+});
 

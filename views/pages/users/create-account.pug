@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+	.content
+		include ../../partials/nav
+	.container
+		.row
+			.col-md-6.offset-md-3
+				h1 Create Account
+
+				form#create-account(autocomplete="off")
+					//- require info
+					.form-group.mb-3
+						label(for='fullName') Full Name:
+						input.form-control(name='fullName' placeholder="Enter full name")
+					.form-group.mb-3
+						label(for='email') Email:
+						input.form-control(name='email' placeholder="Enter email")
+
+					//- option info
+					.form-group.mb-3
+						label(for='gender') Gender:
+						input.form-control(name='gender' placeholder="Enter gender")
+
+
+					//- button handle submit or back
+					.form-group.mb-3
+						input.btn.btn-primary(type='submit' value='Create Account')
+						a(href="/users").btn.btn-secondary.ms-3(type='button') Back
+
+	script(src="/js/create-account.js") 

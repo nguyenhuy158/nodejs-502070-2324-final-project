@@ -1,4 +1,4 @@
-//Focus element on sidebar
+//Focus el	ement on sidebar
 const sideLinks = document.querySelectorAll(
 	".sidebar .side-menu li a:not(.logout)"
 );
@@ -63,3 +63,36 @@ toggler.addEventListener("change", function () {
 		document.body.classList.remove("dark");
 	}
 });
+
+
+function reloadTable() {
+	$('span:contains("Reload")').click();
+}
+
+function formatCurrency(input) {
+	const numericValue = input.value.replace(/[^0-9.]/g, '');
+
+	const formattedValue = new Intl.NumberFormat('vi-VN', {
+		style: 'currency',
+		currency: 'VND',
+		minimumFractionDigits: 0,
+	}).format(numericValue);
+
+	input.value = formattedValue;
+}
+
+function formDataToJson(formData) {
+	const json = {};
+	formData.forEach((value, key) => {
+		if (json[key]) {
+			if (Array.isArray(json[key])) {
+				json[key].push(value);
+			} else {
+				json[key] = [json[key], value];
+			}
+		} else {
+			json[key] = value;
+		}
+	});
+	return json;
+}

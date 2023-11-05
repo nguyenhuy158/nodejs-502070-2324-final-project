@@ -14,16 +14,16 @@ function lazyImageLoading() {
         throttle: 500,
         appendScroll: $('table'),
         onError: function (element) {
-            console.log('[lazy] error loading ' + element.data('src'));
+            // console.log('[lazy] error loading ' + element.data('src'));
         },
         beforeLoad: function (element) {
-            console.log('[lazy] before loading ' + element.data('src'));
+            // console.log('[lazy] before loading ' + element.data('src'));
         },
         afterLoad: function (element) {
-            console.log('[lazy] after loading ' + element.data('src'));
+            // console.log('[lazy] after loading ' + element.data('src'));
         },
         onFinishedAll: function () {
-            console.log('[lazy] all elements loading');
+            // console.log('[lazy] all elements loading');
         }
     });
 }

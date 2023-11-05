@@ -1,20 +1,17 @@
+
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
 const flash = require("../middlewares/flash");
+const addFlash = require('../utils/flash');
 const moment = require("moment");
 const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs");
-require("dotenv")
-    .config();
-const { ObjectId } = require("mongodb");
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const Product = require("../models/product");
-const {
-    generateToken,
-    sendEmail,
-    uploadImage
-} = require("../middlewares/utils");
+
+const { generateToken, sendEmail, uploadImage } = require("../utils/utils");
 
 exports.changeProfilePicture = async (req, res, next) => {
     const user = req.user;
@@ -34,7 +31,7 @@ exports.changeProfilePicture = async (req, res, next) => {
         req.session.user = user;
         fs.unlinkSync(pathFile);
 
-        flash.addFlash(req, "success", "Change picture success");
+        addFlash.addFlash(req, "success", "Change picture success");
         res.redirect("/profile");
     } catch (error) {
         console.log("🚀 ~ file: userController.js:31 ~ exports.changeProfilePicture= ~ error:", error);
@@ -48,7 +45,7 @@ exports.changeProfilePicture = async (req, res, next) => {
 
 exports.viewProfile = async (req, res, next) => {
     try {
-        flash.addFlash(req, "success", "get info success");
+        addFlash.addFlash(req, "success", "get info success");
         res.render("pages/users/profile");
     } catch (error) {
         console.error(error);
@@ -134,7 +131,7 @@ exports.getUsers = async function (req, res, next) {
             perPage,
             nextPage: hasNextPage ? nextPage : null
         };
-        res.render("pages/users/list", {
+        res.render("pages/users/home", {
             ...response,
             sideLink: process.env.SIDEBAR_USER
         });
@@ -175,12 +172,12 @@ exports.resendEmail = async function resendEmail(req, res, next) {
         const user = await User.findById(id);
 
         if (!user) {
-            // return res.render('pages/auth/form', {
+            // return res.render('pages/auth/login', {
             //     isRegister: false,
             //     status: 'failed',
             //     message: 'No user found with the provided email address.',
             // });
-            flash.addFlash(req, "warning", `No user found with the provided ${id}.`);
+            addFlash.addFlash(req, "warning", `No user found with the provided ${id}.`);
             return res.redirect("/users");
         }
 
@@ -192,10 +189,10 @@ exports.resendEmail = async function resendEmail(req, res, next) {
         await sendEmail(req, user, user.token);
 
 
-        flash.addFlash(req, "success", "Email has been resent. Please check your email for further instructions.");
+        addFlash.addFlash(req, "success", "Email has been resent. Please check your email for further instructions.");
         res.redirect("/users");
 
-        // res.render('pages/auth/form', {
+        // res.render('pages/auth/login', {
         //     isRegister: false,
         //     status: 'success',
         //     message: 'Email has been resent. Please check your email for further instructions.',
@@ -207,14 +204,11 @@ exports.resendEmail = async function resendEmail(req, res, next) {
 };
 
 exports.getCreateAccount = (req, res) => {
-    res.render("pages/auth/create-account");
+    res.render("pages/users/create-account");
 };
 
 exports.createAccount = async (req, res, next) => {
-    const {
-        fullName,
-        email
-    } = req.body;
+    const { fullName, email } = req.body;
 
     try {
         const existingUser = await User.findOne({ email });
@@ -253,13 +247,13 @@ exports.login = async (req, res, next) => {
         const salesperson = await User.findOne({ token });
 
         if (!salesperson || salesperson.tokenExpiration < Date.now()) {
-            flash.addFlash(req, "warning", "Please login by clicking on the link in your email.");
+            addFlash.addFlash(req, "warning", "Please login by clicking on the link in your email.");
             return res.redirect("/login");
         }
 
-        res.render("pages/auth/form", { token });
+        res.render("pages/auth/login", { token });
     } catch (error) {
-        flash.addFlash(req, "warning", "An error occurred while logging in.");
+        addFlash.addFlash(req, "warning", "An error occurred while logging in.");
         next(error);
     }
 };
@@ -274,7 +268,7 @@ exports.loginSubmit = async (req, res, next) => {
         const salesperson = await User.findOne({ token });
 
         if (!salesperson || salesperson.tokenExpiration < Date.now()) {
-            flash.addFlash(req, "warning", "Please login by clicking on the link in your email.");
+            addFlash.addFlash(req, "warning", "Please login by clicking on the link in your email.");
             return res.redirect("/login");
         }
 
@@ -283,10 +277,10 @@ exports.loginSubmit = async (req, res, next) => {
         salesperson.tokenExpiration = undefined;
         await salesperson.save();
 
-        flash.addFlash(req, "success", "Password updated. You can now log in using your" + " credentials.");
+        addFlash.addFlash(req, "success", "Password updated. You can now log in using your" + " credentials.");
         res.redirect("/login");
     } catch (error) {
-        flash.addFlash(req, "warning", "An error occurred while logging in.");
+        addFlash.addFlash(req, "warning", "An error occurred while logging in.");
         next(error);
     }
 };
@@ -381,7 +375,12 @@ exports.unlockAccount = async (req, res) => {
     }
 };
 
-exports.apiUpdateSetting = async (req, res) => {
+
+exports.getApiSetting = async (req, res) => {
+    res.json({ ...req.user.settings });
+};
+
+exports.postApiSetting = async (req, res) => {
     try {
         const userId = req.user._id;
         const { darkMode } = req.body;
@@ -402,11 +401,4 @@ exports.apiUpdateSetting = async (req, res) => {
     }
 };
 
-exports.getApiUsers = async (req, res) => {
-    try {
-        const users = await User.find();
-        res.json(users);
-    } catch (error) {
-        res.json({});
-    }
-};
+

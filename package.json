@@ -5,6 +5,13 @@
     "debug": "nodemon --inspect app.js",
     "debugAndDev": "DEBUG=express:* node app.js"
   },
+  "nodemonConfig": {
+    "verbose": true,
+    "ext": "js, json",
+    "ignore": [
+      "**/js/**"
+    ]
+  },
   "dependencies": {
     "@faker-js/faker": "^8.1.0",
     "@popperjs/core": "^2.11.8",
@@ -34,7 +41,6 @@
     "method-override": "^3.0.0",
     "mjml": "^4.14.1",
     "moment": "^2.29.4",
-    "mongodb": "^6.2.0",
     "mongoose": "^7.5.3",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
@@ -69,6 +75,7 @@
   "author": "huy.ntq <huy.ntq02@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^8.53.0",
     "sass": "^1.69.4"
   }
 }

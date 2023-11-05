@@ -1,4 +1,4 @@
-function showToast(message, type) {
+function showToast(type, message) {
     const toast = $(`
         <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
@@ -12,13 +12,13 @@ function showToast(message, type) {
             </div>
         </div>
     `);
-    
+
     $(".toast-container")
         .append(toast);
-    
+
     const toastInstance = new bootstrap.Toast(toast[0], {
         autohide: true,
-        delay   : 5000
+        delay: 5000
     });
     // console.log("=>(index.hbs:377) toastInstance", toastInstance);
     toastInstance.show();

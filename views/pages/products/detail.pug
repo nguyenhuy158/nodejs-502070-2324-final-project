@@ -1,48 +1,50 @@
 extends ../layout
 
 block content 
-    .container
-        h2 Product Details
-        .row.mb-3
-            .col-md-6
-                h4 Barcode:
-                p= product.barcode
+    .content
+        include ../../partials/nav
+        .container
+            h2 Product Details
+            .row.mb-3
+                .col-md-6
+                    h4 Barcode:
+                    p= product.barcode
 
-                h4 Product Name:
-                p= product.productName
+                    h4 Product Name:
+                    p= product.productName
 
-                h4 Import Price:
-                p= product.importPrice
+                    h4 Import Price:
+                    p= product.importPrice
 
-                h4 Thumbnail:
-                p click to change image
-                for imageUrl in product.imageUrls
-                    button.border-0.btn-change-thumbnail
-                        img(src=imageUrl, width=100, height=100 alt='Product Image', class='img-fluid')
-                form#upload-form
-                    input#hidden-file-input.form-control(type='file' name='imageUrls' hidden multiple)
-                    button#btn-add-thumbnail.m-3.btn.btn-outline-primary.btn-add-thumbnail(type='button') +
+                    h4 Thumbnail:
+                    p click to change image
+                    for imageUrl in product.imageUrls
+                        button.border-0.btn-change-thumbnail
+                            img(src=imageUrl, width=100, height=100 alt='Product Image', class='img-fluid')
+                    form#upload-form
+                        input#hidden-file-input.form-control(type='file' name='imageUrls' hidden multiple)
+                        button#btn-add-thumbnail.m-3.btn.btn-outline-primary.btn-add-thumbnail(type='button') +
 
-                h4 Select main thumbnail:
-                select#change-main-thumbnail.form-select
-                    for imageUrl, index in product.imageUrls
-                        option(value=imageUrl)=`Image ${index}`
-            .col-md-6
-                h4 Retail Price:
-                p= product.retailPrice
+                    h4 Select main thumbnail:
+                    select#change-main-thumbnail.form-select
+                        for imageUrl, index in product.imageUrls
+                            option(value=imageUrl)=`Image ${index}`
+                .col-md-6
+                    h4 Retail Price:
+                    p= product.retailPrice
 
-                h4 Category:
-                p= product.category.name
+                    h4 Category:
+                    p= product.category.name
 
-                h4 Creation Date:
-                p= product.createdAtFormatted
+                    h4 Creation Date:
+                    p= product.createdAtFormatted
 
-                h4 Last Update Date:
-                p= product.updatedAtFormatted
+                    h4 Last Update Date:
+                    p= product.updatedAtFormatted
 
-        .row.mb-3
-            .col
-                a.btn.btn-primary(href='/products') Back to Product List
+            .row.mb-3
+                .col
+                    a.btn.btn-primary(href='/products') Back to Product List
 
     script.
         $(function () {
