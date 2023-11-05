@@ -1,6 +1,31 @@
 const { query, body, param, validationResult } = require('express-validator');
 const User = require('../models/user');
 
+
+exports.validateCreateProduct = [
+    body('name').notEmpty().isString(),
+    body('price').isNumeric(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    },
+];
+
+exports.validateUpdateProduct = [
+    body('name').optional().isString(),
+    body('price').optional().isNumeric(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    },
+];
+
 exports.validateCreateAccount = [
     body("fullName")
         .trim()
@@ -41,31 +66,6 @@ exports.validateCreateAccount = [
     }
 ];
 
-
-exports.validateCreateProduct = [
-    body('name').notEmpty().isString(),
-    body('price').isNumeric(),
-    (req, res, next) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-        next();
-    },
-];
-
-exports.validateUpdateProduct = [
-    body('name').optional().isString(),
-    body('price').optional().isNumeric(),
-    (req, res, next) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-        next();
-    },
-];
-
 exports.validateLogin = [
     body("username")
         .trim()
@@ -76,7 +76,16 @@ exports.validateLogin = [
         .notEmpty()
         .withMessage("Password cannot be empty!")
         .isLength({ min: 2 })
-        .withMessage("Password must have at least 6 characters!")
+        .withMessage("Password must have at least 6 characters!"),
+    (req, res, next) => {
+        const result = validationResult(req);
+        if (result.errors.length === 0) {
+            next();
+        } else {
+            req.flash("error", result.errors[0].msg);
+            res.redirect('/login');
+        }
+    }
 ];
 
 exports.validatePasswordReset = [
@@ -92,7 +101,16 @@ exports.validatePasswordReset = [
                 throw new Error("E-mail not exits");
             }
             return true;
-        })
+        }),
+    (req, res, next) => {
+        const result = validationResult(req);
+        if (result.errors.length === 0) {
+            next();
+        } else {
+            req.flash("success", result.errors[0].msg);
+            res.redirect('/password-reset');
+        }
+    }
 ];
 
 exports.validationChangePassword = [

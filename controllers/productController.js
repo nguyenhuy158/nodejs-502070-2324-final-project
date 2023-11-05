@@ -9,7 +9,7 @@ const fs = require("fs");
 const {
     uploadImage,
     removeImageByUrl
-} = require("../middlewares/utils");
+} = require("../utils/utils");
 const { categories } = require("./productCategoryController");
 
 

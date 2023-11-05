@@ -1,10 +1,8 @@
-require("dotenv")
-    .config();
+require("dotenv").config();
 const express = require("express");
 const router = require("./routes");
 const cookieParser = require("cookie-parser");
-const { connectDb } = require("./middlewares/server/config/db");
-const logger = require("./middlewares/handler");
+const { connectDb } = require("./config/db");
 const sassMiddleware = require("node-sass-middleware");
 const path = require("path");
 const config = require("./config/config");
@@ -14,7 +12,7 @@ const session = require("express-session");
 const User = require("./models/user");
 const moment = require("moment/moment");
 // const flash = require("./middlewares/flash");
-const { currentTime } = require("./middlewares/format");
+const { currentTime } = require("./utils/format");
 
 const bcrypt = require("bcryptjs");
 const {
@@ -25,7 +23,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const flash = require("connect-flash");
 
 const { v2: cloudinary } = require("cloudinary");
-const { uploadImage } = require("./middlewares/utils");
+const { uploadImage } = require("./utils/utils");
 
 // process.on("uncaughtException", (error) => {
 //     winstonLogger.error("Uncaught Exception:", error);
@@ -124,4 +122,6 @@ app.use(express.static(path.join(__dirname, "public"), config.staticOptions));
 
 app.use(router);
 
-app.listen(process.env.PORT || 8080, logger.listen);
+app.listen(process.env.PORT || 8080, () => {
+    console.log(`[LISTEN] Server is running on http://localhost:${process.env.PORT}`);
+});

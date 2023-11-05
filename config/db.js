@@ -1,28 +1,28 @@
 require("dotenv")
     .config();
 const mongoose = require("mongoose");
-const User = require("../../../models/user");
-const ProductCategory = require("../../../models/productCategory");
+const User = require("../models/user");
+const ProductCategory = require("../models/productCategory");
 
 exports.connectDb = async () => {
     try {
         mongoose.set("strictQuery", false);
         const connect = await mongoose.connect(process.env.MONGODB_URI);
         mongoose.connection.on("connected", () => {
-            console.log("[db] Connected to DB successfully.");
+            console.log("[DB] Connected to DB successfully.");
         });
         mongoose.connection.on("error", (error) => {
-            console.log(`[db] Error while connecting to DB. ${error}`);
+            console.log(`[DB] Error while connecting to DB. ${error}`);
         });
         mongoose.connection.on("disconnected", () => {
-            console.log("[db] DB connection disconnected.");
+            console.log("[DB] DB connection disconnected.");
         });
 
-        console.log(`[db] Database connected ${connect.connection.host}`);
+        console.log(`[DB] Database connected ${connect.connection.host}`);
         checkAndCreateAdminUser();
         checkAndCreateDefaultCategory();
     } catch (error) {
-        console.log("[db] error:", error);
+        console.log("[DB] error:", error);
     }
 };
 
@@ -71,11 +71,11 @@ async function checkAndCreateAdminUser() {
             });
 
             await newUser.save();
-            console.log("[db] Admin user created.");
+            console.log("[DB] Admin user created.");
         } else {
-            console.log("[db] Admin user already exists.");
+            console.log("[DB] Admin user already exists.");
         }
     } catch (err) {
-        console.error("[db] Error checking/creating admin user:", err);
+        console.error("[DB] Error checking/creating admin user:", err);
     }
 }

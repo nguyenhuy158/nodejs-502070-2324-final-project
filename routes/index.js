@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
-const routerController = require("../controllers/routerController");
+const indexController = require("../controllers/indexController");
+const { checkFirstLogin } = require("../controllers/indexController");
 const errors = require("./errors");
-const { UserValidator } = require("../middlewares/validator");
 const { upload } = require("../config/upload");
 const authRoutes = require("./auth");
 const userRouter = require("./user");
@@ -15,15 +15,13 @@ const customerRouter = require("./customer");
 const productRouter = require("./product");
 const { autoViews } = require("../middlewares/auto-views");
 const { flashMiddleWare } = require("../middlewares/flash");
-const logger = require("../middlewares/handler");
-const { logRequestDetails } = require("../middlewares/access-log");
+const { logRequestDetails } = require("../middlewares/log");
 const { winstonLog, setLocalCategories } = require("../controllers/indexController");
-const path = require("path");
-const config = require("../config/config");
 const { updateCurrentUser } = require("../middlewares/authentication");
 const { ensureAuthenticated } = require("../controllers/authController");
 const authController = require("../controllers/authController");
 const { limiter } = require("../config/config");
+const { morganLog } = require("../middlewares/log");
 const { requireRole } = require("../middlewares/authorization");
 const { validationChangePassword } = require('../middlewares/validation');
 
@@ -51,15 +49,15 @@ router
         authController.postChangePassword)
 
     // other middleware and server
-    .use(routerController.checkFirstLogin)
+    .use(checkFirstLogin)
     .use(autoViews)
-    .get("/log", logger.morganLog)
-    .get("/", routerController.home)
+    .get("/log", morganLog)
+    .get("/", indexController.home)
     .get("/profile", userController.viewProfile)
     .post("/upload-profile-pic", upload.single("profilePic"), userController.changeProfilePicture)
-    .get("/random-product", routerController.randomProduct)
-    .get("/create-sample-data", routerController.createSampleData)
-    .get("/search", routerController.searchResults)
+    .get("/random-product", indexController.randomProduct)
+    .get("/create-sample-data", indexController.createSampleData)
+    .get("/search", indexController.searchResults)
     .post("/api/setting", userController.postApiSetting)
     .get("/api/setting", userController.getApiSetting);
 

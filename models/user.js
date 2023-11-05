@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { formatTimestamp } = require("../middlewares/format");
+const { formatTimestamp } = require("../utils/format");
 const passportLocalMongoose = require("passport-local-mongoose");
 require("dotenv")
     .config();

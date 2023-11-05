@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { formatTimestamp } = require("../middlewares/format");
+const { formatTimestamp } = require("../utils/format");
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const User = require('../models/user');
-const { generateToken, getFullUrlForMailConfirm, sendEmail } = require("../middlewares/utils");
+const { generateToken, getFullUrlForMailConfirm, sendEmail } = require("../utils/utils");
 
 
 exports.checkAndParseObjectId = async (req, res, next) => {

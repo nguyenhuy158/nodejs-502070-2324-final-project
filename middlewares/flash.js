@@ -1,8 +1,3 @@
-exports.addFlash = function (req, type, message) {
-    req.flash(type, message);
-    console.log("=>(flash.js:5) type, message", type, message);
-};
-
 exports.flashMiddleWare = (req, res, next) => {
     // res.locals.user = req.session.user;
     // res.locals.flash = req.session.flash;
