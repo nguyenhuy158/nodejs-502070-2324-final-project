@@ -1,7 +1,6 @@
 const { query, body, param, validationResult } = require('express-validator');
 const User = require('../models/user');
 
-
 exports.validateCreateProduct = [
     body('name').notEmpty().isString(),
     body('price').isNumeric(),

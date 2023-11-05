@@ -82,7 +82,6 @@ exports.putApiProduct = async (req, res) => {
     }
 };
 
-
 exports.deleteApiProductById = async (req, res) => {
     try {
         const id = req.id;

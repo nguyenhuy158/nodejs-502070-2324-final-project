@@ -1,29 +1,33 @@
 const express = require("express");
 const router = express.Router();
+
 const userController = require("../controllers/userController");
 const indexController = require("../controllers/indexController");
-const { checkFirstLogin } = require("../controllers/indexController");
-const errors = require("./errors");
-const { upload } = require("../config/upload");
+
+const errorRouter = require("./error");
 const authRoutes = require("./auth");
 const userRouter = require("./user");
+const checkoutRouter = require("./checkout");
+const productRouter = require("./product");
+const authController = require("../controllers/authController");
+
 const apiProductRouter = require("./apiProduct");
 const apiUserRouter = require("./apiUser");
 const apiProductCategoryRouter = require("./apiProductCategory");
-const checkoutRouter = require("./checkout");
-const customerRouter = require("./customer");
-const productRouter = require("./product");
-const { autoViews } = require("../middlewares/auto-views");
-const { flashMiddleWare } = require("../middlewares/flash");
-const { logRequestDetails } = require("../middlewares/log");
-const { winstonLog, setLocalCategories } = require("../controllers/indexController");
+const apiCustomerRouter = require("./apiCustomer");
+
+const { upload } = require("../config/upload");
+const { checkFirstLogin } = require("../controllers/indexController");
 const { updateCurrentUser } = require("../middlewares/authentication");
 const { ensureAuthenticated } = require("../controllers/authController");
-const authController = require("../controllers/authController");
+const { autoViews } = require("../middlewares/auto-views");
+const { logRequestDetails } = require("../middlewares/log");
 const { limiter } = require("../config/config");
 const { morganLog } = require("../middlewares/log");
 const { requireRole } = require("../middlewares/authorization");
 const { validationChangePassword } = require('../middlewares/validation');
+const { flashMiddleWare } = require("../middlewares/flash");
+const { winstonLog, setLocalCategories } = require("../controllers/indexController");
 
 router
     .use(logRequestDetails)
@@ -37,17 +41,14 @@ router
         } catch (err) {
             next(err);
         }
-    });
-
-// auth router
-router
+    })
+    // auth router
     .use(authRoutes)
     .use(ensureAuthenticated)
     .get("/change-password", authController.changePassword)
     .post("/change-password",
         validationChangePassword,
         authController.postChangePassword)
-
     // other middleware and server
     .use(checkFirstLogin)
     .use(autoViews)
@@ -59,23 +60,22 @@ router
     .get("/create-sample-data", indexController.createSampleData)
     .get("/search", indexController.searchResults)
     .post("/api/setting", userController.postApiSetting)
-    .get("/api/setting", userController.getApiSetting);
+    .get("/api/setting", userController.getApiSetting)
 
-// main router
-router
+    // main router
     .use(setLocalCategories)
     .use("/users", requireRole(process.env.ROLE_ADMIN), userRouter)
     .use("/products", requireRole(process.env.ROLE_ADMIN), productRouter)
-    .use("/customers", customerRouter)
-    .use("/checkout", checkoutRouter);
+    .use("/checkout", checkoutRouter)
 
-router
+    // api router
     .use("/api/products", apiProductRouter)
     .use("/api/users", apiUserRouter)
-    .use("/api/productCategories", apiProductCategoryRouter);
+    .use("/api/productCategories", apiProductCategoryRouter)
+    .use("/api/customers", apiCustomerRouter)
 
-// error router
-router
-    .use(errors);
+    // error router
+    .use(errorRouter);
+
 
 module.exports = router;
