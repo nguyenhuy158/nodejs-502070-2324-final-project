@@ -2,6 +2,10 @@ const { transporter } = require("../config/email");
 const { v2: cloudinary } = require("cloudinary");
 
 
+exports.isNumeric = function isNumeric(value) {
+    return !isNaN(value) && typeof value !== 'boolean';
+};
+
 exports.getFullUrlForMailConfirm = function getFullUrlForMailConfirm(req, token) {
     const baseUrl = `${req.protocol + "://" + req.get("host")}/email-confirm?token=${token}`;
     return baseUrl;
