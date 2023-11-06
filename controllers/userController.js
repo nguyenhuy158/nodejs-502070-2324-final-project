@@ -54,7 +54,7 @@ exports.viewProfile = async (req, res, next) => {
 };
 
 exports.deleteUser = async (req, res, next) => {
-    const id = req.params.id;
+    const id = req.params[0];
     console.log("=>(userController.js:55) id", id);
     console.log("=>(userController.js:56) ObjectId.isValid(id)", ObjectId.isValid(id));
     if (!ObjectId.isValid(id)) {
@@ -101,7 +101,7 @@ exports.createUser = function (req, res, next) {
 };
 
 exports.getUser = async (req, res, next) => {
-    const userId = req.params.id;
+    const userId = req.params[0];
     if (ObjectId.isValid(userId)) {
         const user = await User.findById(userId);
         return res.render("pages/users/detail", { user });
@@ -166,7 +166,7 @@ exports.register = function (req, res, next) {
 };
 
 exports.resendEmail = async function resendEmail(req, res, next) {
-    const id = req.params.id;
+    const id = req.params[0];
 
     try {
         const user = await User.findById(id);
@@ -286,7 +286,7 @@ exports.loginSubmit = async (req, res, next) => {
 };
 
 exports.lockAccount = async (req, res) => {
-    const id = req.params.id;
+    const id = req.params[0];
 
     if (!ObjectId.isValid(id)) {
         res.status(400)
@@ -330,7 +330,7 @@ exports.lockAccount = async (req, res) => {
 };
 
 exports.unlockAccount = async (req, res) => {
-    const id = req.params.id;
+    const id = req.params[0];
     console.log("=>(userController.js:315) id", id);
 
     if (!ObjectId.isValid(id)) {

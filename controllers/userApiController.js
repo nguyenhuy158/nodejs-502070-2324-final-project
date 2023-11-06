@@ -5,7 +5,7 @@ const { generateToken, getFullUrlForMailConfirm, sendEmail } = require("../utils
 
 
 exports.checkAndParseObjectId = async (req, res, next) => {
-    const id = req.params.id;
+    const id = req.params[0];
     if (ObjectId.isValid(id)) {
         req.id = new ObjectId(id);
         try {

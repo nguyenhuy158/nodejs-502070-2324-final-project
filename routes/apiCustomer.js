@@ -21,11 +21,11 @@ router
     .get(/^\/([0-9a-fA-F]{24})$/,
         apiCustomerController.checkAndParseObjectId,
         apiCustomerController.getApiCustomer)
-    .put("/:id",
+    .put(/^\/([0-9a-fA-F]{24})$/,
         apiCustomerController.checkAndParseObjectId,
         apiCustomerController.putApiCustomer
     )
-    .delete("/:id",
+    .delete(/^\/([0-9a-fA-F]{24})$/,
         apiCustomerController.checkAndParseObjectId,
         apiCustomerController.deleteApiCustomerById);
 

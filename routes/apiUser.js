@@ -8,14 +8,14 @@ router
     .post("/",
         validateCreateAccount,
         userApiController.postApiUser)
-    .get("/:id",
+    .get(/^\/([0-9a-fA-F]{24})$/,
         userApiController.checkAndParseObjectId,
         userApiController.getApiUser)
-    .put("/:id",
+    .put(/^\/([0-9a-fA-F]{24})$/,
         userApiController.checkAndParseObjectId,
         userApiController.putApiUser
     )
-    .delete("/:id",
+    .delete(/^\/([0-9a-fA-F]{24})$/,
         userApiController.checkAndParseObjectId,
         userApiController.deleteApiUserById)
     .get("/resent/:id",

@@ -62,7 +62,7 @@ exports.createV1 = async function (req, res, next) {
     const categories = await ProductCategory.find()
         .sort({ name: 1 });
 
-    const productId = req.params.id;
+    const productId = req.params[0];
     const {
         barcode,
         productName,
@@ -128,7 +128,7 @@ exports.createV1 = async function (req, res, next) {
 
 exports.update = async function (req, res, next) {
 
-    const productId = req.params.id;
+    const productId = req.params[0];
 
     const {
         productName,
@@ -182,7 +182,7 @@ exports.edit = async function (req, res, next) {
         const categories = await ProductCategory.find()
             .sort({ name: 1 });
 
-        const id = req.params.id;
+        const id = req.params[0];
 
         const product = await Product.findById({ _id: id });
 
@@ -199,7 +199,7 @@ exports.edit = async function (req, res, next) {
 exports.detail = async function (req, res, next) {
 
     try {
-        const id = req.params.id;
+        const id = req.params[0];
 
         const product = await Product.findById({ _id: id });
         if (req.xhr) {
@@ -218,7 +218,7 @@ exports.detail = async function (req, res, next) {
 
 
 exports.delete = async function (req, res, next) {
-    const id = req.params.id;
+    const id = req.params[0];
     console.log("=>(productController.js:203) id", id);
 
     if (!ObjectId.isValid(id)) {
@@ -364,7 +364,7 @@ exports.processImageUrlsBeforeStore = (files) => {
 
 exports.addThumbnails = async (req, res) => {
     const imageUrls = await processImageUrlsBeforeStore(req.files);
-    const productId = req.params.id;
+    const productId = req.params[0];
     console.log(`=>(productController.js:369) productId`, productId);
     try {
         const result = await Product.updateOne({ _id: productId }, { $push: { imageUrls: { $each: imageUrls } } });
@@ -385,7 +385,7 @@ exports.addThumbnails = async (req, res) => {
 
 exports.removeThumbnails = async (req, res) => {
     const imageUrls = req.body.imageUrls;
-    const productId = req.params.id;
+    const productId = req.params[0];
     try {
         const result = await Product.updateOne({ _id: productId }, { $pull: { imageUrls: imageUrls } });
         console.log(`=>(productController.js:371) result`, result);
@@ -406,7 +406,7 @@ exports.removeThumbnails = async (req, res) => {
 
 
 exports.mainThumbnail = async (req, res) => {
-    const productId = req.params.id;
+    const productId = req.params[0];
     const value = req.body.imageUrls;
 
     try {
