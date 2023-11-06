@@ -1,168 +1,152 @@
 extends ../layout
+
 block content 
-    .content
-        include ../../partials/nav
-        link(rel="stylesheet" href="/css/checkout.css")
-        .container
-                h1.heading
-                        ion-icon(name='cart-outline') 
-                        |       Checkout
-                .item-flex
-                        section.checkout     
-                                h2.section-heading Checkout Details
-                                .payment-form
-                                        form#customer-info(role='form' action='/checkout' method='post')
-                                                .phoneNumber-form
-                                                        label.label-default(for='input-phone') Phone
-                                                        .input-group
-                                                                input#phone-number.input-default.form-control(name='phone' type='text')
-                                                                button#load-customer.btn.btn-outline-secondary(type='button')
-                                                                        ion-icon(name='reload-circle-outline')
-                                                .fullName-form
-                                                        label.label-default(for='full-name') Full Name
-                                                                input#fullname.input-default(name='fullName' type='text' value='')
-                                                .address-form
-                                                        label.label-default(for='address') Address
-                                                                input#address.input-default(name='address' type='text' value='')
-                                                .note-form
-                                                        label.label-default(for='note') Note
-                                                                input#note.input-default(name='note' type='text' value='' cols="30" rows="5")
-                                button.btn.btn-primary(type='submit') Checkout
-                        section.cart 
-                                .cart-item-box
-                                        h2.section-heading Product Summary 
-                                        .product-card
-                                                .card
-                                                        .img-box
-                                                                img.product-img(src="https://images.macrumors.com/t/TkNh1oQ0-9TnnBjDnLyuz6yLkjE=/1600x0/article-new/2023/09/iPhone-15-General-Feature-Black.jpg" alt="Iphone 15 Proooooo" width="80")
-                                                        .detail
-                                                                h4.product-name Iphone 15 Pro
-                                                                .wrapper
-                                                                        .product-qty
-                                                                                button#decrement
-                                                                                        ion-icon(name='remove-outline')
-                                                                                span#quantity 1
-                                                                                button#increment
-                                                                                        ion-icon(name='add-outline')
-                                                                        .price
-                                                                                |       $
-                                                                                span#price 1.25
-                                                        button.product-close-btn
-                                                                ion-icon(name='close-outline')
-                                        .product-card
-                                                .card
-                                                        .img-box
-                                                                img.product-img(src="https://images.samsung.com/uk/smartphones/galaxy-s22-ultra/buy/02_carousel/01_group/s22_ultra_carousel_groupkv_mo.jpg?imwidth=720?$LazyLoad_Home_JPG$" alt="Samsung S20 Ultraaaaaa" width="80")
-                                                        .detail
-                                                                h4.product-name Samsung S20 Ultra
-                                                                .wrapper
-                                                                        .product-qty
-                                                                                button#decrement
-                                                                                        ion-icon(name='remove-outline')
-                                                                                span#quantity 1
-                                                                                button#increment
-                                                                                        ion-icon(name='add-outline')
-                                                                        .price
-                                                                                |       $
-                                                                                span#price 1.50
-                                                        button.product-close-btn
-                                                                ion-icon(name='close-outline')
-                                .wrapper
-                                        .discount-token
-                                                label.label-default(for='discount-token') Gift Card / Discount code
-                                                .wrapper-flex
-                                                                input#discount-token.input-default(name='discount-token' type='text' value='')
-                                                                button.btn.btn-outline Apply
-                                        .amount
-                                                .subtotal
-                                                        span Subtotal
-                                                        span 
-                                                                |       $
-                                                                span#subtotal 2.05
+	.content
+		include ../../partials/nav
+		link(rel="stylesheet" href="/css/checkout.css")
+		.container
+			h1.heading
+				ion-icon(name='cart-outline') 
+				|       Checkout
+			.item-flex
 
-                                                .tax
-                                                        span Tax
-                                                        span 
-                                                                |       $
-                                                                span#tax 0.10
+				//- customer information
+				section.checkout     
+					h2.section-heading Checkout Details
+					.payment-form
+						form#customer-info(role='form' action='/checkout' method='post')
+							.phoneNumber-form
+								label.label-default(for='input-phone') Phone
+								.input-group
+									input#phone-number.input-default.form-control(name='phone' type='text')
+									button#load-customer.btn.btn-outline-secondary(type='button')
+										ion-icon(name='reload-circle-outline')
+							.fullName-form
+								label.label-default(for='full-name') Full Name
+									input#fullname.input-default(name='fullName' type='text' value='')
+							.address-form-regions
+								label.label-default(for='address') Regions
+									select#regions.form-select(name='regions' data-placeholder="Select a Regions")
+							.address-form-districts
+								label.label-default(for='address') Districts
+									select#districts.form-select(name='districts' data-placeholder="Select a Districts")
 
-                                                .shipping
-                                                        span Shipping
-                                                        span 
-                                                                |       $
-                                                                span#shipping 0.00
-                                                .total
-                                                        span Total
-                                                        span 
-                                                                |       $
-                                                                span#total 2.15
+							.address-form-wards
+								label.label-default(for='address') Wards
+									select#wards.form-select(name='wards' data-placeholder="Select a Wards")
 
-        //- .container-fluid
-        //- .row
-        //-     .col-md-8
-        //-         ul.list-unstyled
-        //-             li.list-item Product 1
-        //-             li.list-item Product 1
-        //-             li.list-item Product 1
-        //-             li.list-item Product 1
-        //-             li.list-item Product 1
-        //- .col-md-4
-        //-     form#customer-info(role='form' action='/checkout' method='post')
-        //-         input(name="id" type="text" hidden)
-        //-         .form-group
-        //-             label(for='input-phone') Phone
-        //-             .input-group
-        //-                 input#input-phone.form-control(name='phone' type='text')
-        //-                 button#load-customer.btn.btn-outline-input.form-control(name="fullName" type="text" value='')secondary(type='button')
-        //-                     ion-icon(name='reload-circle-outline')
-        //-         .form-group
-        //-             label.form-label(for="") Full Name
-        //-             input.form-control(name="fullName" type="text" value='')
-        //-         .form-group
-        //-             label.form-label(for="") Address
-        //-             input.form-control(name="address" type="text" value='')
-        //-         .form-group
-        //-             label.form-label(for="") Note
-        //-             textarea.form-control(name="note" type="text" value='' cols="30" rows="5")
-        //-         button.my-2.btn.btn-primary(type='submit') Checkout
-    script(type='module' src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js')
-    script(nomodule='' src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js')
-    script.
-        $(document)
-                .ready(() => {
-                    console.log('Checkout page');
-                    $('#load-customer')
-                            .click(() => {
-                                const phone = $('#input-phone')
-                                        .val();
-                                $.ajax({
-                                    url: '/checkout/get-customer',
-                                    method: 'POST',
-                                    data: {phone},
-                                    success: function (response) {
-                                        const customer = response.customer;
-                                        if (customer) {
-                                            $(`input[name="fullName"]`)
-                                                    .val(customer.fullName);
-                                            $(`input[name="address"]`)
-                                                    .val(customer.address);
-                                            $(`input[name="fullName"]`)
-                                                    .val(customer.fullName);
-                                            $(`input[name="fullName"]`)
-                                                    .val(customer.fullName);
-                                        } else {
-                                            $('#customer-info')
-                                                    .trigger("reset");
-                                            $('#input-phone')
-                                                    .val(phone)
-                                        }
-                                    },
-                                    error: function (error) {
-                                        $('#customer-info')
-                                                .trigger("reset");
-                                        $('#input-phone')
-                                                .val(phone)
-                                    }
-                                })
-                            })
-                })
+							.note-form
+								label.label-default(for='note') Note
+									input#note.input-default(name='note' type='text' value='' cols="30" rows="5")
+					button.btn.btn-primary(type='submit') Checkout
+
+				//- view product list in cart
+				section.cart 
+					.cart-item-box
+						h2.section-heading Product Summary 
+						.product-card
+							.card
+								.img-box
+									img.product-img(src="https://images.macrumors.com/t/TkNh1oQ0-9TnnBjDnLyuz6yLkjE=/1600x0/article-new/2023/09/iPhone-15-General-Feature-Black.jpg" alt="Iphone 15 Proooooo" width="80")
+								.detail
+									h4.product-name Iphone 15 Pro
+									.wrapper
+										.product-qty
+											button#decrement
+												ion-icon(name='remove-outline')
+											span#quantity 1
+											button#increment
+												ion-icon(name='add-outline')
+										.price
+											|       $
+											span#price 1.25
+								button.product-close-btn
+									ion-icon(name='close-outline')
+						.product-card
+							.card
+								.img-box
+									img.product-img(src="https://images.samsung.com/uk/smartphones/galaxy-s22-ultra/buy/02_carousel/01_group/s22_ultra_carousel_groupkv_mo.jpg?imwidth=720?$LazyLoad_Home_JPG$" alt="Samsung S20 Ultraaaaaa" width="80")
+								.detail
+									h4.product-name Samsung S20 Ultra
+									.wrapper
+										.product-qty
+											button#decrement
+												ion-icon(name='remove-outline')
+											span#quantity 1
+											button#increment
+												ion-icon(name='add-outline')
+										.price
+											|       $
+											span#price 1.50
+								button.product-close-btn
+									ion-icon(name='close-outline')
+					.wrapper
+						.discount-token
+							label.label-default(for='discount-token') Gift Card / Discount code
+							.wrapper-flex
+								input#discount-token.input-default(name='discount-token' type='text' value='')
+								button.btn.btn-outline Apply
+						.amount
+							.subtotal
+								span Subtotal
+								span 
+									|       $
+									span#subtotal 2.05
+
+							.tax
+								span Tax
+								span 
+									|       $
+									span#tax 0.10
+
+							.shipping
+								span Shipping
+								span 
+									|       $
+									span#shipping 0.00
+							.total
+								span Total
+								span 
+									|       $
+									span#total 2.15
+
+	script(src="/js/checkout.js") 
+	script.
+		$(document)
+			.ready(() => {
+				console.log('Checkout page');
+				$('#load-customer')
+					.click(() => {
+						const phone = $('#input-phone')
+							.val();
+						$.ajax({
+							url: '/checkout/get-customer',
+							method: 'POST',
+							data: {phone},
+							success: function (response) {
+								const customer = response.customer;
+								if (customer) {
+									$(`input[name="fullName"]`)
+										.val(customer.fullName);
+									$(`input[name="address"]`)
+										.val(customer.address);
+									$(`input[name="fullName"]`)
+										.val(customer.fullName);
+									$(`input[name="fullName"]`)
+										.val(customer.fullName);
+								} else {
+									$('#customer-info')
+										.trigger("reset");
+									$('#input-phone')
+										.val(phone)
+								}
+							},
+							error: function (error) {
+								$('#customer-info')
+									.trigger("reset");
+								$('#input-phone')
+									.val(phone)
+							}
+						})
+					})
+			})
