@@ -1,71 +1,133 @@
 /* eslint-disable no-undef */
+
+function computeTotalBill(cart) {
+    let totalBill = 0;
+
+    if (cart && cart.products && Array.isArray(cart.products)) {
+        for (const productItem of cart.products) {
+            if (productItem.product && typeof productItem.quantity === 'number') {
+                totalBill += productItem.product.retailPrice * productItem.quantity;
+            }
+        }
+    }
+
+    return totalBill;
+}
+
+function loadInfoCart() {
+    $.ajax({
+        url: `/api/carts/current`,
+        type: 'GET',
+        success: (response) => {
+            console.log(`🚀 🚀 file: 🚀 response`, response.cart);
+            showToast('success', response.message);
+
+            if (response.cart?.products) {
+                response.cart?.products.forEach(p => {
+                    console.log(`🚀 🚀 file: checkout.js:26 🚀 p`, p);
+                    const productData = {
+                        imageUrl: p.product.imageUrls[0],
+                        name: p.product.productName,
+                        quantity: p.quantity,
+                        price: p.product.retailPrice,
+                    };
+                    $('#products-container').createProductCardAndAppend(productData);
+                });
+
+                $('#total-money').text(computeTotalBill(response.cart));
+            }
+        },
+        error: (error) => {
+            console.log(`🚀 🚀 file: 🚀 error`, error.responseJSON);
+            showToast('error', error.responseJSON?.message);
+        }
+    });
+}
+
+function loadInfoCustomer() {
+    const phone = $('#phone-number').val();
+
+    const validPhoneNumberPattern = /^0\d{9}$/;
+
+    if (!validPhoneNumberPattern.test(phone)) {
+        showToast('error', 'Invalid phone number format');
+        return;
+    }
+
+    $.ajax({
+        url: `/api/customers/${phone}`,
+        method: 'GET',
+        success: function (response) {
+            const customer = response.customer;
+
+            if (customer) {
+                showToast('success', response.message);
+
+                $(`input[name="fullName"]`).val(customer.fullName);
+                $(`input[name="address"]`).val(customer.address);
+            } else {
+                showToast('error', response.message);
+            }
+        },
+        error: function (error) {
+            showToast('error', error.responseJSON?.message);
+        }
+    });
+}
+
+
 $(() => {
 
-    $('#load-product').on('click', function () {
+    $('.btn-checkout').on('click', function () {
         $.ajax({
-            url: `/api/carts/current`,
-            type: 'GET',
+            url: `/checkout`,
+            type: 'POST',
+            data: {
+                phone: $('#phone-number').val(),
+                givenAmount: $('#given-money').text()
+            },
             success: (response) => {
-                console.log(`🚀 ------------------------------------------------------🚀`);
                 console.log(`🚀 🚀 file: 🚀 response`, response);
-                console.log(`🚀 ------------------------------------------------------🚀`);
                 showToast('success', response.message);
             },
             error: (error) => {
-                console.log(`🚀 ------------------------------------------------🚀`);
                 console.log(`🚀 🚀 file: 🚀 error`, error.responseJSON);
-                console.log(`🚀 ------------------------------------------------🚀`);
                 showToast('error', error.responseJSON?.message);
             }
         });
     });
 
-    const productData = {
-        imageUrl: 'https://images.macrumors.com/t/TkNh1oQ0-9TnnBjDnLyuz6yLkjE=/1600x0/article-new/2023/09/iPhone-15-General-Feature-Black.jpg',
-        name: 'Iphone 15 Pro',
-        quantity: 1,
-        price: 1.25,
-    };
+    $('#input-given-money').on('input', function () {
+        const total = parseFloat($('#total-money').text());
+        const given = parseFloat($(this).val());
 
-    $('#products-container').createProductCardAndAppend(productData);
+        if (isNaN(given)) {
+            $('#given-money').text('');
+            $('#exchange-money').text('');
+            $('.btn-checkout').prop('disabled', true);
+        } else {
+            const exchange = given - total;
+            $('#given-money').text(given);
+            $('#exchange-money').text(exchange >= 0 ? exchange : 0);
 
-    function loadInforCustomer() {
-        const phone = $('#phone-number').val();
-
-        const validPhoneNumberPattern = /^0\d{9}$/;
-
-        if (!validPhoneNumberPattern.test(phone)) {
-            showToast('error', 'Invalid phone number format');
-            return;
+            $('.btn-checkout').prop('disabled', exchange < 0);
         }
+    });
 
-        $.ajax({
-            url: `/api/customers/${phone}`,
-            method: 'GET',
-            success: function (response) {
-                const customer = response.customer;
+    $('#load-product').on('click', function () {
+        loadInfoCart();
+    });
+    loadInfoCart();
 
-                if (customer) {
-                    showToast('success', response.message);
 
-                    $(`input[name="fullName"]`).val(customer.fullName);
-                    $(`input[name="address"]`).val(customer.address);
-                } else {
-                    showToast('error', response.message);
-                }
-            },
-            error: function (error) {
-                showToast('error', error.responseJSON?.message);
-            }
-        });
-    }
+
 
     $('#phone-number').on('blur', function () {
-        loadInforCustomer();
+        loadInfoCustomer();
     });
 
     $('#load-customer').on('click', function () {
-        loadInforCustomer();
+        loadInfoCustomer();
     });
 
     $('#regions').select2({
@@ -199,8 +261,10 @@ $(() => {
         const incrementBtn = $('<button id="increment">')
             .append($('<ion-icon name="add-outline">'));
         const price = $('<div class="price">');
-        const dollarSign = $('<span>').text('$');
-        const priceValue = $('<span id="price">').text(productData.price.toFixed(2));
+        const priceValue = $('<span id="price">')
+            .text(productData.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+
+
         const closeBtn = $('<button class="product-close-btn">')
             .append($('<ion-icon name="close-outline">'));
 
@@ -215,10 +279,17 @@ $(() => {
         productQty.append(quantity);
         productQty.append(incrementBtn);
         wrapper.append(price);
-        price.append(dollarSign);
         price.append(priceValue);
         card.append(closeBtn);
 
         return this.append(productCard);
     };
 })(jQuery);
+// const productData = {
+//     imageUrl: 'https://images.macrumors.com/t/TkNh1oQ0-9TnnBjDnLyuz6yLkjE=/1600x0/article-new/2023/09/iPhone-15-General-Feature-Black.jpg',
+//     name: 'Iphone 15 Pro',
+//     quantity: 1,
+//     price: 1.25,
+// };
+// $('#products-container').createProductCardAndAppend(productData);
+

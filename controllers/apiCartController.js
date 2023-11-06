@@ -10,7 +10,7 @@ exports.checkAndParseObjectId = async (req, res, next) => {
     if (ObjectId.isValid(id)) {
         req.id = new ObjectId(id);
         try {
-            const cart = await Cart.findOne(req.id);
+            const cart = await Cart.findOne(req.id).populate('products.product');
             req.apiCart = cart;
             return next();
         } catch (error) {
@@ -64,7 +64,7 @@ exports.checkQuantity = async (req, res, next) => {
 exports.checkCurrentLoginUser = async (req, res, next) => {
     const userId = req.user._id;
     try {
-        const cart = await Cart.findOne({ user: userId });
+        const cart = await Cart.findOne({ user: userId }).populate('products.product');
         req.apiCart = cart;
         next();
     } catch (error) {
@@ -78,7 +78,8 @@ exports.checkCurrentLoginUser = async (req, res, next) => {
 exports.getApiCartByCurrentLoginUser = async (req, res) => {
     try {
         const cart = req.apiCart;
-        res.json(cart);
+        if (!cart) return res.json({ error: false, message: 'Cart empty.', cart });
+        return res.json({ error: false, message: 'Get cart successfully.', cart });
     } catch (error) {
         res.status(500).json({ error: true, message: 'Could not gets the cart' + error });
     }
@@ -86,8 +87,9 @@ exports.getApiCartByCurrentLoginUser = async (req, res) => {
 
 exports.getApiCarts = async (req, res) => {
     try {
-        const carts = await Cart.find();
-        res.json(carts);
+        const carts = await Cart.find().populate('products.product');
+        if (!carts) return res.json({ error: false, message: 'Carts empty.', carts });
+        return res.json({ error: false, message: 'Get carts successfully.', carts });
     } catch (error) {
         res.status(500).json({ error: true, message: 'Could not gets the carts' + error });
     }
@@ -109,8 +111,9 @@ exports.getApiCarts = async (req, res) => {
 
 exports.getApiCart = async (req, res) => {
     try {
-        const cart = await Cart.find(req.id);
-        res.json(cart);
+        const cart = await Cart.find(req.id).populate('products.product');
+        if (!cart) return res.json({ error: false, message: 'Cart not found.', cart });
+        return res.json({ error: false, message: 'Get cart successfully.', cart });
     } catch (error) {
         res.status(500).json({ error: true, message: 'Could not get the cart' + error });
     }
@@ -167,4 +170,25 @@ exports.deleteApiCartById = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: true, message: 'Could not delete the cart' + error });
     }
+};
+
+// exports.getCartByCurrentLoginUser = async function getCartByCurrentLoginUser(req) {
+//     const userId = req.user._id;
+//     try {
+//         const cart = await Cart.findOne({ user: userId });
+//         req.apiCart = cart;
+//     } catch (error) {
+//         console.log(`🚀 🚀 file: apiCartController.js:181 🚀 getCartByCurrentLoginUser 🚀 error`, error);
+//     }
+// };
+
+exports.getOrCreateCart = async function getOrCreateCart(userId) {
+    let cart = await Cart.findOne({ user: userId }).populate('products.product');
+
+    if (!cart) {
+        cart = new Cart({ user: userId });
+        await cart.save();
+    }
+
+    return cart;
 };

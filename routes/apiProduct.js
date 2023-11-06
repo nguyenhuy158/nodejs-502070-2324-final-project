@@ -18,6 +18,10 @@ router
     )
     .delete(/^\/([0-9a-fA-F]{24})$/,
         productApiController.checkAndParseObjectId,
-        productApiController.deleteApiProductById);
+        productApiController.deleteApiProductById)
+    .put(/^\/add-cart\/([0-9a-fA-F]{24})$/,
+        productApiController.checkAndParseObjectId,
+        productApiController.addProductToCart
+    );
 
 module.exports = router;

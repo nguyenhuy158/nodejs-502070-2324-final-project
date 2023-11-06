@@ -109,3 +109,14 @@ exports.deleteApiCustomerById = async (req, res) => {
         res.status(500).json({ error: true, message: 'Could not delete the customer' + error });
     }
 };
+
+exports.getOrCreateCustomer = async function getOrCreateCustomer(phone) {
+    let customer = await Customer.findOne({ phone });
+
+    if (!customer) {
+        customer = new Customer({ phone });
+        await customer.save();
+    }
+
+    return customer;
+};

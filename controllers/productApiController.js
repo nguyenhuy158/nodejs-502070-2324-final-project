@@ -3,12 +3,15 @@ const ObjectId = mongoose.Types.ObjectId;
 const Product = require("../models/product");
 const { processImageUrlsBeforeStore } = require('./productController');
 
+const { getOrCreateCart } = require('./apiCartController');
+
 exports.checkAndParseObjectId = async (req, res, next) => {
     const id = req.params[0];
     if (ObjectId.isValid(id)) {
         req.id = new ObjectId(id);
         try {
-            await Product.findOne(req.id).populate("category");
+            const product = await Product.findOne(req.id).populate("category");
+            req.apiProduct = product;
             return next();
         } catch (error) {
             res.status(400).json({
@@ -93,5 +96,23 @@ exports.deleteApiProductById = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ error: true, message: 'Could not delete the product' + error });
+    }
+};
+
+exports.addProductToCart = async (req, res) => {
+    try {
+        const product = req.apiProduct;
+        const cart = await getOrCreateCart(req.user._id);
+        console.log(`🚀 🚀 file: productApiController.js:106 🚀 exports.addProductToCart= 🚀 cart`, cart);
+        cart.addProduct(product._id);
+        await cart.save();
+
+        return res.json({
+            error: false,
+            cart,
+            message: "Add product successfully"
+        });
+    } catch (error) {
+        res.status(500).json({ error: true, message: 'Could not add product to cart' + error });
     }
 };

@@ -44,9 +44,9 @@ block content
 									input#note.input-default(name='note' type='text' value='' cols="30" rows="5")
 
 							label.form-label(for="given-money") Given money:
-							input.form-control#given-money(name="givenMoney" type="number" placeholder="Enter given money")
+							input.form-control#input-given-money(name="givenMoney" type="number" placeholder="Enter given money")
 
-					button.btn.btn-primary(type='submit') Checkout
+					button.btn.btn-primary.btn-checkout(disabled) Checkout
 
 				//- view product list in cart
 				section.cart 
@@ -54,13 +54,13 @@ block content
 						h2.section-heading Product Summary 
 
 						label.form-label(for="given-money") Search products:
-						input.form-control#given-money(type="number" placeholder="Search products")
-						
+						input.form-control#search-product(type="number" placeholder="Search products")
+
 
 						button.btn.btn-sm.btn-outline-secondary#load-product load product in cart
 						#products-container
 							//- product list
-							
+
 					.wrapper
 						.discount-token
 							label.label-default(for='discount-token') Gift Card / Discount code
@@ -69,26 +69,17 @@ block content
 								button.btn.btn-outline Apply
 						.amount
 							.subtotal
-								span Subtotal
+								span Have to pay
 								span 
-									|       $
-									span#subtotal 2.05
-
-							.tax
-								span Tax
-								span 
-									|       $
-									span#tax 0.10
+									span#total-money 0 ₫
 
 							.shipping
-								span Shipping
+								span Money given by guests
 								span 
-									|       $
-									span#shipping 0.00
+									span#given-money 0 ₫
 							.total
-								span Total
+								span Exchange
 								span 
-									|       $
-									span#total 2.15
+									span#exchange-money 0 ₫
 
 	script(src="/js/checkout.js")

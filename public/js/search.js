@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const searchContainer = $("#search-container");
 const searchInput = $("#search-input");
 const searchResults = $("#search-results");
