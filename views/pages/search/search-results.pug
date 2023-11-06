@@ -58,7 +58,7 @@ block content
                                         |  Result
                                     hr
                                     //- BEGIN SEARCH INPUT
-                                    form(action='/search', method='get')
+                                    form(action='/search', method='get' data-toggle="formcache")
                                         .input-group
                                             input.form-control(name='q' type="text" placeholder="Search..." value=q)
                                             button.btn.btn-outline-secondary(type="submit")

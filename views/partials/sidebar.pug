@@ -19,9 +19,17 @@
       a(href='/checkout')
         i.bx.bx-analyse
         | Checkout
-    li(class= sideLink == 'User' ? 'active' : '')
-      a(href='/users')
+    li(class= sideLink == 'Orders' ? 'active' : '')
+      a(href='/orders')
+        i.bx.bx-money
+        | Orders
+    li(class= sideLink == 'Customer' ? 'active' : '')
+      a(href='/customers')
         i.bx.bx-group
+        | Customer
+    li(class= sideLink == 'Users' ? 'active' : '')
+      a(href='/users')
+        i.bx.bx-id-card
         | Users
     li
       a(href='#')

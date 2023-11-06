@@ -7,14 +7,14 @@ router
         productCategoryApiController.getApiProductCategories)
     .post("/",
         productCategoryApiController.postApiProductCategory)
-    .get("/:id",
+    .get(/^\/([0-9a-fA-F]{24})$/,
         productCategoryApiController.checkAndParseObjectId,
         productCategoryApiController.getApiProductCategory)
-    .put("/:id",
+    .put(/^\/([0-9a-fA-F]{24})$/,
         productCategoryApiController.checkAndParseObjectId,
         productCategoryApiController.putApiProductCategory
     )
-    .delete("/:id",
+    .delete(/^\/([0-9a-fA-F]{24})$/,
         productCategoryApiController.checkAndParseObjectId,
         productCategoryApiController.deleteApiProductCategoryById);
 

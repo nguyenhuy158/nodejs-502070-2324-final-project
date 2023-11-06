@@ -263,6 +263,9 @@
     "zenMode.restore": true,
     "zenMode.silentNotifications": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[jade]": {
+        "editor.defaultFormatter": "ducfilan.pug-formatter"
+    },
     // "editor.defaultFormatter": "GitHub.copilot",
     // "editor.defaultFoldingRangeProvider": "GitHub.copilot",
     // "editor.cursorBlinking": "smooth",

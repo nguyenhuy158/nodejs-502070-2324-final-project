@@ -86,7 +86,7 @@ html(lang='en')
                         h4.modal-title Cập nhật thông tin người dùng
                         button.close(data-dismiss='modal') &times;
 
-                    form#editForm(action='', method='POST')
+                    form#editForm(action='', method='POST' data-toggle="formcache")
                         // Modal body
                         .modal-body
                             input#id(type='hidden', value='')

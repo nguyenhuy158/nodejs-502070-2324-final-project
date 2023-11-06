@@ -4,7 +4,9 @@ const Customer = require("../models/customer");
 
 
 exports.checkAndParseObjectId = async (req, res, next) => {
-    const id = req.params.id;
+    const id = req.params[0];
+    console.log(`🚀 🚀 file: apiCustomerController.js:8 🚀 exports.checkAndParseObjectId= 🚀 req.params`, req.params);
+    console.log(`🚀 🚀 file: apiCustomerController.js:8 🚀 exports.checkAndParseObjectId= 🚀 id`, id);
     if (ObjectId.isValid(id)) {
         req.id = new ObjectId(id);
         try {
@@ -57,7 +59,9 @@ exports.getApiCustomer = async (req, res) => {
 };
 
 exports.checkAndCheckPhone = async (req, res, next) => {
-    const phone = req.params.phone;
+    const phone = req.params[0];
+    console.log(`🚀 🚀 file: apiCustomerController.js:62 🚀 exports.checkAndCheckPhone= 🚀 req.params`, req.params);
+    console.log(`🚀 🚀 file: apiCustomerController.js:61 🚀 exports.checkAndCheckPhone= 🚀 phone`, phone);
     try {
         const customer = await Customer.findOne({ phone });
         req.apiCustomer = customer;
@@ -73,7 +77,8 @@ exports.checkAndCheckPhone = async (req, res, next) => {
 exports.getApiCustomerByPhone = async (req, res) => {
     try {
         const customer = await Customer.findOne({ phone: req.phone });
-        res.json(customer);
+        if (!customer) return res.json({ error: false, message: 'Customer no payment before.', customer });
+        return res.json({ error: false, message: 'Get info customer successfully.', customer });
     } catch (error) {
         res.status(500).json({ error: true, message: 'Could not get the customer by phone' + error });
     }

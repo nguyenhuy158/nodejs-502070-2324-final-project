@@ -4,3 +4,10 @@ GET http://localhost:8080
 ###
 
 GET google.com HTTP/1.1
+
+###
+
+http://localhost:8080/api/customers/0837377853
+###
+
+http://localhost:8080/api/customers/653719b3df469698503e653e

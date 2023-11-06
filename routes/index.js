@@ -16,6 +16,7 @@ const apiProductRouter = require("./apiProduct");
 const apiUserRouter = require("./apiUser");
 const apiProductCategoryRouter = require("./apiProductCategory");
 const apiCustomerRouter = require("./apiCustomer");
+const apiCartRouter = require("./apiCart");
 
 const { upload } = require("../config/upload");
 const { checkFirstLogin } = require("../controllers/indexController");
@@ -32,6 +33,7 @@ const { setLocalCategories } = require("../controllers/indexController");
 router
     .use(logRequestDetails)
     .use(limiter)
+    .get("/search/address", searchController.searchAddress)
     // .use(require("morgan")("tiny", config.morganOptions))
     // .use(winstonLog)
     .use(updateCurrentUser)
@@ -75,6 +77,7 @@ router
     .use("/api/users", apiUserRouter)
     .use("/api/productCategories", apiProductCategoryRouter)
     .use("/api/customers", apiCustomerRouter)
+    .use("/api/carts", apiCartRouter)
 
     // error router
     .use(errorRouter);

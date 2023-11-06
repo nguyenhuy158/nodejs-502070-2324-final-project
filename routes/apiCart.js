@@ -8,7 +8,7 @@ router
         apiCartController.getApiCarts)
     // .post("/",
     //     apiCartController.postApiCart)
-    .get("/:id",
+    .get(/^\/([0-9a-fA-F]{24})$/,
         apiCartController.checkAndParseObjectId,
         apiCartController.getApiCart)
     .get("/current",
@@ -24,7 +24,7 @@ router
         apiCartController.checkAndParseObjectId,
         apiCartController.clearApiCartById
     )
-    .delete("/:id",
+    .delete(/^\/([0-9a-fA-F]{24})$/,
         apiCartController.checkAndParseObjectId,
         apiCartController.deleteApiCartById);
 

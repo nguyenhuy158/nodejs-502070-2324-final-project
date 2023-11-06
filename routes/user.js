@@ -10,8 +10,8 @@ router
     .get("/:id/resend", userController.resendEmail)
     .get("/create-account", userController.getCreateAccount)
     .post("/create-account", userController.createAccount)
-    .delete("/:id", userController.deleteUser)
-    .get("/:id", userController.getUser)
+    .delete(/^\/([0-9a-fA-F]{24})$/, userController.deleteUser)
+    .get(/^\/([0-9a-fA-F]{24})$/, userController.getUser)
     .get("/login", userController.login)
     .post("/login", userController.loginSubmit);
 

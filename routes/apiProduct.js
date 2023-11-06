@@ -9,14 +9,14 @@ router
     .post("/",
         upload.array("imageUrls", 5),
         productApiController.postApiProduct)
-    .get("/:id",
+    .get(/^\/([0-9a-fA-F]{24})$/,
         productApiController.checkAndParseObjectId,
         productApiController.getApiProduct)
-    .put("/:id",
+    .put(/^\/([0-9a-fA-F]{24})$/,
         productApiController.checkAndParseObjectId,
         productApiController.putApiProduct
     )
-    .delete("/:id",
+    .delete(/^\/([0-9a-fA-F]{24})$/,
         productApiController.checkAndParseObjectId,
         productApiController.deleteApiProductById);
 
