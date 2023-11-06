@@ -72,3 +72,50 @@ exports.searchResults = async (req, res, next) => {
         });
     }
 };
+
+
+const jsonData = require('../public/vietnam-address-api.json');
+exports.searchAddress = (req, res) => {
+    const { q, type, regioncode, districtcode } = req.query;
+
+    if (!q && !regioncode && !districtcode) {
+        return res.json(jsonData);
+    }
+
+    let result = [];
+
+    if (type === 'regions') {
+        result = jsonData.filter(item => item.codename.includes(q));
+    } else if (type === 'districts') {
+        if (!regioncode) {
+            return res.status(400).json({ error: 'Missing required parameter: regioncode' });
+        }
+
+        const region = jsonData.find(item => item.codename === regioncode);
+        if (region) {
+            result = region.districts.filter(district => district.codename.includes(q));
+        }
+        if (!q) {
+            result = region.districts;
+        }
+    } else if (type === 'wards') {
+        if (!regioncode || !districtcode) {
+            return res.status(400).json({ error: 'Missing required parameters: regioncode and districtcode' });
+        }
+
+        const region = jsonData.find(item => item.codename === regioncode);
+        if (region) {
+            const district = region.districts.find(item => item.codename === districtcode);
+            if (district) {
+                result = district.wards.filter(ward => ward.codename.includes(q));
+            }
+            if (!q) {
+                result = district.wards;
+            }
+        }
+    } else {
+        return res.status(400).json({ error: 'Invalid type parameter' });
+    }
+
+    res.json(result);
+};

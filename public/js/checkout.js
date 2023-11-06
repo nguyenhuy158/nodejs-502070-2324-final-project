@@ -1,16 +1,25 @@
 /* eslint-disable no-undef */
 $(() => {
+
     $('#regions').select2({
+        dropdownAutoWidth: true,
+        delay: 250,
+        debug: true,
+        width: "100%",
+        placeholder: 'Select an regions',
         ajax: {
-            delay: 250,
-            placeholder: 'Select an regions',
-            url: '/vietnam-address-api.json',
+            url: '/search/address',
             dataType: 'json',
             data: function (params) {
-                var query = {
-                    search: params.term,
+                const query = {
+                    q: params.term,
+                    type: 'regions'
                 };
+                console.log(`🚀 🚀 file: checkout.js:16 🚀 query`, query);
                 return query;
+            },
+            sorter: function (e) {
+                console.log(`🚀 🚀 file: checkout.js:20 🚀 sorter`, e);
             },
             processResults: function (data) {
                 const names = data.map((p) => {
@@ -29,23 +38,24 @@ $(() => {
     });
 
     $('#districts').select2({
+        disabled: true,
+        placeholder: 'Select an regions',
         ajax: {
-            disabled: true,
             delay: 250,
-            placeholder: 'Select an regions',
-            url: '/vietnam-address-api.json',
+            url: '/search/address',
             dataType: 'json',
             data: function (params) {
-                var query = {
-                    search: params.term,
+                const query = {
+                    q: params.term,
+                    type: 'districts',
+                    regioncode: $('#regions').val()
                 };
+                console.log(`🚀 🚀 file: checkout.js:52 🚀 query`, query);
                 return query;
             },
             processResults: function (data) {
-                const districts = data
-                    .filter(f => f.codename == $('#regions').val())[0].districts;
 
-                const names = districts
+                const names = data
                     .map((p) => {
                         return {
                             "id": p.codename,
@@ -63,26 +73,24 @@ $(() => {
     });
 
     $('#wards').select2({
+        disabled: true,
+        placeholder: 'Select an regions',
         ajax: {
             delay: 250,
-            disabled: true,
-            placeholder: 'Select an regions',
-            url: '/vietnam-address-api.json',
+            url: '/search/address',
             dataType: 'json',
             data: function (params) {
-                var query = {
-                    search: params.term,
+                const query = {
+                    q: params.term,
+                    type: 'wards',
+                    regioncode: $('#regions').val(),
+                    districtcode: $('#districts').val()
                 };
                 return query;
             },
             processResults: function (data) {
-                const districts = data
-                    .filter(f => f.codename == $('#regions').val())[0].districts;
 
-                const wards = districts
-                    .filter(f => f.codename == $('#districts').val())[0].wards;
-
-                const names = wards.map((p) => {
+                const names = data.map((p) => {
                     return {
                         "id": p.codename,
                         "text": p.name

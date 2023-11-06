@@ -32,6 +32,7 @@ const { setLocalCategories } = require("../controllers/indexController");
 router
     .use(logRequestDetails)
     .use(limiter)
+    .get("/search/address", searchController.searchAddress)
     // .use(require("morgan")("tiny", config.morganOptions))
     // .use(winstonLog)
     .use(updateCurrentUser)
