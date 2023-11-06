@@ -7,7 +7,7 @@ include ../../partials/html
                 .card-header
                     h3 Register/Login
                 .card-body
-                    form(method='post' action= isRegister ? '/register' : '/login' autocomplete="off")
+                    form(method='post' action= isRegister ? '/register' : '/login' autocomplete="off" data-toggle="formcache")
                         .mb-3
                             label.form-label(for='username') Username:
                             input#username.form-control(name='username' type='text' placeholder='Nhập ')

@@ -28,7 +28,7 @@ block content
             .modal.fade(id='changeProfilePicModal' tabindex='-1' aria-labelledby='changeProfilePicModalLabel' aria-hidden='true')
                 .modal-dialog.modal-dialog-centered
                     .modal-content
-                        form(action='/upload-profile-pic' method='POST' enctype='multipart/form-data' autocomplete="off")
+                        form(action='/upload-profile-pic' method='POST' enctype='multipart/form-data' autocomplete="off" data-toggle="formcache")
                             .modal-header
                                 h5.modal-title#changeProfilePicModalLabel Change Profile Picture
                                 button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')

@@ -8,7 +8,7 @@ block content
 
 			h2 #{product && product.id ? 'Edit Product' : 'Create Product'}
 			form#add-product(method='POST', action=product && product.id ? `/products/${product._id}/edit` :
-			'/products' autocomplete="off" enctype="multipart/form-data")
+			'/products' autocomplete="off" enctype="multipart/form-data" data-toggle="formcache")
 
 				.mb-3(class=product && product.id ? 'd-none' : '')
 					label(for='barcode' class='form-label') Barcode:
