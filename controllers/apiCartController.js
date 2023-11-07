@@ -48,6 +48,32 @@ exports.checkProductIdAndParseObjectId = async (req, res, next) => {
     }
 };
 
+exports.putApiProductIncrement = async (req, res, next) => {
+    try {
+        const cart = await this.getOrCreateCart(req.user._id);
+
+        await cart.adjustProductQuantity(req.productId, await cart.getQuantityByProductId(req.productId) + 1);
+        await cart.save();
+
+        return res.json({ error: false, message: 'Update successfully', cart });
+    } catch (error) {
+        return res.json({ error: true, message: 'Update successfully' + error });
+    }
+};
+
+exports.putApiProductDecrement = async (req, res, next) => {
+    try {
+        const cart = await this.getOrCreateCart(req.user._id);
+
+        await cart.adjustProductQuantity(req.productId, await cart.getQuantityByProductId(req.productId) - 1);
+        await cart.save();
+
+        return res.json({ error: false, message: 'Update successfully', cart });
+    } catch (error) {
+        return res.json({ error: true, message: 'Update successfully' + error });
+    }
+};
+
 exports.checkQuantity = async (req, res, next) => {
     const quantity = req.params.quantity;
     if (isNumeric(quantity)) {

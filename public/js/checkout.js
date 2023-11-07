@@ -14,6 +14,46 @@ function computeTotalBill(cart) {
     return totalBill;
 }
 
+function setEventClickForQuantityButtons() {
+    $('.btn-decrement, .btn-increment').off('click').on('click', function (e) {
+
+        const productCard = $(this).parents('[data-id]').first();
+        const productId = productCard.data('id');
+        console.log(`🚀 🚀 file: checkout.js:22 🚀 productId`, productId);
+
+        const quantity = $(this).siblings('.quantity');
+        const quantityValue = quantity.text();
+
+        let action = '';
+        if (!isNaN(quantityValue)) {
+            if (this.classList.contains('btn-decrement') && quantityValue > 0) {
+                quantity.text(+quantityValue - 1);
+                action = 'decrement';
+            }
+            if (this.classList.contains('btn-increment') && quantityValue > 0) {
+                quantity.text(+quantityValue + 1);
+                action = 'increment';
+            }
+            if (action !== '') {
+                $.ajax({
+                    url: `/api/carts/products/${productId}/${action}`,
+                    type: 'PUT',
+                    success: function (response) {
+                        console.log(`🚀 🚀 file: checkout.js:35 🚀 response`, response);
+
+                    },
+                    error: function (error) {
+                        console.log(`🚀 🚀 file: checkout.js:38 🚀 error`, error.responseJSON?.message);
+                        showToast('error', 'Update fail');
+                        quantity.text(+quantityValue);
+                    }
+                });
+            }
+
+        }
+    });
+}
+
 function loadInfoCart() {
     $.ajax({
         url: `/api/carts/current`,
@@ -23,16 +63,20 @@ function loadInfoCart() {
             showToast('success', response.message);
 
             if (response.cart?.products) {
+                $('#products-container').text('');  
                 response.cart?.products.forEach(p => {
                     console.log(`🚀 🚀 file: checkout.js:26 🚀 p`, p);
                     const productData = {
+                        _id: p.product._id,
                         imageUrl: p.product.imageUrls[0],
                         name: p.product.productName,
                         quantity: p.quantity,
                         price: p.product.retailPrice,
                     };
-                    $('#products-container').text('').createProductCardAndAppend(productData);
+                    $('#products-container').createProductCardAndAppend(productData);
                 });
+
+                setEventClickForQuantityButtons();
 
                 $('#total-money').text(computeTotalBill(response.cart));
             }
@@ -244,7 +288,7 @@ $(() => {
 
 (function ($) {
     $.fn.createProductCardAndAppend = function (productData) {
-        const productCard = $('<div class="product-card">');
+        const productCard = $(`<div class="product-card" data-id="${productData._id}">`);
         const card = $('<div class="card">');
         const imgBox = $('<div class="img-box">');
         const productImg = $('<img class="product-img">')
@@ -255,17 +299,17 @@ $(() => {
         const productName = $('<h4 class="product-name">').text(productData.name);
         const wrapper = $('<div class="wrapper">');
         const productQty = $('<div class="product-qty">');
-        const decrementBtn = $('<button id="decrement">')
+        const decrementBtn = $('<button id="decrement" class="btn-decrement">')
             .append($('<ion-icon name="remove-outline">'));
-        const quantity = $('<span id="quantity">').text(productData.quantity);
-        const incrementBtn = $('<button id="increment">')
+        const quantity = $('<span class="quantity">').text(productData.quantity);
+        const incrementBtn = $('<button id="increment" class="btn-increment">')
             .append($('<ion-icon name="add-outline">'));
         const price = $('<div class="price">');
         const priceValue = $('<span id="price">')
             .text(productData.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
 
 
-        const closeBtn = $('<button class="product-close-btn">')
+        const closeBtn = $('<button class="product-close-btn btn-remove-product">')
             .append($('<ion-icon name="close-outline">'));
 
         productCard.append(card);

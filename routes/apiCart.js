@@ -14,6 +14,12 @@ router
     .get("/current",
         apiCartController.checkCurrentLoginUser,
         apiCartController.getApiCartByCurrentLoginUser)
+    .put("/products/:productId/increment",
+        apiCartController.checkProductIdAndParseObjectId,
+        apiCartController.putApiProductIncrement)
+    .put("/products/:productId/decrement",
+        apiCartController.checkProductIdAndParseObjectId,
+        apiCartController.putApiProductDecrement)
     .put("/:id/:productId/:quantity",
         apiCartController.checkAndParseObjectId,
         apiCartController.checkProductIdAndParseObjectId,
