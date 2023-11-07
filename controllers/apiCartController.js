@@ -51,8 +51,7 @@ exports.checkProductIdAndParseObjectId = async (req, res, next) => {
 exports.putApiProductIncrement = async (req, res, next) => {
     try {
         const cart = await this.getOrCreateCart(req.user._id);
-
-        await cart.adjustProductQuantity(req.productId, await cart.getQuantityByProductId(req.productId) + 1);
+        await cart.adjustProductQuantity(req.productId, + 1);
         await cart.save();
 
         return res.json({ error: false, message: 'Update successfully', cart });
@@ -64,8 +63,7 @@ exports.putApiProductIncrement = async (req, res, next) => {
 exports.putApiProductDecrement = async (req, res, next) => {
     try {
         const cart = await this.getOrCreateCart(req.user._id);
-
-        await cart.adjustProductQuantity(req.productId, await cart.getQuantityByProductId(req.productId) - 1);
+        await cart.adjustProductQuantity(req.productId, - 1);
         await cart.save();
 
         return res.json({ error: false, message: 'Update successfully', cart });
