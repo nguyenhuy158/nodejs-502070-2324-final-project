@@ -168,8 +168,26 @@ input::-webkit-outer-spin-button {
 .phoneNumber-form,
 .fullName-form,
 .address-form,
-.note-form {
+.note-form,
+.address-form-regions,
+.address-form-districts,
+.address-form-wards,
+.address-form-detail {
     margin-bottom: 20px;
+}
+
+.select2-container .select2-selection--single {
+    height: 40px;
+    padding-top: 5px;
+    font-size: 16px;
+}
+
+.select2-container {
+    width: 100% !important;
+}
+
+.select2-selection__arrow {
+    margin-top: 5px;
 }
 
 .phoneNumber-form input {
@@ -227,6 +245,20 @@ input::-webkit-outer-spin-button {
     flex-direction: row;
     align-items: center;
     gap: 20px;
+}
+
+.card .detail {
+    padding: 10px 0px;
+}
+
+.cart-item-box .proSearch {
+    margin-bottom: 10px;
+    border-radius: var(--radius);
+    color: var(--davys-gray);
+
+    input {
+        background: var(--platinum);
+    }
 }
 
 .card .product-img {

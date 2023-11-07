@@ -4,7 +4,7 @@ block content
 	.content
 		include ../../partials/nav
 		link(rel="stylesheet" href="/css/checkout.css")
-		.container
+		.container-fluid
 			h1.heading
 				ion-icon(name='cart-outline') 
 				|       Checkout
@@ -20,7 +20,7 @@ block content
 								.input-group
 									input#phone-number.input-default.form-control(name='phone' type='text')
 									button#load-customer.btn.btn-outline-secondary(type='button')
-										i.bx.bx-loader.bx-spin.bx-rotate-90
+										i.bx.bxs-megaphone
 							.fullName-form
 								label.label-default(for='full-name') Full Name
 									input#fullname.input-default(name='fullName' type='text' value='')
@@ -29,22 +29,22 @@ block content
 									select#regions.form-select(name='regions')
 							.address-form-districts
 								label.label-default(for='address') Districts
-									select#districts.form-select(name='districts')
+								select#districts.form-select(name='districts')
 
 							.address-form-wards
 								label.label-default(for='address') Wards
-									select#wards.form-select(name='wards')
+								select#wards.form-select(name='wards')
 
 							.address-form-detail
-								label.label-default(for='address') Wards
-									input#wards.form-select(name='address')
+								label.label-default(for='address') Address 
+									input#wards.input-default(name='address')
 
 							.note-form
 								label.label-default(for='note') Note
 									input#note.input-default(name='note' type='text' value='' cols="30" rows="5")
-
-							label.form-label(for="given-money") Given money:
-							input.form-control#input-given-money(name="givenMoney" type="number" placeholder="Enter given money")
+							.given-money
+								label.label-default(for="given-money") Given money
+									input.input-default(name="givenMoney" type="number")
 
 					button.btn.btn-primary.btn-checkout(disabled) Checkout
 
@@ -54,10 +54,11 @@ block content
 						h2.section-heading Product Summary 
 
 						label.form-label(for="given-money") Search products:
-						input.form-control#search-product(type="number" placeholder="Search products")
-
-
-						button.btn.btn-sm.btn-outline-secondary#load-product load product in cart
+						.input-group.proSearch
+							input.form-control#search-product(type="text")
+							button.btn.btn-sm.btn-outline-secondary#load-product(type='button')
+								i.bx.bx-archive-in
+							//- button.btn.btn-sm.btn-outline-secondary#load-product load product in cart
 						#products-container
 							//- product list
 
