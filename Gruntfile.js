@@ -32,6 +32,14 @@ module.exports = function (grunt) {
                 }
             }
         },
+        processhtml: {
+            options: {},
+            dist: {
+                files: {
+                    'views/layout.html': ['views/layout.pug']
+                }
+            }
+        },
         hashres: {
             options: {
                 encoding: 'utf8',
@@ -44,17 +52,32 @@ module.exports = function (grunt) {
                     'dist/css/combined.css'
                 ],
                 dest: [
-                    'view/layout/*.pug'
+                    'views/layout.pug'
                 ],
             }
-        }
+        },
+        copy: {
+            main: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'dist/',
+                        src: ['js/bundle.min.js', 'css/combined.css'],
+                        dest: 'public/',
+                        filter: 'isFile',
+                    },
+                ],
+            },
+        },
     });
 
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-processhtml');
     grunt.loadNpmTasks('grunt-hashres');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('default', ['sass', 'concat', 'uglify', 'hashres']);
+    grunt.registerTask('default', ['sass', 'concat', 'uglify', 'processhtml', 'copy', 'hashres']);
 };

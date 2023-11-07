@@ -31,7 +31,7 @@ function loadInfoCart() {
                         quantity: p.quantity,
                         price: p.product.retailPrice,
                     };
-                    $('#products-container').createProductCardAndAppend(productData);
+                    $('#products-container').text('').createProductCardAndAppend(productData);
                 });
 
                 $('#total-money').text(computeTotalBill(response.cart));
