@@ -6,7 +6,7 @@
     "debugAndDev": "DEBUG=express:* node app.js"
   },
   "nodemonConfig": {
-    "verbose": true,
+    "verbose": false,
     "ext": "js, json",
     "ignore": [
       "**/js/**"

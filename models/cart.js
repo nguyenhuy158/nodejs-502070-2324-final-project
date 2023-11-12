@@ -20,7 +20,14 @@ cartSchema.methods.getQuantityByProductId = async function (productId) {
         return this.products[productIndex].quantity;
     }
     return 0;
-}
+};
+
+cartSchema.methods.removeProduct = function (productId) {
+    const productIndex = this.products.findIndex(item => item.product.equals(productId));
+    if (productIndex !== -1) {
+        this.products.splice(productIndex, 1);
+    }
+};
 
 cartSchema.methods.calculateTotalPrice = async function () {
     let total = 0;

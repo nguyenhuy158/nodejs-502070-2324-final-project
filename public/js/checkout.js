@@ -26,7 +26,7 @@ function setEventClickForQuantityButtons() {
 
         let action = '';
         if (!isNaN(quantityValue)) {
-            if (this.classList.contains('btn-decrement') && quantityValue > 0) {
+            if (this.classList.contains('btn-decrement') && quantityValue > 1) {
                 quantity.text(+quantityValue - 1);
                 action = 'decrement';
             }
@@ -54,6 +54,28 @@ function setEventClickForQuantityButtons() {
     });
 }
 
+function setEventRemoveProductButtons() {
+    $('.btn-remove-product').off('click').on('click', function (e) {
+        const productCard = $(this).parents('[data-id]').first();
+        const productId = productCard.data('id');
+        console.log(`🚀 🚀 file: checkout.js:22 🚀 productId`, productId);
+
+        $.ajax({
+            url: `/api/carts/products/${productId}`,
+            type: 'DELETE',
+            success: function (response) {
+                console.log(`🚀 🚀 file: checkout.js:35 🚀 response`, response);
+                productCard.remove();
+                showToast('success', 'Remove product success');
+            },
+            error: function (error) {
+                console.log(`🚀 🚀 file: checkout.js:38 🚀 error`, error.responseJSON?.message);
+                showToast('error', 'Remove product fail');
+            }
+        });
+    });
+}
+
 function loadInfoCart() {
     $.ajax({
         url: `/api/carts/current`,
@@ -77,6 +99,7 @@ function loadInfoCart() {
                 });
 
                 setEventClickForQuantityButtons();
+                setEventRemoveProductButtons();
 
                 $('#total-money').text(computeTotalBill(response.cart));
             }

@@ -3,6 +3,8 @@ const router = express.Router();
 const apiCartController = require("../controllers/apiCartController");
 
 
+
+// api/carts/
 router
     .get("/",
         apiCartController.getApiCarts)
@@ -30,6 +32,9 @@ router
         apiCartController.checkAndParseObjectId,
         apiCartController.clearApiCartById
     )
+    .delete("/products/:productId",
+        apiCartController.checkProductIdAndParseObjectId,
+        apiCartController.deleteApiProduct)
     .delete(/^\/([0-9a-fA-F]{24})$/,
         apiCartController.checkAndParseObjectId,
         apiCartController.deleteApiCartById);
