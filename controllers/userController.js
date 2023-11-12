@@ -186,7 +186,7 @@ exports.resendEmail = async function resendEmail(req, res, next) {
             .add(1, "minutes");
         await user.save();
 
-        await sendEmail(req, user, user.token);
+        await sendEmail(req, user, user.token, "create-account");
 
 
         addFlash.addFlash(req, "success", "Email has been resent. Please check your email for further instructions.");
@@ -207,7 +207,7 @@ exports.getCreateAccount = (req, res) => {
     res.render("pages/users/create-account");
 };
 
-exports.createAccount = async (req, res, next) => {
+exports.postCreateAccount = async (req, res, next) => {
     const { fullName, email } = req.body;
 
     try {
@@ -230,7 +230,7 @@ exports.createAccount = async (req, res, next) => {
         });
 
         await salesperson.save();
-        await sendEmail(req, existingUser, token);
+        await sendEmail(req, existingUser, token, "create-account");
 
         req.flash("success", "Account created successfully: Please check your email for further instructions.");
         res.redirect("/users");

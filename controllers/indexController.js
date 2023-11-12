@@ -9,8 +9,6 @@ const productController = require("./productController");
 const winstonLogger = require('../config/logger');
 const { categories } = require("./productCategoryController");
 const { faker } = require("@faker-js/faker");
-const { transporter } = require("../config/email");
-const compiledFunction = require("pug").compileFile("./views/email/email-template.pug");
 
 
 exports.checkFirstLogin = (req, res, next) => {

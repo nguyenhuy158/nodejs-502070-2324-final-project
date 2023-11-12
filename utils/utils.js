@@ -1,6 +1,7 @@
 const { transporter } = require("../config/email");
 const { v2: cloudinary } = require("cloudinary");
-
+const compiledFunctionCreateAccount = require("pug").compileFile("./views/email/email-template-create-account.pug");
+const compiledFunctionForgotPassword = require("pug").compileFile("./views/email/email-template-forgot-password.pug");
 
 exports.isNumeric = function isNumeric(value) {
     return !isNaN(value) && typeof value !== 'boolean';
@@ -26,22 +27,36 @@ exports.generateToken = function () {
     return token;
 };
 
-exports.sendEmail = async function (req, user, token, options = undefined) {
-    try {
-        const mailOptions =
-            options ?
-                options :
-                {
-                    from: process.env.FROM_EMAIL,
-                    to: user.email,
-                    subject: "Activate Sales Account",
-                    text: `Dear ${user.fullName},
-                        An account has been created for you in the Sales System. To log in, please click the following link within 1 minute:
-                        ${req.protocol + "://" + req.get("host")}/email-confirm?token=${token}
-                        Best regards,
-                        Administrator`,
-                };
+exports.sendEmail = async function (req, user, token, type = "create-account") {
+    const mailOptions = {
+        from: process.env.FROM_EMAIL,
+        to: user.email,
+    };
 
+
+    switch (type) {
+        case "create-account":
+            mailOptions.subject = "Your New Retail Store Login Account";
+            mailOptions.html = compiledFunctionCreateAccount({
+                name: user.fullName,
+                url: req.protocol + "://" + req.get("host") + "/email-confirm?token=" + token,
+                admin: req.user.fullName || "Admin",
+            });
+            break;
+
+        case "forgot-password":
+            mailOptions.subject = "Your Retail Store System Password Reset";
+            mailOptions.html = compiledFunctionForgotPassword({
+                name: user.fullName,
+                url: req.protocol + "://" + req.get("host") + "/email-confirm?token=" + token,
+                admin: "Admin",
+            });
+            break;
+
+        default:
+            break;
+    }
+    try {
         await transporter.sendMail(mailOptions, (err, info) => {
             console.log(`[SEND MAIL] ${err ? 'Fail' : 'Success'}`);
             console.log("[SEND MAIL][INFO]", info.accepted);

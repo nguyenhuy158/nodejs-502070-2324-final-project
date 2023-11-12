@@ -45,20 +45,7 @@ exports.postApiUser = async (req, res) => {
 
         salesperson.sentMail(resetToken);
 
-        const resetLink = getFullUrlForMailConfirm(req, resetToken);
-
-        const mailOptions = {
-            from: process.env.FROM_EMAIL,
-            to: salesperson.email,
-            subject: "Welcome to Tech Hut - Activate Sales Account [Retail Store]",
-            text: `Dear ${salesperson.fullName}\n\n` +
-                `An account has been created for you in the Sales System. To log in, please click the following link within 1 minute:\n\n` +
-                `${resetLink}\n\n` +
-                `Best regards,` +
-                `${req.user.fullName}`,
-        };
-
-        sendEmail(req, salesperson, resetToken, mailOptions);
+        await sendEmail(req, salesperson, resetToken, "create-account");
 
         res.status(201).json({
             error: false,

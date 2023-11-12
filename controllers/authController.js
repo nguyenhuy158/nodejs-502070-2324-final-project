@@ -86,18 +86,7 @@ exports.postPasswordReset = async (req, res, next) => {
         user.isFirstLogin = false;
         await user.save();
 
-        const resetLink = `${req.protocol + '://' + req.get('host')
-            }/email-confirm?token=${resetToken}`;
-        const mailOptions = {
-            from: process.env.FROM_EMAIL,
-            to: email,
-            subject: 'Password Reset Request',
-            text:
-                `You are receiving this email because you (or someone else) requested a password reset for your account.\n\n` +
-                `Please click on the following link, or paste this into your browser to reset your password:\n\n` +
-                resetLink,
-        };
-        sendEmail(req, user, resetToken, mailOptions);
+        sendEmail(req, user, resetToken, "forgot-password");
         req.flash(
             'success',
             'Reset success, please check mail to login (if email exist).',
