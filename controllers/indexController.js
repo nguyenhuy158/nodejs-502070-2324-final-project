@@ -162,10 +162,10 @@ async function createSampleDataOrder() {
 }
 
 exports.createSampleData = async function (req, res, next) {
-    await createSampleDataCustomer();
-    await createSampleDataProductCategory();
-    await createSampleDataProduct();
-    await createSampleDataOrder();
+    // await createSampleDataCustomer();
+    // await createSampleDataProductCategory();
+    // await createSampleDataProduct();
+    // await createSampleDataOrder();
     return res.redirect("/");
 };
 

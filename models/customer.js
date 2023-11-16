@@ -7,8 +7,8 @@ const customerSchema = new Schema({
     address: { type: String, },
     gender: { type: String, enum: ['Male', 'Female', 'Unknown'], default: 'Unknown' },
     rank: { type: String, enum: ['Bronze', 'Gold', 'Platinum', 'Diamond'], default: 'Bronze' },
-    email: { type: String },
-    birthDay: { type: Date },
+    email: { type: String, default: '' },
+    birthDay: { type: Date, default: Date.now },
 }, {
     timestamps: true,
 });
