@@ -1,6 +1,8 @@
 
 exports.logRequestDetails = (req, res, next) => {
     console.log(`[USERNAME] ${res.app.locals.user?.username}`);
+    console.log('[Session ID] ', req.sessionID);
+
     next();
 };
 

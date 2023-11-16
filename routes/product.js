@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const productController = require("../controllers/productController");
-const {upload} = require("../config/upload");
+const { upload } = require("../config/upload");
 
 router
     // .get('/', authController.checkAdmin, productController.gets)

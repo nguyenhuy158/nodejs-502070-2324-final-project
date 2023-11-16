@@ -10,6 +10,7 @@ const authRoutes = require("./auth");
 const userRouter = require("./user");
 const checkoutRouter = require("./checkout");
 const productRouter = require("./product");
+const customerRouter = require("./customer");
 const authController = require("../controllers/authController");
 
 const apiProductRouter = require("./apiProduct");
@@ -29,12 +30,13 @@ const { morganLog } = require("../middlewares/log");
 const { requireRole } = require("../middlewares/auth");
 const { validationChangePassword, validateSearch } = require('../middlewares/validation');
 const { setLocalCategories } = require("../controllers/indexController");
+const { morganOptions } = require("../config/config");
 
 router
     .use(logRequestDetails)
     .use(limiter)
     .get("/search/address", searchController.searchAddress)
-    // .use(require("morgan")("tiny", config.morganOptions))
+    .use(require("morgan")("tiny", morganOptions))
     // .use(winstonLog)
     .use(updateCurrentUser)
     .get("/error", (req, res, next) => {
@@ -70,6 +72,7 @@ router
     // main router
     .use("/users", requireRole(process.env.ROLE_ADMIN), userRouter)
     .use("/products", requireRole(process.env.ROLE_ADMIN), productRouter)
+    .use("/customers", customerRouter)
     .use("/checkout", checkoutRouter)
 
     // api router

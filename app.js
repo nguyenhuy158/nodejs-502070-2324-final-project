@@ -11,7 +11,6 @@ const moment = require("moment/moment");
 const winstonLogger = require("./config/logger");
 const passport = require("passport");
 const session = require("express-session");
-const bcrypt = require("bcryptjs");
 const flash = require("connect-flash");
 
 const User = require("./models/user");
@@ -21,6 +20,7 @@ const { currentTime } = require("./utils/format");
 const { cookieOptions, cloudinaryConfig } = require("./config/config");
 
 const LocalStrategy = require("passport-local").Strategy;
+const MongoStore = require('connect-mongo');
 
 const { v2: cloudinary } = require("cloudinary");
 const { uploadImage } = require("./utils/utils");
@@ -34,7 +34,6 @@ const { uploadImage } = require("./utils/utils");
 //     winstonLogger.error("Unhandled Rejection:", reason);
 // });
 
-
 connectDb();
 
 const app = express();
@@ -46,7 +45,15 @@ app.disable("x-powered-by");
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(require("express-session")({ secret: "keyboard cat", resave: false, saveUninitialized: false }));
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    // milliseconds * seconds * minutes * hours * days
+    // 1000 * 60 * 60 * 24 * 10 = 10 days
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 10 },
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+    resave: true,
+    saveUninitialized: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());

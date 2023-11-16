@@ -19,3 +19,4 @@ router
         productCategoryApiController.deleteApiProductCategoryById);
 
 module.exports = router;
+
