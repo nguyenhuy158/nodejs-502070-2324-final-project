@@ -190,6 +190,10 @@ input::-webkit-outer-spin-button {
     margin-top: 5px;
 }
 
+.select2-dropdown--below {
+    position: inherit !important;
+}
+
 .phoneNumber-form input {
     letter-spacing: 3px;
 }
