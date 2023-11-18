@@ -2,15 +2,14 @@ doctype html
 html(lang="en")
     head
         meta(charset="UTF-8")
-        include ../partials/html
+        include ../partials/head
     body
         include ../partials/fn
         include ../partials/pagination
         include ../partials/flash
         include ../partials/sidebar
 
-        script(src='/js/toast.js')
-        script(src='/js/home.js')
+        script(src='/js/custom/home.js')
 
         //- Auto remove flash message - KEEP IT
         script.
@@ -28,8 +27,8 @@ html(lang="en")
                 });
             });
 
-        script(type=module src="/js/lazy-image-loading.js")
-        script(type=module src="/js/magnific-popup.js")
+        script(type=module src="/js/custom/lazy-image-loading.js")
+        script(type=module src="/js/custom/magnific-popup-config.js")
         script.
             lazyImageLoading()
             magnificPopup();

@@ -68,12 +68,12 @@ block content
 						contentType: false,
 						success    : function (response) {
 							console.log("Response:", response);
-							showToast(response.message, 'success')
+							toastr.success(response.message)
 							window.location = '/products'
 						},
 						error      : function (error) {
 							console.log("Error:", error);
-							showToast(error, 'success')
+							toastr.error(error)
 						}
 					});
 				});

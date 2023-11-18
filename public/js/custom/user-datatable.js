@@ -101,10 +101,10 @@ $(() => {
                     data: null,
                     render: function (data, type, row, meta) {
                         const viewBtn = `<a class="my-1 btn btn-sm btn-primary" href="/users/${row._id}">
-								    <i class='bx bx-detail'></i>
+                                    <i class='bx bx-detail'></i>
 								</a>`;
 
-                        const updateBtn = `<button class="my-1 btn btn-sm btn-success btn-edit">
+                        const updateBtn = `<button class="my-1 btn btn-sm btn-success edit-btn">
                                     <i class='bx bx-edit'></i>
 								</button>`;
 

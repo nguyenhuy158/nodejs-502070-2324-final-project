@@ -153,6 +153,5 @@ yarn.lock
 .vscode/keybindings.json
 .vscode/settings.json
 .vscode/setup-keybindings.bat
-views/partials/nav.pug
 source/TODO
 public/js/bundle.min.js

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
-const ProductCategory = require("../models/productCategory");
+const ProductCategory = require("../models/product-category");
 
 exports.checkAndParseObjectId = async (req, res, next) => {
     const id = req.params[0];

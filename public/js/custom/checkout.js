@@ -44,7 +44,7 @@ function setEventClickForQuantityButtons() {
                     },
                     error: function (error) {
                         console.log(`🚀 🚀 file: checkout.js:38 🚀 error`, error.responseJSON?.message);
-                        showToast('error', 'Update fail');
+                        toastr.error('Update fail');
                         quantity.text(+quantityValue);
                     }
                 });
@@ -66,11 +66,11 @@ function setEventRemoveProductButtons() {
             success: function (response) {
                 console.log(`🚀 🚀 file: checkout.js:35 🚀 response`, response);
                 productCard.remove();
-                showToast('success', 'Remove product success');
+                toastr.success('Remove product success');
             },
             error: function (error) {
                 console.log(`🚀 🚀 file: checkout.js:38 🚀 error`, error.responseJSON?.message);
-                showToast('error', 'Remove product fail');
+                toastr.error('Remove product fail');
             }
         });
     });
@@ -82,7 +82,7 @@ function loadInfoCart() {
         type: 'GET',
         success: (response) => {
             console.log(`🚀 🚀 file: 🚀 response`, response.cart);
-            showToast('success', response.message);
+            toastr.success(response.message);
 
             if (response.cart?.products) {
                 $('#products-container').text('');  
@@ -106,7 +106,7 @@ function loadInfoCart() {
         },
         error: (error) => {
             console.log(`🚀 🚀 file: 🚀 error`, error.responseJSON);
-            showToast('error', error.responseJSON?.message);
+            toastr.error(error.responseJSON?.message);
         }
     });
 }
@@ -117,7 +117,7 @@ function loadInfoCustomer() {
     const validPhoneNumberPattern = /^0\d{9}$/;
 
     if (!validPhoneNumberPattern.test(phone)) {
-        showToast('error', 'Invalid phone number format');
+        toastr.error('Invalid phone number format');
         return;
     }
 
@@ -128,16 +128,16 @@ function loadInfoCustomer() {
             const customer = response.customer;
 
             if (customer) {
-                showToast('success', response.message);
+                toastr.success(response.message);
 
                 $(`input[name="fullName"]`).val(customer.fullName);
                 $(`input[name="address"]`).val(customer.address);
             } else {
-                showToast('error', response.message);
+                toastr.error(response.message);
             }
         },
         error: function (error) {
-            showToast('error', error.responseJSON?.message);
+            toastr.error(error.responseJSON?.message);
         }
     });
 }
@@ -151,15 +151,21 @@ $(() => {
             type: 'POST',
             data: {
                 phone: $('#phone-number').val(),
+                fullName: $('#full-name').val(),
+                address: $('#address').val(),
+                region: $('#regions').val(),
+                district: $('#districts').val(),
+                ward: $('#wards').val(),
                 givenAmount: $('#given-money').text()
             },
             success: (response) => {
                 console.log(`🚀 🚀 file: 🚀 response`, response);
-                showToast('success', response.message);
+                toastr.success(response.message);
+                window.location.href = `/checkout/${response.order._id}`;
             },
             error: (error) => {
                 console.log(`🚀 🚀 file: 🚀 error`, error.responseJSON);
-                showToast('error', error.responseJSON?.message);
+                toastr.error(error.responseJSON?.message);
             }
         });
     });

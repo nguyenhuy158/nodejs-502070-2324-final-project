@@ -1,13 +1,13 @@
 
-const ProductCategory = require("../models/productCategory");
+const ProductCategory = require("../models/product-category");
 const Product = require("../models/product");
 const Order = require("../models/order");
 const Customer = require("../models/customer");
 
-const productController = require("./productController");
+const productController = require("./product-controller");
 
 const winstonLogger = require('../config/logger');
-const { categories } = require("./productCategoryController");
+const { categories } = require("./product-category-controller");
 const { faker } = require("@faker-js/faker");
 
 

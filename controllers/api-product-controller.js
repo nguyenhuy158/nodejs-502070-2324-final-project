@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const Product = require("../models/product");
-const { processImageUrlsBeforeStore } = require('./productController');
+const { processImageUrlsBeforeStore } = require('./product-controller');
 
-const { getOrCreateCart } = require('./apiCartController');
+const { getOrCreateCart } = require('./api-cart-controller');
 
 exports.checkAndParseObjectId = async (req, res, next) => {
     const id = req.params[0];

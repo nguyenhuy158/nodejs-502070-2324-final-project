@@ -2,15 +2,20 @@ const Customer = require('../models/customer');
 const Cart = require('../models/customer');
 const Order = require('../models/order');
 
-const { getOrCreateCart } = require('./apiCartController');
-const { getOrCreateCustomer } = require('./apiCustomerController');
+const { getOrCreateCart } = require('./api-cart-controller');
+const { getOrCreateCustomer } = require('./api-customer-controller');
 
-exports.checkout = async (req, res, next) => {
-    const { phone, givenAmount } = req.body;
+exports.checkout = async (req, res) => {
+    const { phone, fullName, address, region, district, ward, givenAmount } = req.body;
 
     try {
         const cart = await getOrCreateCart(req.user._id);
-        const customer = await getOrCreateCustomer(phone);
+        const { customer, flagNewCustomer } = await getOrCreateCustomer(phone);
+        if (flagNewCustomer) {
+            customer.setAddress(region, district, ward, address);
+            customer.setFullName(fullName);
+            await customer.save();
+        }
 
         const totalAmount = await cart.calculateTotalPrice();
 
@@ -63,3 +68,25 @@ exports.getCustomer = async (req, res, next) => {
         });
     }
 };
+
+exports.checkAndParseObjectId = async (req, res, next) => {
+    const { id } = req.params;
+    if (!id) return res.status(400).json({ error: true, message: 'Missing id' });
+    try {
+        const order = await Order.findById(id);
+
+        if (order) {
+            req.order = order;
+            return next();
+        }
+
+        return res.status(400).json({ error: true, message: 'Invalid id' });
+    } catch (error) {
+        return res.status(400).json({ error: true, message: 'Invalid id' });
+    }
+};
+
+exports.getOrderById = (req, res) => {
+    const order = req.order;
+    res.json({ error: false, order });
+};  

@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const userController = require("../controllers/userController");
-const indexController = require("../controllers/indexController");
-const searchController = require("../controllers/searchController");
+const userController = require("../controllers/user-controller");
+const indexController = require("../controllers/index-controller");
+const searchController = require("../controllers/search-controller");
 
 const errorRouter = require("./error");
 const authRoutes = require("./auth");
@@ -11,25 +11,25 @@ const userRouter = require("./user");
 const checkoutRouter = require("./checkout");
 const productRouter = require("./product");
 const customerRouter = require("./customer");
-const authController = require("../controllers/authController");
+const authController = require("../controllers/auth-controller");
 
-const apiProductRouter = require("./apiProduct");
-const apiUserRouter = require("./apiUser");
-const apiProductCategoryRouter = require("./apiProductCategory");
-const apiCustomerRouter = require("./apiCustomer");
-const apiCartRouter = require("./apiCart");
+const apiProductRouter = require("./api-product");
+const apiUserRouter = require("./api-user");
+const apiProductCategoryRouter = require("./api-product-category");
+const apiCustomerRouter = require("./api-customer");
+const apiCartRouter = require("./api-cart");
 
 const { upload } = require("../config/upload");
-const { checkFirstLogin } = require("../controllers/indexController");
+const { checkFirstLogin } = require("../controllers/index-controller");
 const { updateCurrentUser } = require("../middlewares/auth");
-const { ensureAuthenticated } = require("../controllers/authController");
+const { ensureAuthenticated } = require("../controllers/auth-controller");
 const { autoViews } = require("../middlewares/auto-views");
 const { logRequestDetails } = require("../middlewares/log");
 const { limiter } = require("../config/config");
 const { morganLog } = require("../middlewares/log");
 const { requireRole } = require("../middlewares/auth");
 const { validationChangePassword, validateSearch } = require('../middlewares/validation');
-const { setLocalCategories } = require("../controllers/indexController");
+const { setLocalCategories } = require("../controllers/index-controller");
 const { morganOptions } = require("../config/config");
 
 router

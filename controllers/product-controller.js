@@ -1,5 +1,5 @@
 const Product = require("../models/product");
-const ProductCategory = require("../models/productCategory");
+const ProductCategory = require("../models/product-category");
 
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
@@ -9,7 +9,7 @@ const fs = require("fs");
 
 const { faker } = require("@faker-js/faker");
 const { uploadImage, removeImageByUrl } = require("../utils/utils");
-const { categories } = require("./productCategoryController");
+const { categories } = require("./product-category-controller");
 
 
 function product(productId) {

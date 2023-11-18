@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const productApiController = require("../controllers/productApiController");
+const productApiController = require("../controllers/api-product-controller");
 const { upload } = require("../config/upload");
 
 router

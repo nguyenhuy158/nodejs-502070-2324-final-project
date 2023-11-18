@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const userApiController = require("../controllers/userApiController");
+const userApiController = require("../controllers/api-user-controller");
 const { validateCreateAccount } = require('../middlewares/validation');
 
 router

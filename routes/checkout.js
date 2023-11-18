@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const checkoutController = require('../controllers/checkoutController');
+const checkoutController = require('../controllers/checkout-controller');
 
 
 router
     .get('', checkoutController.get)
     .post('', checkoutController.checkout)
+    .get(/^\/([0-9a-fA-F]{24})$/, checkoutController.checkAndParseObjectId, checkoutController.getOrderById)
     .post('/get-customer', checkoutController.getCustomer);
 
 module.exports = router;

@@ -1,7 +1,7 @@
 
 const mongoose = require("mongoose");
 const User = require("../models/user");
-const ProductCategory = require("../models/productCategory");
+const ProductCategory = require("../models/product-category");
 
 exports.connectDb = async () => {
     try {

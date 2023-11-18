@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const productCategoryApiController = require("../controllers/productCategoryApiController.js");
+const productCategoryApiController = require("../controllers/api-product-category-controller.js");
 
 router
     .get("/",

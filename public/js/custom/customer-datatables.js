@@ -119,10 +119,10 @@ $(() => {
                     data: null,
                     render: function (data, type, row, meta) {
                         const viewBtn = `<a class="my-1 btn btn-sm btn-primary" href="/users/${row._id}">
-								    <i class='bx bx-detail'></i>
+                                    <i class='bx bx-detail'></i>
 								</a>`;
 
-                        const updateBtn = `<button class="my-1 btn btn-sm btn-success btn-edit">
+                        const updateBtn = `<button class="my-1 btn btn-sm btn-success edit-btn">
                                     <i class='bx bx-edit'></i>
 								</button>`;
 
@@ -130,19 +130,7 @@ $(() => {
                                     <i class='bx bx-trash-alt'></i>
 								</button>`;
 
-                        const lockBtn = `<button class="my-1 btn btn-sm btn-dark lock-btn">
-                                    <i class='bx bx-lock-alt'></i>
-								</button>`;
-
-                        const unLockBtn = `<button class="my-1 btn btn-sm btn-dark unlock-btn">
-                                    <i class='bx bx-lock-open-alt' ></i>
-								</button>`;
-
-                        const resentBtn = `<button class="my-1 btn btn-sm btn-secondary resent-btn">
-                                    <i class='bx bx-mail-send'></i>
-								</button>`;
-
-                        return `${viewBtn} ${updateBtn} ${deleteBtn} ${row.lockedStatus ? unLockBtn : lockBtn} ${resentBtn}`;
+                        return `${viewBtn} ${updateBtn} ${deleteBtn}`;
                     }
                 },
             ]

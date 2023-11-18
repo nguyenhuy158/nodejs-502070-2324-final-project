@@ -1,4 +1,4 @@
-const ProductCategory = require("../models/productCategory");
+const ProductCategory = require("../models/product-category");
 
 
 exports.categories = () => ProductCategory.find()

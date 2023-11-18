@@ -112,11 +112,13 @@ exports.deleteApiCustomerById = async (req, res) => {
 
 exports.getOrCreateCustomer = async function getOrCreateCustomer(phone) {
     let customer = await Customer.findOne({ phone });
+    let flagNewCustomer = false;
 
     if (!customer) {
         customer = new Customer({ phone });
         await customer.save();
+        flagNewCustomer = true;
     }
 
-    return customer;
+    return { customer, flagNewCustomer };
 };
