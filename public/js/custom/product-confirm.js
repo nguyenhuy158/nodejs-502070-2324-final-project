@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 function assignEditEvent() {
     const editButton = $(".btn-edit");

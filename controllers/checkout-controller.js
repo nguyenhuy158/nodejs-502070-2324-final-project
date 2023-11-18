@@ -33,7 +33,11 @@ exports.checkout = async (req, res) => {
             changeAmount: totalAmount - givenAmount,
         });
 
+
         await order.save();
+
+        cart.clearAllProducts();
+        await cart.save();
         return res.json({ error: false, message: 'Get order successfully.', order });
     } catch (error) {
         console.log(`🚀 🚀 file: checkoutController.js:13 🚀 exports.checkout= 🚀 error`, error);
@@ -50,7 +54,7 @@ exports.get = async (req, res, next) => {
     }
 };
 
-exports.getCustomer = async (req, res, next) => {
+exports.getCustomer = async (req, res) => {
     const { phone } = req.body;
     // const customer = { phone };
     try {

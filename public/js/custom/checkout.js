@@ -15,7 +15,7 @@ function computeTotalBill(cart) {
 }
 
 function setEventClickForQuantityButtons() {
-    $('.btn-decrement, .btn-increment').off('click').on('click', function (e) {
+    $('.btn-decrement, .btn-increment').off('click').on('click', function () {
 
         const productCard = $(this).parents('[data-id]').first();
         const productId = productCard.data('id');
@@ -55,7 +55,7 @@ function setEventClickForQuantityButtons() {
 }
 
 function setEventRemoveProductButtons() {
-    $('.btn-remove-product').off('click').on('click', function (e) {
+    $('.btn-remove-product').off('click').on('click', function () {
         const productCard = $(this).parents('[data-id]').first();
         const productId = productCard.data('id');
         console.log(`🚀 🚀 file: checkout.js:22 🚀 productId`, productId);
