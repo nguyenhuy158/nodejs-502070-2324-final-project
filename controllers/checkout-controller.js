@@ -11,6 +11,7 @@ exports.checkout = async (req, res) => {
     try {
         const cart = await getOrCreateCart(req.user._id);
         const { customer, flagNewCustomer } = await getOrCreateCustomer(phone);
+
         if (flagNewCustomer) {
             customer.setAddress(region, district, ward, address);
             customer.setFullName(fullName);
@@ -20,7 +21,7 @@ exports.checkout = async (req, res) => {
         const totalAmount = await cart.calculateTotalPrice();
 
         const order = new Order({
-            customer,
+            customer: customer._id,
             products: cart.products.map(p => {
                 return {
                     product: p.product._id,

@@ -27,7 +27,9 @@
         "node_modules/": true,
         "*.log": true,
         "*.lock": true,
-        "setting.json": true
+        "setting.json": true,
+        "public/js/plugins/": true,
+        "public/css/plugins/": true,
     },
     "search.exclude": {
         ".idea/": true,
@@ -35,7 +37,9 @@
         "node_modules/": true,
         "*.log": true,
         "*.lock": true,
-        "setting.json": true
+        "setting.json": true,
+        "public/js/plugins/": true,
+        "public/css/plugins/": true,
     },
     "auto-rename-tag.activationOnLanguage": [
         "*"

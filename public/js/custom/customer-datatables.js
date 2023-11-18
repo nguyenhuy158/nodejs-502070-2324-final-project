@@ -63,56 +63,42 @@ $(() => {
                 {
                     data: 'phone',
                     render: function (data, type, row) {
-                        console.log(`🚀 🚀 file: customer-datatables.js:62 🚀 data`, data);
-
                         return data || '';
                     },
                 },
                 {
                     data: 'fullName',
                     render: function (data, type, row) {
-                        console.log(`🚀 🚀 file: customer-datatables.js:70 🚀 data`, data);
-
                         return data || '';
                     },
                 },
                 {
                     data: 'address',
                     render: function (data, type, row) {
-                        console.log(`🚀 🚀 file: customer-datatables.js:78 🚀 data`, data);
-
                         return data || '';
                     },
                 },
                 {
                     data: 'gender',
                     render: function (data, type, row) {
-                        console.log(`🚀 🚀 file: customer-datatables.js:86 🚀 data`, data);
-
                         return data || '';
                     },
                 },
                 {
                     data: 'rank',
                     render: function (data, type, row) {
-                        console.log(`🚀 🚀 file: customer-datatables.js:94 🚀 data`, data);
-
                         return data || '';
                     },
                 },
                 {
                     data: 'email',
                     render: function (data, type, row) {
-                        console.log(`🚀 🚀 file: customer-datatables.js:102 🚀 data`, data);
-
                         return data || '';
                     },
                 },
                 {
-                    data: 'birthday',
+                    data: 'birthDay',
                     render: function (data, type, row) {
-                        console.log(`🚀 🚀 file: customer-datatables.js:110 🚀 data`, data);
-
                         return data || '';
                     },
                 },
@@ -164,7 +150,6 @@ $(() => {
 
     $('#reload-user-table').on('click', () => {
         $('#user-table').DataTable().ajax.reload(function (json) {
-            console.log("The data has been refreshed:", json);
         });
     });
 });

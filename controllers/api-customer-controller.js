@@ -5,8 +5,6 @@ const Customer = require("../models/customer");
 
 exports.checkAndParseObjectId = async (req, res, next) => {
     const id = req.params[0];
-    console.log(`🚀 🚀 file: apiCustomerController.js:8 🚀 exports.checkAndParseObjectId= 🚀 req.params`, req.params);
-    console.log(`🚀 🚀 file: apiCustomerController.js:8 🚀 exports.checkAndParseObjectId= 🚀 id`, id);
     if (ObjectId.isValid(id)) {
         req.id = new ObjectId(id);
         try {
@@ -28,12 +26,20 @@ exports.checkAndParseObjectId = async (req, res, next) => {
 
 exports.getApiCustomers = async (req, res) => {
     try {
-        const customers = await Customer.find();
+        let customers = await Customer.find();
+
+        customers = await Promise.all(customers.map(async (customer) => ({
+            ...customer.toObject(),
+            address: await customer.getFullAddress(),
+            birthDay: customer.getBirthDay()
+        })));
+
         res.json(customers);
     } catch (error) {
-        res.status(500).json({ error: true, message: 'Could not gets the customers' + error });
+        res.status(500).json({ error: true, message: 'Could not get the customers' + error });
     }
 };
+
 
 exports.postApiCustomer = async (req, res) => {
     try {

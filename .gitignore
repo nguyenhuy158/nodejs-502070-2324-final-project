@@ -132,6 +132,7 @@ dist
 
 # css render
 public/css/*.css
+!public/css/plugins/*
 
 # upload profile folder
 public/uploads/*.png
@@ -148,10 +149,5 @@ public/uploads/*.svg
 
 package-lock.json
 yarn.lock
-.vscode/keybindings.json
-.vscode/keybindings.json
-.vscode/keybindings.json
-.vscode/settings.json
-.vscode/setup-keybindings.bat
 source/TODO
 public/js/bundle.min.js
