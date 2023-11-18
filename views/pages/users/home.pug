@@ -3,13 +3,13 @@ extends ../layout.pug
 block content
 	.content
 		include ../../partials/nav
-
+		link(rel="stylesheet", href="/css/users.css")
 		.container
 			h2 User List
 			#button-container.mb-3
 
-			table#user-table.table.table-sm.table-striped.table-bordered(style="width:100%")
-				thead
+			table#user-table.table.table-sm.table-striped.table-bordered.align-middle(style="width:100%")
+				thead.align-middle
 					tr
 						th STT
 						th Avatar
