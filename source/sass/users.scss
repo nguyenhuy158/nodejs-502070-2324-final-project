@@ -18,13 +18,13 @@
 }
 
 #button-container {
-    width: 35%;
+    width: 50%;
     display: flex;
 
     .dt-buttons {
         display: flex;
         justify-content: space-between;
-        width: 100%;
+        width: fit-content;
     }
 
     .btn-group .btn {

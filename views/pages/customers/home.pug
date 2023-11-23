@@ -3,8 +3,10 @@ extends ../layout
 block content 
 	.content
 		include ../../partials/nav
+		link(rel="stylesheet", href="/css/customer.css")
 		.container
 			h2 Customers manager
+			#button-container.mb-3
 
 			table#customer-table.table.table-sm.table-striped.table-bordered(style="width:100%")
 				thead
