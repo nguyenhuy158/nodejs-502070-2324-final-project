@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
+
 //Focus el	ement on sidebar
 const sideLinks = document.querySelectorAll(
 	".sidebar .side-menu li a:not(.logout)"
@@ -56,8 +57,8 @@ window.addEventListener("resize", () => {
 	}
 });
 
+// THEME TOGGLE
 const toggler = document.getElementById("theme-toggle");
-
 toggler.addEventListener("change", function () {
 	if (this.checked) {
 		document.body.classList.add("dark");
@@ -65,24 +66,26 @@ toggler.addEventListener("change", function () {
 		document.body.classList.remove("dark");
 	}
 });
+// THEME TOGGLE
 
-
+// TODO: just change
 function reloadTable() {
-	$('span:contains("Reload")').click();
+	$('span:contains("Reload")').trigger('click');
 }
 
-function formatCurrency(input) {
-	const numericValue = input.value.replace(/[^0-9.]/g, '');
+// function formatCurrency(input) {
+// 	const numericValue = input.value.replace(/[^0-9.]/g, '');
 
-	const formattedValue = new Intl.NumberFormat('vi-VN', {
-		style: 'currency',
-		currency: 'VND',
-		minimumFractionDigits: 0,
-	}).format(numericValue);
+// 	const formattedValue = new Intl.NumberFormat('vi-VN', {
+// 		style: 'currency',
+// 		currency: 'VND',
+// 		minimumFractionDigits: 0,
+// 	}).format(numericValue);
 
-	input.value = formattedValue;
-}
+// 	input.value = formattedValue;
+// }
 
+// Convert form data to JSON
 function formDataToJson(formData) {
 	const json = {};
 	formData.forEach((value, key) => {
@@ -100,6 +103,7 @@ function formDataToJson(formData) {
 }
 
 
+// LOGOUT
 $(() => {
 	$('a.logout').off('click').on('click', function (e) {
 		e.preventDefault();
