@@ -10,11 +10,13 @@ router
         authController.get)
     .get("/email-confirm",
         authController.emailConfirm)
+
     .get("/password-reset",
         authController.getPasswordReset)
     .post("/password-reset",
         validatePasswordReset,
         authController.postPasswordReset)
+        
     .post("/login",
         validateLogin,
         passport.authenticate("local", passportAuthenticateConfig))
