@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 //Focus el	ement on sidebar
 const sideLinks = document.querySelectorAll(
 	".sidebar .side-menu li a:not(.logout)"
@@ -96,3 +98,22 @@ function formDataToJson(formData) {
 	});
 	return json;
 }
+
+
+$(() => {
+	$('a.logout').off('click').on('click', function (e) {
+		e.preventDefault();
+		$.ajax({
+			url: '/logout',
+			method: 'GET',
+			success: (response) => {
+				toastr[response.error ? 'error' : 'success'](response.message);
+				if (!response.error) {
+					window.location.href = '/login';
+				}
+			}, error: (response) => {
+				toastr[response.responseJSON?.error ? 'error' : 'success'](response.responseJSON?.message);
+			}
+		});
+	});
+});

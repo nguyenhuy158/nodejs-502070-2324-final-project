@@ -239,17 +239,17 @@ exports.checkUser = async function (req, res, next) {
     }
 };
 
-exports.logout = function (req, res, next) {
+exports.logout = function (req, res) {
     req.logout(function (err) {
         if (err) {
-            res.redirect('/error');
+            return res.json({ error: true, message: 'Logout failed.' });
         } else {
             req.flash('info', 'Logout successfully.');
             req.session = null;
             res.locals = null;
             res.clearCookie(process.env.COOKIE_NAME);
             res.cookies = null;
-            res.redirect('/login');
+            return res.json({ error: false, message: 'Logout successfully.' });
         }
     });
 };
