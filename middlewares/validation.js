@@ -99,13 +99,15 @@ exports.validateLogin = [
         if (result.errors.length === 0) {
             next();
         } else {
-            req.flash("error", result.errors[0].msg);
-            res.redirect('/login');
+            return res.json({
+                error: true,
+                message: result.errors[0].msg
+            });
         }
     }
 ];
 
-exports.validatePasswordReset = [
+exports.validateResetPassword = [
     body("email")
         .trim()
         .notEmpty()

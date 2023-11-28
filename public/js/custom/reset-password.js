@@ -5,7 +5,7 @@ $(() => {
 
 		const email = $('input[name="email"]').val();
 		$.ajax({
-			url: '/password-reset',
+			url: '/reset-password',
 			type: 'post',
 			data: {
 				email

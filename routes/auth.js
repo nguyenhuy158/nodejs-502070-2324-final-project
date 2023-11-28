@@ -1,25 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/auth-controller");
-const passport = require("passport");
-const { passportAuthenticateConfig } = require("../config/config");
-const { validatePasswordReset, validateLogin } = require('../middlewares/validation');
+const { validateResetPassword, validateLogin } = require('../middlewares/validation');
 
 router
     .get("/login",
         authController.get)
+    .post("/login",
+        validateLogin,
+        authController.customAuthenticateCallback)
+
     .get("/email-confirm",
         authController.emailConfirm)
 
-    .get("/password-reset",
-        authController.getPasswordReset)
-    .post("/password-reset",
-        validatePasswordReset,
-        authController.postPasswordReset)
-        
-    .post("/login",
-        validateLogin,
-        passport.authenticate("local", passportAuthenticateConfig))
+    .get("/reset-password",
+        authController.getResetPassword)
+    .post("/reset-password",
+        validateResetPassword,
+        authController.postResetPassword)
+
     .get("/logout", authController.logout);
 
 module.exports = router;

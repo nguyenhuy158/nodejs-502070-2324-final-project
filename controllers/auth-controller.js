@@ -3,6 +3,7 @@ require('dotenv').config();
 const User = require('../models/user');
 const moment = require('moment');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
 
 const { cookieOptions } = require('../config/config');
 const { generateToken, sendEmail } = require('../utils/utils');
@@ -14,6 +15,13 @@ exports.ensureAuthenticated = function (req, res, next) {
         return next();
     }
     res.redirect('/login');
+};
+
+exports.ensureNotAuthenticated = function (req, res, next) {
+    if (!req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/');
 };
 
 exports.checkAdmin = async function (req, res, next) {
@@ -30,6 +38,8 @@ exports.logger = async function (req, res, next) {
     next();
 };
 
+
+// LOGIN
 exports.get = async function (req, res, next) {
     const { token } = req.query;
 
@@ -63,9 +73,33 @@ exports.get = async function (req, res, next) {
     } else {
         return res.render('pages/auth/login', {
             messages: req.flash('info'),
+            pageTitle: 'Login - Tech Hut'
         });
     }
 };
+exports.customAuthenticateCallback = (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        console.log(`🚀 🚀 file: auth-controller.js:75 🚀 passport.authenticate 🚀 info`, info);
+        console.log(`🚀 🚀 file: auth-controller.js:75 🚀 passport.authenticate 🚀 user`, user);
+        console.log(`🚀 🚀 file: auth-controller.js:75 🚀 passport.authenticate 🚀 err`, err);
+        if (err) {
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        if (!user) {
+            return res.status(401).json({ message: 'Username or Password not correct ', error: true });
+        }
+
+        req.login(user, (loginErr) => {
+            if (loginErr) {
+                return res.status(500).json({ message: 'Username or Password not correct', error: true });
+            }
+
+            return res.status(200).json({ message: 'Login successful', user, error: false });
+        });
+    })(req, res, next);
+};
+// LOGIN
 
 exports.emailConfirm = async (req, res, next) => {
     const token = req.query.token;
@@ -274,11 +308,13 @@ exports.postChangePassword = async function (req, res, next) {
 };
 
 
-// PASSWORD RESET
-exports.getPasswordReset = async (req, res) => {
-    return res.render('pages/auth/password-reset');
+// PASSWORD RESET | FORGOT PASSWORD
+exports.getResetPassword = async (req, res) => {
+    return res.render('pages/auth/reset-password', {
+        pageTitle: 'Reset Password - Tech Hut'
+    });
 };
-exports.postPasswordReset = async (req, res) => {
+exports.postResetPassword = async (req, res) => {
     const { email } = req.body;
 
     try {
@@ -308,4 +344,4 @@ exports.postPasswordReset = async (req, res) => {
         });
     }
 };
-// PASSWORD RESET
+// PASSWORD RESET | FORGOT PASSWORD

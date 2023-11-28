@@ -60,14 +60,6 @@ module.exports = {
         max: +process.env.LIMIT_MAX_REQUEST_PER_LIMIT_TIME,
         message: process.env.LIMIT_MESSAGE
     }),
-    passportAuthenticateConfig: {
-        successRedirect: "/",
-        failureRedirect: "/login",
-        failureFlash: true,
-        successFlash: true,
-        failureMessage: "Invalid username or password.",
-        successMessage: "Logged in successfully.",
-    },
     cloudinaryConfig: {
         cloud_name: "techhut",
         api_key: "111625936491283",
