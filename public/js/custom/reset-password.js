@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 $(() => {
 	$('form').on('submit', function (e) {
+		showSpinner();
 		e.preventDefault();
 
 		const email = $('input[name="email"]').val();
@@ -19,6 +20,8 @@ $(() => {
 			error: function (error) {
 				toastr.error(error.responseJSON?.message);
 			}
+		}).always(() => {
+			hideSpinner();
 		});
 	});
 });

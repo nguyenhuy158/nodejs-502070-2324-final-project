@@ -1,0 +1,11 @@
+.spinner-container.position-absolute.vh-100.vw-100.d-none
+	.spinner-border.text-primary(role="status" style="width:2rem;height:2rem;position:absolute;left:50%;top:50%;z-index:1000;")
+	span.visually-hidden Loading...
+
+script.
+	function showSpinner() {
+		$('.spinner-container').removeClass('d-none');
+	}
+	function hideSpinner() {
+		$('.spinner-container').addClass('d-none');
+	}

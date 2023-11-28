@@ -4,6 +4,7 @@ $(() => {
 
     $('#login').on('submit', (e) => {
         e.preventDefault();
+        showSpinner();
 
         const username = $('input[name="username"]').val();
         const password = $('input[name="password"]').val();
@@ -25,6 +26,8 @@ $(() => {
                 console.log(response);
                 toastr[response.responseJSON?.error ? 'error' : 'success'](response.responseJSON?.message);
             }
+        }).always(() => {
+            hideSpinner();
         });
     });
 });
