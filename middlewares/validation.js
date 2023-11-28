@@ -124,8 +124,10 @@ exports.validatePasswordReset = [
         if (result.errors.length === 0) {
             next();
         } else {
-            req.flash("success", result.errors[0].msg);
-            res.redirect('/password-reset');
+            return res.json({
+                error: true,
+                message: result.errors[0].msg
+            });
         }
     }
 ];
