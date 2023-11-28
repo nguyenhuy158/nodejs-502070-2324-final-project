@@ -67,37 +67,6 @@ exports.get = async function (req, res, next) {
     }
 };
 
-exports.getPasswordReset = async (req, res, next) => {
-    return res.render('pages/auth/password-reset');
-};
-
-exports.postPasswordReset = async (req, res, next) => {
-    const { email } = req.body;
-
-    try {
-        const user = await User.findOne({ email });
-
-        const resetToken = generateToken();
-        const resetTokenExpires = new Date(Date.now() + 10 * 60 * 1000);
-
-        user.token = resetToken;
-        user.tokenExpiration = resetTokenExpires;
-        user.isPasswordReset = true;
-        user.isFirstLogin = false;
-        await user.save();
-
-        sendEmail(req, user, resetToken, "forgot-password");
-        req.flash(
-            'success',
-            'Reset success, please check mail to login (if email exist).',
-        );
-        res.redirect('/login');
-    } catch (error) {
-        console.log('=>(authController.js:104) error', error);
-        next(error);
-    }
-};
-
 exports.emailConfirm = async (req, res, next) => {
     const token = req.query.token;
     console.log('=>(authController.js:70) token', token);
@@ -303,3 +272,40 @@ exports.postChangePassword = async function (req, res, next) {
         next(error);
     }
 };
+
+
+// PASSWORD RESET
+exports.getPasswordReset = async (req, res) => {
+    return res.render('pages/auth/password-reset');
+};
+exports.postPasswordReset = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+
+        const resetToken = generateToken();
+        // const resetTokenExpires = new Date(Date.now() + 1 * 60 * 1000);
+        const resetTokenExpires = moment().add(1, 'minutes');
+
+        user.token = resetToken;
+        user.tokenExpiration = resetTokenExpires;
+        user.isPasswordReset = true;
+        user.isFirstLogin = false;
+        await user.save();
+
+        sendEmail(req, user, resetToken, "forgot-password");
+
+        return res.json({
+            error: false,
+            message: 'Password reset success, please check mail to login.'
+        });
+    } catch (error) {
+        console.log(`🚀 🚀 file: auth-controller.js:303 🚀 error`, error);
+        return res.json({
+            error: true,
+            message: 'Password reset failed, an error has occurred please reload the page and try again.'
+        });
+    }
+};
+// PASSWORD RESET
