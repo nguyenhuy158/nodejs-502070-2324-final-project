@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 const cookieSession = require("cookie-session");
 const path = require("path");
 const fs = require("fs");
 const rateLimit = require("express-rate-limit");
+const MongoStore = require('connect-mongo');
 
 module.exports = {
     port: process.env.PORT || 3000,
@@ -70,5 +72,17 @@ module.exports = {
         cloud_name: "techhut",
         api_key: "111625936491283",
         api_secret: "wh9x7uDLH2d6-Wk6A7uN4Ea8qUQ"
+    },
+    sessionConfig: {
+        secret: process.env.SESSION_SECRET,
+        // milliseconds * seconds * minutes * hours * days
+        // 1000 * 60 * 60 * 24 * 10 = 10 days
+        cookie: { maxAge: 1000 * 60 * 60 * 24 * 10 },
+        store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+        resave: true,
+        saveUninitialized: true,
+        name: 'techhut.sid',
+        httpOnly: true,
+        secure: true,
     }
 };
