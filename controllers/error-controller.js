@@ -13,7 +13,7 @@ exports.clientErrorHandler = function (err, req, res, next) {
 };
 
 exports.errorNotFound = function (req, res, next) {
-    logger.error(`${err.status || 400} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+    logger.error(`${404} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 
     res.status(404).render("pages/error/404", { pageTitle: "Page Not Found - Tech Hut" });
 };

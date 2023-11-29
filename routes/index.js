@@ -6,30 +6,31 @@ const userController = require("../controllers/user-controller");
 const indexController = require("../controllers/index-controller");
 const searchController = require("../controllers/search-controller");
 
-const errorRouter = require("./error");
 const authRoutes = require("./auth");
 const userRouter = require("./user");
-const checkoutRouter = require("./checkout");
-const productRouter = require("./product");
-const customerRouter = require("./customer");
 const orderRouter = require("./order");
+const errorRouter = require("./error");
+const productRouter = require("./product");
+const checkoutRouter = require("./checkout");
+const customerRouter = require("./customer");
 const authController = require("../controllers/auth-controller");
 
-const apiProductRouter = require("./api-product");
 const apiUserRouter = require("./api-user");
-const apiProductCategoryRouter = require("./api-product-category");
-const apiCustomerRouter = require("./api-customer");
+const apiOrderRouter = require("./api-order");
 const apiCartRouter = require("./api-cart");
+const apiProductRouter = require("./api-product");
+const apiCustomerRouter = require("./api-customer");
+const apiProductCategoryRouter = require("./api-product-category");
 
 const { upload } = require("../config/upload");
-const { checkFirstLogin } = require("../controllers/index-controller");
-const { updateCurrentUser } = require("../middlewares/auth");
-const { ensureAuthenticated } = require("../controllers/auth-controller");
-const { autoViews } = require("../middlewares/auto-views");
 const { limiter } = require("../config/config");
 const { requireRole } = require("../middlewares/auth");
-const { validationChangePassword, validateSearch } = require('../middlewares/validation');
+const { autoViews } = require("../middlewares/auto-views");
+const { updateCurrentUser } = require("../middlewares/auth");
+const { checkFirstLogin } = require("../controllers/index-controller");
 const { setLocalCategories } = require("../controllers/index-controller");
+const { ensureAuthenticated } = require("../controllers/auth-controller");
+const { validationChangePassword, validateSearch } = require('../middlewares/validation');
 
 router
     .use(limiter)
@@ -52,8 +53,6 @@ router
     .get("/", indexController.getDashboardPage)
     .get("/profile", userController.viewProfile)
     .post("/upload-profile-pic", upload.single("profilePic"), userController.changeProfilePicture)
-    .get("/random-product", indexController.randomProduct)
-    .get("/create-sample-data", indexController.createSampleData)
     .get("/search",
         validateSearch,
         searchController.searchResults)
@@ -72,6 +71,7 @@ router
     .use("/api/users", apiUserRouter)
     .use("/api/productCategories", apiProductCategoryRouter)
     .use("/api/customers", apiCustomerRouter)
+    .use("/api/orders", apiOrderRouter)
     .use("/api/carts", apiCartRouter)
 
     // error router

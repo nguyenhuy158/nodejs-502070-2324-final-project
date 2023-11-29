@@ -105,7 +105,7 @@ $(() => {
                 {
                     data: null,
                     render: function (data, type, row, meta) {
-                        const viewBtn = `<a class="my-1 btn btn-sm btn-primary" href="/users/${row._id}">
+                        const viewBtn = `<a class="my-1 btn btn-sm btn-primary" href="/customers/${row._id}">
                                     <i class='bx bx-detail'></i>
 								</a>`;
 
@@ -113,7 +113,11 @@ $(() => {
                                     <i class='bx bx-edit'></i>
 								</button>`;
 
-                        return `${viewBtn} ${updateBtn}`;
+                        const purchaseHistoryBtn = `<a class="my-1 btn btn-sm btn-success purchase-btn" href="/customers/${row._id}/purchase">
+                                    <i class='bx bx-history'></i>
+								</a>`;
+
+                        return `${viewBtn} ${updateBtn} ${purchaseHistoryBtn}`;
                     }
                 },
             ]

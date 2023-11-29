@@ -41,4 +41,19 @@ $(() => {
     tippy(".logout", {
         content: "Logout",
     });
+    tippy(".theme-toggle", {
+        content: "Dark mode toggle",
+    });
+
+
+    // Datatables
+    tippy(".purchase-btn", {
+        content: "View history purchase of customer",
+    });
+    tippy(".edit-btn", {
+        content: "Edit data",
+    });
+    tippy(".delete-btn", {
+        content: "Delete data",
+    });
 });

@@ -1,0 +1,53 @@
+
+
+extends ../layout
+
+block content 
+	.content
+		include ../../partials/nav
+		.container.mt-4
+			h1 Customer Purchase History
+			//  Customer Information 
+			.card.mb-4
+				.card-header.
+
+					Customer Information
+
+				.card-body
+					p
+						strong Name:
+						|  #{customer.fullName}
+					p
+						strong Phone:
+						|  #{customer.phone}
+					p
+						strong Address:
+						|  #{customer.fullAddress}
+			//  Product List 
+			.card
+				.card-header.
+
+					Products Bought
+
+				.card-body
+					table.table
+						thead
+							tr
+								th Product
+								th Price
+								th Quantity
+								th Total
+						tbody
+							//  Product rows go here 
+							tr
+								td Product 1
+								td $20.00
+								td 2
+								td $40.00
+							tr
+								td Product 2
+								td $30.00
+								td 1
+								td $30.00
+
+	script(src="") 

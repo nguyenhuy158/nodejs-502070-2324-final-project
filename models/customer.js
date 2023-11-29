@@ -36,7 +36,6 @@ customerSchema.methods.getFullAddress = async function () {
 
         const ward = (district.wards || []).find(entry => entry.codename === this.address.ward) || {};
 
-        console.log(`🚀 🚀 file: customer.js:48 🚀`, `${this.address.address}, ${ward.name}, ${district.name}, ${region.name}`);
         return `${this.address.address}, ${ward.name}, ${district.name}, ${region.name}`;
     } catch (error) {
         console.error('Error reading or parsing the address file:', error);

@@ -242,7 +242,7 @@
     "window.titleSeparator": "👻",
     "workbench.activityBar.iconClickBehavior": "toggle",
     "workbench.activityBar.location": "top",
-    "workbench.colorTheme": "GitHub Light Colorblind (Beta)",
+    "workbench.colorTheme": "Visual Studio Light",
     "workbench.editor.enablePreview": false,
     "workbench.editor.pinnedTabsOnSeparateRow": true,
     "workbench.editor.restoreViewState": false,

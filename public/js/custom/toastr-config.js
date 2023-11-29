@@ -6,15 +6,17 @@ $(() => {
 
     if (notification) {
         const notificationType = Object.keys(notification)[0];
-        const notificationMessage = notification[notificationType][0];
+        if (notificationType !== undefined && notificationType !== null) {
+            const notificationMessage = notification[notificationType][0];
 
-        if (notificationType === 'error') {
-            toastr.error(notificationMessage);
-        } else {
-            toastr.success(notificationMessage);
+            if (notificationType === 'error') {
+                toastr.error(notificationMessage);
+            } else {
+                toastr.success(notificationMessage);
+            }
+
+            localStorage.removeItem('notification');
         }
-
-        localStorage.removeItem('notification');
     }
 });
 
