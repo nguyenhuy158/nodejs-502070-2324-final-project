@@ -37,53 +37,6 @@
 }
 
 
-body.dark {
-    --onyx: hsl(0, 0%, 100%);
-    --azure: hsl(219, 77%, 60%);
-    --white: hsl(0, 0%, 100%);
-    --platinum: hsl(0, 0%, 100%);
-    --gainsboro: hsl(0, 0%, 90%);
-    --red-salsa: hsl(0, 77%, 60%);
-    --dim-gray: hsl(0, 0%, 39%);
-    --davys-gray: hsl(0, 0%, 30%);
-    --spanish-gray: hsl(0, 0%, 100%);
-    --quick-silver: hsl(0, 0%, 100%);
-
-    .checkout,
-    .cart {
-        background-color: #999;
-        color: #fff;
-    }
-
-    .checkout .select2-container--default.select2-container--disabled .select2-selection--single {
-        background-color: #d4d4d4;
-    }
-
-    .input-group button {
-        background-color: #2591fd;
-    }
-
-    .input-group button i {
-        color: #ffffff;
-    }
-
-    .input-group button:hover {
-        background-color: #57d081;
-    }
-
-    .cart .wrapper .wrapper-flex button {
-        background-color: #2591fd;
-        color: #fff;
-    }
-
-    .cart .wrapper .wrapper-flex button:hover {
-        background-color: #ffffff;
-        color: #302d2d;
-        border-color: #57d081;
-        border-width: 2px; // Increase border thickness
-    }
-}
-
 // -------------------------------------- 
 // ***************  RESET  
 // -------------------------------------- 
