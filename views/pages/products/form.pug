@@ -3,41 +3,42 @@ extends ../layout
 block content
 	.content
 		include ../../partials/nav
-		.container
-			a.btn.btn-primary(href="/products") Back to product list
-
-			h2 #{product && product.id ? 'Edit Product' : 'Create Product'}
+		link(rel="stylesheet" href="/css/productForm.css")
+		.container-fluid
+			div.header
+				h2 #{product && product.id ? 'Edit Product' : 'Create Product'}
+				a.btn.btn-primary(href="/products") Back to product list
 			form#add-product(method='POST', action=product && product.id ? `/products/${product._id}/edit` :
 			'/products' autocomplete="off" enctype="multipart/form-data" data-toggle="formcache")
 
 				.mb-3(class=product && product.id ? 'd-none' : '')
-					label(for='barcode' class='form-label') Barcode:
+					label(for='barcode' class='form-label') Barcode
 					input#barcode.form-control(type='text' name='barcode', value=product ? product.barcode : '',readonly=product ? true : false, required)
 
 				.mb-3
-					label(for='productName' class='form-label') Product Name:
+					label(for='productName' class='form-label') Product Name
 					input#productName.form-control(type='text' name='productName', value=product ? product.productName : '', required)
 
 				.mb-3
-					label(for='importPrice' class='form-label') Import Price:
+					label(for='importPrice' class='form-label') Import Price
 					input#importPrice.form-control(type='number' name='importPrice', value=product ? product.importPrice : '' min='1000')
 
 				.mb-3
-					label(for='retailPrice' class='form-label') Retail Price:
+					label(for='retailPrice' class='form-label') Retail Price
 					input#retailPrice.form-control(type='number' name='retailPrice', value=product ? product.retailPrice : '' min='1000')
 
 				.mb-3
-					label(for='imageUrls' class='form-label') Image URLs:
+					label(for='imageUrls' class='form-label') Image URLs
 					input#imageUrls.form-control(type='file' name='imageUrls', multiple)
 				// Add image preview for editing
 				if product && product.imageUrls.length > 0
 					.mb-3
-						label(class='form-label') Current Image:
+						label(class='form-label') Current Image
 						each imageUrl in product.imageUrls
 							img(src=imageUrl, alt='Current Image' height='100' width='100' class='img-preview')
 
 				.mb-3
-					label(for='category' class='form-label') Category:
+					label(for='category' class='form-label') Category
 					select#category.form-select(name='category')
 						each category in categories
 							if product
@@ -46,8 +47,9 @@ block content
 								- const areEqual = false
 							option(value=category._id, selected=areEqual)= category.name
 
-				button.btn(type='submit', class=`${product ? 'btn-success' : 'btn-primary'}`) #{product ? 'Save' : 'Create'}
-				a.btn.btn-secondary(href='/products') Cancel
+				.btn-group
+					button.btn(type='submit', class=`${product ? 'btn-success' : 'btn-primary'}`) #{product ? 'Save' : 'Create'}
+					a.btn.btn-secondary(href='/products') Cancel
 
 	script.
 		$(document)

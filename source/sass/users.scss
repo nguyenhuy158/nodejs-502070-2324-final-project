@@ -15,6 +15,10 @@
     .pagination {
         padding-right: 15px;
     }
+.dataTables_scrollHeadInner thead th,
+.dataTables_scrollBody tbody tr td:not(:last-child) {
+    text-align: center;
+}
 }
 
 #button-container {
@@ -31,4 +35,27 @@
         margin-right: 10px;
         border-radius: 5px;
     }
+}
+body.dark {
+    .container {
+        color: #fff;
+    }
+
+    .dataTables_scrollHeadInner thead th {
+        background-color: gray;
+        color: #fff;
+    }
+
+    .dataTables_scrollBody tbody tr td {
+        background-color: #333;
+        color: #fff;
+    }
+
+    #button-container {
+        .btn-group button {
+            background-color: #2591fd !important;
+            color: #fff;
+        }
+    }
+
 }
