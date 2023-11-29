@@ -9,7 +9,7 @@ const path = require("path");
 const fs = require("fs");
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-const Product = require("../models/product");
+const logger = require("../config/logger");
 
 const { generateToken, sendEmail, uploadImage } = require("../utils/utils");
 
@@ -46,9 +46,11 @@ exports.changeProfilePicture = async (req, res, next) => {
 exports.viewProfile = async (req, res, next) => {
     try {
         addFlash.addFlash(req, "success", "get info success");
-        res.render("pages/users/profile");
+        res.render("pages/users/profile", {
+            pageTitle: "Profile - Tech Hut"
+        });
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         next(error);
     }
 };
@@ -133,7 +135,8 @@ exports.getUsers = async function (req, res, next) {
         };
         res.render("pages/users/home", {
             ...response,
-            sideLink: process.env.SIDEBAR_USER
+            sideLink: process.env.SIDEBAR_USER,
+            pageTitle: "Users Manager - Tech Hut"
         });
     } catch (error) {
         console.error("Error fetching users:", error);

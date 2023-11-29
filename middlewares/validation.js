@@ -13,8 +13,9 @@ exports.validateSearch = [
             next();
         } else {
             req.flash('error', result.errors[0].msg);
-
-            return res.render('pages/search/search-results');
+            return res.render('pages/search/search-results', {
+                pageTitle: 'Search Results - Tech Hut'
+            });
         }
     }
 ];

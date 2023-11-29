@@ -1,6 +1,7 @@
 const Customer = require('../models/customer');
 const Cart = require('../models/customer');
 const Order = require('../models/order');
+const logger = require('../config/logger');
 
 const { getOrCreateCart } = require('./api-cart-controller');
 const { getOrCreateCustomer } = require('./api-customer-controller');
@@ -46,11 +47,16 @@ exports.checkout = async (req, res) => {
     }
 };
 
-exports.get = async (req, res, next) => {
+exports.getCheckoutPage = async (req, res, next) => {
     try {
         const carts = await Cart.find();
-        return res.render('pages/checkouts/home', { carts, sideLink: process.env.SIDEBAR_CHECKOUT });
+        return res.render('pages/checkouts/home', {
+            carts,
+            sideLink: process.env.SIDEBAR_CHECKOUT,
+            pageTitle: 'Checkout - Tech Hut'
+        });
     } catch (error) {
+        logger.error(error);
         next(error);
     }
 };

@@ -5,7 +5,7 @@ const { validateResetPassword, validateLogin } = require('../middlewares/validat
 
 router
     .get("/login",
-        authController.get)
+        authController.getLogin)
     .post("/login",
         validateLogin,
         authController.customAuthenticateCallback)

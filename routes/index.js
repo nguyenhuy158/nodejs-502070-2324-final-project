@@ -12,6 +12,7 @@ const userRouter = require("./user");
 const checkoutRouter = require("./checkout");
 const productRouter = require("./product");
 const customerRouter = require("./customer");
+const orderRouter = require("./order");
 const authController = require("../controllers/auth-controller");
 
 const apiProductRouter = require("./api-product");
@@ -35,9 +36,6 @@ router
     .get("/search/address", searchController.searchAddress)
     .use(updateCurrentUser)
     .get("/error", (req, res, next) => {
-        // try {
-        // } catch (err) {
-        // }
         next(new Error("This is a 500 error."));
     })
     // auth router
@@ -66,6 +64,7 @@ router
     .use("/users", requireRole(process.env.ROLE_ADMIN), userRouter)
     .use("/products", requireRole(process.env.ROLE_ADMIN), productRouter)
     .use("/customers", customerRouter)
+    .use("/orders", orderRouter)
     .use("/checkout", checkoutRouter)
 
     // api router

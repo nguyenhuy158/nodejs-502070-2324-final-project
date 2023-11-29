@@ -41,7 +41,7 @@ exports.logger = async function (req, res, next) {
 
 
 // LOGIN
-exports.get = async function (req, res, next) {
+exports.getLogin = async function (req, res, next) {
     const { token } = req.query;
 
     if (token) {

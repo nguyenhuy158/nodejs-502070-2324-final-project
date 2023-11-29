@@ -3,26 +3,17 @@ extends ../layout
 block content 
 	.content
 		include ../../partials/nav
-		link(rel="stylesheet", href="/css/customer.css")
+		link(rel="stylesheet", href="/css/order.css")
 		.container
-			h2 Customers manager
+			h2 Orders manager
 			#button-container.mb-3
 
-			table#customer-table.table.table-sm.table-striped.table-bordered(style="width:100%")
+			table#order-table.table.table-sm.table-striped.table-bordered(style="width:100%")
 				thead
 					tr
 						th STT
-						th Phone
-						th Full Name
-						th Address
-						th Gender
-						th Rank
-						th Email
-						th Birthday
-						th Handle
 				tbody
 
 
 
-	//- script(src="/js/custom/customer-confirm.js") 
-	script(src="/js/custom/customer-datatables.js") 
+	script(src="/js/custom/order-datatables.js") 

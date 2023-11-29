@@ -113,11 +113,7 @@ $(() => {
                                     <i class='bx bx-edit'></i>
 								</button>`;
 
-                        const deleteBtn = `<button class="my-1 btn btn-sm btn-danger delete-btn">
-                                    <i class='bx bx-trash-alt'></i>
-								</button>`;
-
-                        return `${viewBtn} ${updateBtn} ${deleteBtn}`;
+                        return `${viewBtn} ${updateBtn}`;
                     }
                 },
             ]

@@ -5,7 +5,7 @@ const { upload } = require("../config/upload");
 
 router
     // .get('/', authController.checkAdmin, productController.gets)
-    .get("/", productController.gets)
+    .get("/", productController.getProducts)
     .get("/add", productController.add)
     .post("/", upload.array("imageUrls", 5), productController.create)
     .get(/^\/([0-9a-fA-F]{24})$/, productController.detail)
@@ -13,7 +13,7 @@ router
     .get("/:id/edit", productController.edit)
     // .post("/:id/edit", productController.update)
     .delete(/^\/([0-9a-fA-F]{24})$/, productController.delete)
-    .get("/about", productController.gets)
+    .get("/about", productController.getProducts)
     .post("/:id/imageUrls", upload.array("imageUrls", 5), productController.addThumbnails)
     .put("/:id/imageUrls", productController.removeThumbnails)
     .put("/:id/main-thumbnail", productController.mainThumbnail);

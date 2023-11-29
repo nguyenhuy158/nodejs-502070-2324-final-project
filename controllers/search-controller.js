@@ -44,7 +44,10 @@ exports.searchResults = async (req, res, next) => {
                     .limit(10),
             };
 
-            res.render("pages/search/search-results", { ...response });
+            res.render("pages/search/search-results", {
+                ...response,
+                pageTitle: "Search Results - Tech Hut"
+            });
         } else {
             const users = await User.find({
                 fullName: {

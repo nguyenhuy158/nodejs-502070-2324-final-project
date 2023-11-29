@@ -261,7 +261,7 @@ exports.delete = async function (req, res, next) {
     }
 };
 
-exports.gets = async function (req, res, next) {
+exports.getProducts = async function (req, res, next) {
     const perPage = parseInt(req.query.perPage) || 10;
     let page = parseInt(req.query.page) || 1;
 
@@ -292,7 +292,8 @@ exports.gets = async function (req, res, next) {
         };
         res.render("pages/products/home", {
             ...output,
-            sideLink: process.env.SIDEBAR_PRODUCT
+            sideLink: process.env.SIDEBAR_PRODUCT,
+            pageTitle: "Products Manager - Tech Hut"
         });
 
     } catch (error) {
