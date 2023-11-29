@@ -6,7 +6,7 @@ const Customer = require("../models/customer");
 
 const productController = require("./product-controller");
 
-const winstonLogger = require('../config/logger');
+const logger = require('../config/logger');
 const { categories } = require("./product-category-controller");
 const { faker } = require("@faker-js/faker");
 
@@ -180,6 +180,6 @@ exports.setLocalCategories = async (req, res, next) => {
 };
 
 exports.winstonLog = (req, res, next) => {
-    winstonLogger.info(`${req.method} ${req.url}`);
+    logger.info(`${req.method} ${req.url}`);
     next();
 };

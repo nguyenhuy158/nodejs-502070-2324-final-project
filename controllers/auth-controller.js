@@ -4,6 +4,7 @@ const User = require('../models/user');
 const moment = require('moment');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const logger = require('../config/logger');
 
 const { cookieOptions } = require('../config/config');
 const { generateToken, sendEmail } = require('../utils/utils');
@@ -258,18 +259,24 @@ exports.getRegister = async function (req, res) {
     res.render('pages/auth/login', { isRegister: true });
 };
 
-exports.changePassword = async function (req, res) {
+// CHANGE PASSWORD 
+exports.getChangePassword = async function (req, res) {
     if (req.user.isFirstLogin || req.user.isPasswordReset) {
         return res.render('pages/auth/change-password', {
             isFirstLogin: true,
             currentPassword: req.user.username,
         });
     }
-    return res.render('pages/auth/change-password');
+    return res.render(
+        'pages/auth/change-password', {
+        pageTitle: 'Change Password - Tech Hut'
+    });
 };
-
 exports.postChangePassword = async function (req, res, next) {
     const { currentPassword, newPassword, confirmPassword } = req.body;
+    console.log(`🚀 🚀 file: auth-controller.js:277 🚀 currentPassword`, currentPassword);
+    console.log(`🚀 🚀 file: auth-controller.js:277 🚀 confirmPassword`, confirmPassword);
+    console.log(`🚀 🚀 file: auth-controller.js:277 🚀 newPassword`, newPassword);
 
     try {
         const user = req.user;
@@ -281,17 +288,11 @@ exports.postChangePassword = async function (req, res, next) {
             );
 
             if (!isPasswordValid) {
-                req.flash(
-                    'error',
-                    'Change password fail: Password is not correct.',
-                );
-                return res.status(401).redirect('/change-password');
+                return res.json({
+                    error: true,
+                    message: 'The password is incorrect.'
+                });
             }
-        }
-
-        if (newPassword !== confirmPassword) {
-            req.flash('error', 'Change password fail: Password not match.');
-            return res.status(400).redirect('/change-password');
         }
 
         user.password = newPassword;
@@ -299,14 +300,20 @@ exports.postChangePassword = async function (req, res, next) {
         user.isPasswordReset = false;
         await user.save();
         req.session.user = user;
-        req.flash('success', 'Change password success: Password changed.');
-        res.redirect('/');
+
+        return res.json({
+            error: false,
+            message: 'Password changed successfully.'
+        });
     } catch (error) {
-        console.log(`🚀 🚀 file: authController.js:308 🚀 error`, error);
-        next(error);
+        logger.error(error);
+        return res.json({
+            error: true,
+            message: 'An error occurred during processing please reload the page and try again.'
+        });
     }
 };
-
+// CHANGE PASSWORD 
 
 // PASSWORD RESET | FORGOT PASSWORD
 exports.getResetPassword = async (req, res) => {

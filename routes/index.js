@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const logger = require("../config/logger");
 
 const userController = require("../controllers/user-controller");
 const indexController = require("../controllers/index-controller");
@@ -24,32 +25,25 @@ const { checkFirstLogin } = require("../controllers/index-controller");
 const { updateCurrentUser } = require("../middlewares/auth");
 const { ensureAuthenticated } = require("../controllers/auth-controller");
 const { autoViews } = require("../middlewares/auto-views");
-const { logRequestDetails } = require("../middlewares/log");
 const { limiter } = require("../config/config");
-const { morganLog } = require("../middlewares/log");
 const { requireRole } = require("../middlewares/auth");
 const { validationChangePassword, validateSearch } = require('../middlewares/validation');
 const { setLocalCategories } = require("../controllers/index-controller");
-const { morganOptions } = require("../config/config");
 
 router
-    .use(logRequestDetails)
     .use(limiter)
     .get("/search/address", searchController.searchAddress)
-    .use(require("morgan")("tiny", morganOptions))
-    // .use(winstonLog)
     .use(updateCurrentUser)
     .get("/error", (req, res, next) => {
-        try {
-            throw new Error("This is a 500 error.");
-        } catch (err) {
-            next(err);
-        }
+        // try {
+        // } catch (err) {
+        // }
+        next(new Error("This is a 500 error."));
     })
     // auth router
     .use(authRoutes)
     .use(ensureAuthenticated)
-    .get("/change-password", authController.changePassword)
+    .get("/change-password", authController.getChangePassword)
     .post("/change-password",
         validationChangePassword,
         authController.postChangePassword)
@@ -57,7 +51,6 @@ router
     .use(checkFirstLogin)
     .use(autoViews)
     .use(setLocalCategories)
-    .get("/log", morganLog)
     .get("/", indexController.home)
     .get("/profile", userController.viewProfile)
     .post("/upload-profile-pic", upload.single("profilePic"), userController.changeProfilePicture)

@@ -1,3 +1,5 @@
+const moment = require("moment");
+
 exports.formatTimestamp = function (timestamp) {
     try {
         const hours = timestamp.getHours().toString().padStart(2, "0");
@@ -14,6 +16,3 @@ exports.formatTimestamp = function (timestamp) {
     }
 };
 
-exports.currentTime = function () {
-    return require("dateformat")(new Date(), process.env.DATETIME_FORMAT_FULL);
-};

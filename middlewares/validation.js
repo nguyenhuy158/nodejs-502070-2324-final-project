@@ -92,8 +92,8 @@ exports.validateLogin = [
         .trim()
         .notEmpty()
         .withMessage("Password cannot be empty!")
-        .isLength({ min: 2 })
-        .withMessage("Password must have at least 6 characters!"),
+        .isLength({ min: 4 })
+        .withMessage("Password must have at least 4 characters!"),
     (req, res, next) => {
         const result = validationResult(req);
         if (result.errors.length === 0) {
@@ -138,33 +138,36 @@ exports.validationChangePassword = [
     body("currentPassword")
         .notEmpty()
         .withMessage("Password cannot be empty!")
-        .isLength({ min: 6 })
-        .withMessage("Password must have at least 6 characters!"),
+        .isLength({ min: 4 })
+        .withMessage("Password must have at least 4 characters!"),
     body("newPassword")
         .notEmpty()
-        .withMessage("Password cannot be empty!")
+        .withMessage("New password cannot be empty!")
         .isLength({ min: 6 })
-        .withMessage("Password must have at least 6 characters!")
+        .withMessage("New password must have at least 6 characters!")
         .custom((value, { req }) => {
             return value !== req.body.currentPassword;
         })
         .withMessage("Please don't use old password!"),
     body("confirmPassword")
         .notEmpty()
-        .withMessage("Password cannot be empty!")
+        .withMessage("Confirm password cannot be empty!")
         .isLength({ min: 6 })
-        .withMessage("Password must have at least 6 characters!")
+        .withMessage("Confirm password must have at least 6 characters!")
         .custom((value, { req }) => {
             return value === req.body.newPassword;
         })
-        .withMessage("Confirm Password not match!"),
+        .withMessage("Confirm password not match!"),
     (req, res, next) => {
         const result = validationResult(req);
-        if (result.errors.length !== 0) {
-            req.flash("error", result.errors[0].msg);
-            res.redirect("/change-password");
+        if (result.errors.length === 0) {
+            next();
+        } else {
+            return res.json({
+                error: true,
+                message: result.errors[0].msg
+            });
         }
-        next();
     }
 ]
 

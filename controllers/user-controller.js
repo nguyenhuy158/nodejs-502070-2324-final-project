@@ -202,43 +202,45 @@ exports.resendEmail = async function resendEmail(req, res, next) {
         next(error);
     }
 };
-
+// CREATE NEW SALE PEOPLE
 exports.getCreateAccount = (req, res) => {
-    res.render("pages/users/create-account");
+    res.render("pages/users/create-account", {
+        pageTitle: "Create Account - Tech Hut",
+    });
 };
+// exports.postCreateAccount = async (req, res, next) => {
+//     const { fullName, email } = req.body;
 
-exports.postCreateAccount = async (req, res, next) => {
-    const { fullName, email } = req.body;
+//     try {
+//         const existingUser = await User.findOne({ email });
 
-    try {
-        const existingUser = await User.findOne({ email });
+//         if (existingUser) {
+//             req.flash("error", "Email already exists Please use a different email address.");
+//             return res.redirect("/user/create-account");
+//         }
 
-        if (existingUser) {
-            req.flash("error", "Email already exists Please use a different email address.");
-            return res.redirect("/user/create-account");
-        }
+//         const token = generateToken();
+//         const tokenExpiration = moment()
+//             .add(1, "minutes");
 
-        const token = generateToken();
-        const tokenExpiration = moment()
-            .add(1, "minutes");
+//         const salesperson = new User({
+//             fullName,
+//             email,
+//             token,
+//             tokenExpiration
+//         });
 
-        const salesperson = new User({
-            fullName,
-            email,
-            token,
-            tokenExpiration
-        });
+//         await salesperson.save();
+//         await sendEmail(req, existingUser, token, "create-account");
 
-        await salesperson.save();
-        await sendEmail(req, existingUser, token, "create-account");
-
-        req.flash("success", "Account created successfully: Please check your email for further instructions.");
-        res.redirect("/users");
-    } catch (error) {
-        req.flash("error", `Account created fail: ${error}.`);
-        next(error);
-    }
-};
+//         req.flash("success", "Account created successfully: Please check your email for further instructions.");
+//         res.redirect("/users");
+//     } catch (error) {
+//         req.flash("error", `Account created fail: ${error}.`);
+//         next(error);
+//     }
+// };
+// CREATE NEW SALE PEOPLE
 
 exports.login = async (req, res, next) => {
     const { token } = req.query;

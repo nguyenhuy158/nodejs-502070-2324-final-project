@@ -1,18 +1,10 @@
 
-exports.errorNotFound = function (req, res, next) {
-    const { method, originalUrl } = req;
-    console.error(`[ERROR][404] ${method}\t${originalUrl}`);
-    console.error(`[ERROR][404] ${method}\t${originalUrl}`);
-    res.status(404).render("pages/404");
-};
-
-exports.logErrors = function (err, req, res, next) {
-    console.error(`[ERROR][LOG] ${err.message}`);
-    console.error(`[ERROR][LOG] ${err.stack}`);
-    next(err);
-};
+const logger = require("../config/logger");
 
 exports.clientErrorHandler = function (err, req, res, next) {
+    logger.error(`${err.status || 500} - ${res.statusMessage} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+    logger.error(`${err.status || 500} - ${res.statusMessage} - ${err.stack} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+
     if (req.xhr) {
         res.status(404).send({ error: "Something failed!", message: err.message });
     } else {
@@ -20,9 +12,23 @@ exports.clientErrorHandler = function (err, req, res, next) {
     }
 };
 
+exports.errorNotFound = function (req, res, next) {
+    logger.error(`400 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+
+    res.status(404).render("pages/404");
+};
+
+exports.logErrors = function (err, req, res, next) {
+    logger.error(`${err.status || 500} - ${res.statusMessage} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+    logger.error(`${err.status || 500} - ${res.statusMessage} - ${err.stack} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+
+    next(err);
+};
+
 exports.serverErrorHandler = function (err, req, res, next) {
-    console.error(`[ERROR][500] ${err.message}`);
-    console.error(`[ERROR][500] ${err.stack}`);
+    logger.error(`${err.status || 500} - ${res.statusMessage} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+    logger.error(`${err.status || 500} - ${res.statusMessage} - ${err.stack} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+
     res.status(500).render("pages/500", { error: "Something failed!", message: err.message });
 };
 

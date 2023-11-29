@@ -9,7 +9,7 @@ router
     .put("/:id/unlock", userController.unlockAccount)
     .get("/:id/resend", userController.resendEmail)
     .get("/create-account", userController.getCreateAccount)
-    .post("/create-account", userController.postCreateAccount)
+    // .post("/create-account", userController.postCreateAccount)
     .delete(/^\/([0-9a-fA-F]{24})$/, userController.deleteUser)
     .get(/^\/([0-9a-fA-F]{24})$/, userController.getUser)
     .get("/login", userController.login)

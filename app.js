@@ -7,8 +7,8 @@ const sassMiddleware = require("node-sass-middleware");
 const path = require("path");
 const router = require("./routes");
 const config = require("./config/config");
+const logger = require("./config/logger");
 const moment = require("moment/moment");
-const winstonLogger = require("./config/logger");
 const passport = require("passport");
 const session = require("express-session");
 const flash = require("connect-flash");
@@ -16,7 +16,6 @@ const flash = require("connect-flash");
 const User = require("./models/user");
 
 const { connectDb } = require("./config/db");
-const { currentTime } = require("./utils/format");
 const { cookieOptions, cloudinaryConfig } = require("./config/config");
 
 const LocalStrategy = require("passport-local").Strategy;
@@ -62,17 +61,24 @@ app.use(passport.session());
 app.use(flash());
 
 app.use((req, res, next) => {
-    console.log("[👻NEW REQUEST👻]👻👻👻👻👻👻👻👻👻👻👻[👻NEW REQUEST👻]");
     const { method, originalUrl, xhr } = req;
-    const accessTime = currentTime();
-    const fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
-
-    console.log(`[LOG]\t${fullUrl}`);
-    console.log(`[LOG]\t${method}\t${originalUrl}\t[${accessTime}]`);
-    console.log(`[LOG]\t${method}\txhr: ${xhr}\t[${accessTime}]`);
-
     res.locals.message = req.flash();
-    console.log("[FLASH] ", res.locals.message);
+    let fullUrl = process.env.NODE_ENV === 'production' ?
+        `${req.protocol}://${req.get("host")}${req.originalUrl}` :
+        `${req.originalUrl}`;
+
+    logger.info(`[👻👻👻👻👻👻👻👻👻👻]`);
+
+    logger.http(`[URL] ${fullUrl}`);
+    logger.http(`[METHOD] ${method}`);
+    logger.http(`[METHOD] ${originalUrl}`);
+    logger.http(`[XHR] ${xhr}`);
+
+    logger.http(`[USERNAME] ${res.app.locals.user?.username}`);
+    logger.http(`[Session ID] ${req.sessionID}`);
+
+    logger.http(`[FLASH] ${JSON.stringify(res.locals.message)}`);
+
     next();
 });
 

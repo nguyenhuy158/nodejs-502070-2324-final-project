@@ -1,20 +1,23 @@
+
 /* eslint-disable no-undef */
-// TODO uncomment this
-// $(() => {
-//     const notification = sessionStorage.getItem('notification')
-//     const notificationType = sessionStorage.getItem('notificationType')
+$(() => {
+    const notification = JSON.parse(localStorage.getItem('notification')) || undefined;
+    console.log(`🚀 🚀 file: toastr-config.js:5 🚀 notification`, notification);
 
-//     if (notification) {
-//         if (notificationType === 'success') {
-//             toastr.success(notification)
-//         } else if (notificationType === 'error') {
-//             toastr.error(notification)
-//         }
+    if (notification) {
+        const notificationType = Object.keys(notification)[0];
+        const notificationMessage = notification[notificationType][0];
 
-//         sessionStorage.removeItem('notification')
-//         sessionStorage.removeItem('notificationType')
-//     }
-// })
+        if (notificationType === 'error') {
+            toastr.error(notificationMessage);
+        } else {
+            toastr.success(notificationMessage);
+        }
+
+        localStorage.removeItem('notification');
+    }
+});
+
 toastr.options = {
     closeButton: true,
     debug: true,

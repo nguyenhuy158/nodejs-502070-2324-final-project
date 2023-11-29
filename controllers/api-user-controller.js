@@ -35,28 +35,42 @@ exports.getApiUsers = async (req, res) => {
     }
 };
 
+// CREATE SALE ACCOUNT
 exports.postApiUser = async (req, res) => {
     try {
         const { fullName, email } = req.body;
-        const salesperson = new User({ fullName, email });
+        const token = generateToken();
+
+        // check account exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(500).json({
+                error: true,
+                message: 'Email already exists Please use a different email address'
+            });
+        }
+
+        // create new account
+        const salesperson = new User({
+            fullName,
+            email,
+        });
         await salesperson.save();
 
-        const resetToken = generateToken();
+        // sent mail
+        await salesperson.sentMail(token);
+        await sendEmail(req, salesperson, token, "create-account");
 
-        salesperson.sentMail(resetToken);
-
-        await sendEmail(req, salesperson, resetToken, "create-account");
-
-        res.status(201).json({
+        return res.status(201).json({
             error: false,
             message: 'Account created successfully: Please check your email for further instructions.',
             user: salesperson
         });
-
     } catch (error) {
         res.status(500).json({ error: true, message: 'Could not create the user account' + error });
     }
 };
+// CREATE SALE ACCOUNT
 
 exports.getApiUser = async (req, res) => {
     try {

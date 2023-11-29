@@ -52,9 +52,6 @@ module.exports = {
         indentedSyntax: false,
         prefix: "/css"
     },
-    morganOptions: {
-        stream: fs.createWriteStream(path.join(__dirname, process.env.MORGAN_LOG), { flags: "a" })
-    },
     limiter: rateLimit({
         windowMs: +process.env.LIMIT_TIME * 60 * 1000,
         max: +process.env.LIMIT_MAX_REQUEST_PER_LIMIT_TIME,
