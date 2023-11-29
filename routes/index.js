@@ -51,7 +51,7 @@ router
     .use(checkFirstLogin)
     .use(autoViews)
     .use(setLocalCategories)
-    .get("/", indexController.home)
+    .get("/", indexController.getDashboardPage)
     .get("/profile", userController.viewProfile)
     .post("/upload-profile-pic", upload.single("profilePic"), userController.changeProfilePicture)
     .get("/random-product", indexController.randomProduct)

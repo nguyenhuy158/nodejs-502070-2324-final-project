@@ -13,9 +13,9 @@ exports.clientErrorHandler = function (err, req, res, next) {
 };
 
 exports.errorNotFound = function (req, res, next) {
-    logger.error(`400 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+    logger.error(`${err.status || 400} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 
-    res.status(404).render("pages/404");
+    res.status(404).render("pages/error/404");
 };
 
 exports.logErrors = function (err, req, res, next) {
@@ -29,6 +29,6 @@ exports.serverErrorHandler = function (err, req, res, next) {
     logger.error(`${err.status || 500} - ${res.statusMessage} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
     logger.error(`${err.status || 500} - ${res.statusMessage} - ${err.stack} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 
-    res.status(500).render("pages/500", { error: "Something failed!", message: err.message });
+    res.status(500).render("pages/error/500", { error: "Something failed!", message: err.message });
 };
 
