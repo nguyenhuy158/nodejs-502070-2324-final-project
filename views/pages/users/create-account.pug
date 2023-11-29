@@ -20,8 +20,10 @@ block content
 						//- option info
 						.form-group.mb-3
 							label(for='gender') Gender:
-							input.form-control(name='gender' placeholder="Enter gender")
-
+							select.form-control(name='gender')
+								option(value='male') Male
+								option(value='female') Female
+								option(value='unknown') Unknown
 
 						//- button handle submit or back
 						.form-group.mb-3

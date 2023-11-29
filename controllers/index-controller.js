@@ -22,13 +22,11 @@ exports.checkFirstLogin = (req, res, next) => {
     next();
 };
 
-exports.home = async (req, res) => {
-
-    res.render("pages/home", {
-        title: "Home",
+exports.getDashboardPage = async (req, res) => {
+    res.render("pages/dashboard", {
+        pageTitle: "Dashboard - Tech Hut",
         app_name: process.env.APP_NAME,
-        products: await Product.find({})
-            .limit(3),
+        products: await Product.find({}).limit(3),
         sideLink: process.env.SIDEBAR_HOME
     });
 };
