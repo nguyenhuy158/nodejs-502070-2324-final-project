@@ -15,6 +15,7 @@
     .pagination {
         padding-right: 15px;
     }
+
     .dataTables_scrollHeadInner thead th,
     .dataTables_scrollBody tbody tr td:not(:last-child) {
         text-align: center;
@@ -36,6 +37,7 @@
         border-radius: 5px;
     }
 }
+
 body.dark {
     .container {
         color: #fff;

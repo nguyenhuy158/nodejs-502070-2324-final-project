@@ -3,6 +3,7 @@ extends ../layout
 block content
 	.content
 		include ../../partials/nav
+		link(rel="stylesheet", href="/css/userForm.css")
 		.container
 			.row-justify-content-md-center
 				.col-md-6.offset-md-3.mt-5
@@ -19,14 +20,14 @@ block content
 
 						//- option info
 						.form-group.mb-3
-							label(for='gender') Gender:
+							label(for='gender') Gender
 							select.form-control(name='gender')
 								option(value='male') Male
 								option(value='female') Female
 								option(value='unknown') Unknown
 
 						//- button handle submit or back
-						.form-group.mb-3
+						.btn-group
 							input.btn.btn-primary(type='submit' value='Create Account')
 							a(href="/users").btn.btn-secondary.ms-3(type='button') Back
 
