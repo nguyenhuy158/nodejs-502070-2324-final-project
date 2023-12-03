@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 const cookieSession = require("cookie-session");
 const path = require("path");
-const fs = require("fs");
 const rateLimit = require("express-rate-limit");
 const MongoStore = require('connect-mongo');
 

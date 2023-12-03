@@ -1,9 +1,4 @@
 exports.flashMiddleWare = (req, res, next) => {
-    // res.locals.user = req.session.user;
-    // res.locals.flash = req.session.flash;
-    // delete req.session.flash;
-    // next();
-    
     req.session.flashMessages = req.session.flashMessages || [];
     req.flash = (type, message) => {
         req.session.flashMessages.push({ type, message });

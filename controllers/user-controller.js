@@ -1,7 +1,6 @@
 
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
-const flash = require("../middlewares/flash");
 const addFlash = require('../utils/flash');
 const moment = require("moment");
 const sharp = require("sharp");

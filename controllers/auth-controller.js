@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const User = require('../models/user');
 const moment = require('moment');
 const bcrypt = require('bcryptjs');
@@ -8,8 +6,6 @@ const logger = require('../config/logger');
 
 const { cookieOptions } = require('../config/config');
 const { generateToken, sendEmail } = require('../utils/utils');
-const { faker } = require('@faker-js/faker');
-const { query, body, param, validationResult } = require('express-validator');
 
 exports.ensureAuthenticated = function (req, res, next) {
     if (req.isAuthenticated()) {

@@ -4,8 +4,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { formatTimestamp } = require("../utils/format");
 const passportLocalMongoose = require("passport-local-mongoose");
-require("dotenv")
-    .config();
 
 const userSchema = new Schema({
     email: { type: String, unique: true, required: true, trim: true },

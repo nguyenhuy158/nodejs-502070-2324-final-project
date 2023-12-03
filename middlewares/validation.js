@@ -1,7 +1,6 @@
 const { query, body, param, validationResult } = require('express-validator');
 const User = require('../models/user');
 
-
 exports.validateSearch = [
     query('q')
         .trim()
