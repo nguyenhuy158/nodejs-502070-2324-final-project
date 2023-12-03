@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const sassMiddleware = require("node-sass-middleware");
 
 const path = require("path");
+
 const router = require("./routes");
 const config = require("./config/config");
 const logger = require("./config/logger");
