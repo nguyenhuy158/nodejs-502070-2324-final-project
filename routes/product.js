@@ -8,14 +8,14 @@ router
     .get("/", productController.getProducts)
     .get("/add", productController.add)
     .post("/", upload.array("imageUrls", 5), productController.create)
-    .get(/^\/([0-9a-fA-F]{24})$/, productController.detail)
+    .get(/^\/([0-9a-fA-F]{24})$/, productController.getProductDetail)
     .put(/^\/([0-9a-fA-F]{24})$/, upload.array("imageUrls", 5), productController.update)
     .get("/:id/edit", productController.edit)
     // .post("/:id/edit", productController.update)
     .delete(/^\/([0-9a-fA-F]{24})$/, productController.delete)
     .get("/about", productController.getProducts)
-    .post("/:id/imageUrls", upload.array("imageUrls", 5), productController.addThumbnails)
-    .put("/:id/imageUrls", productController.removeThumbnails)
-    .put("/:id/main-thumbnail", productController.mainThumbnail);
+    .post(/^\/([0-9a-fA-F]{24})\/imageUrls$/, upload.array("imageUrls", 5), productController.addThumbnails)
+    .put(/^\/([0-9a-fA-F]{24})\/imageUrls$/, productController.removeThumbnails)
+    .put(/^\/([0-9a-fA-F]{24})\/main-thumbnail$/, productController.mainThumbnail);
 
 module.exports = router;

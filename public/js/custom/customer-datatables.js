@@ -20,7 +20,7 @@ $(() => {
                 'spacer',
                 {
                     extend: 'collection',
-                    className: 'custom-html-collection',
+                    className: 'options-btn',
                     buttons: [
                         '<h3>Export</h3>',
                         'copy',
@@ -69,8 +69,8 @@ $(() => {
                 {
                     data: 'fullName',
                     render: function (data, type, row) {
-                        return data || '';
-                    },
+                        return `<a href="/customers/${row._id}">${data || ''}</a>`;
+                    }
                 },
                 {
                     data: 'address',
@@ -105,15 +105,15 @@ $(() => {
                 {
                     data: null,
                     render: function (data, type, row, meta) {
-                        const viewBtn = `<a class="my-1 btn btn-sm btn-primary" href="/customers/${row._id}">
+                        const viewBtn = `<a class="my-1 btn btn-sm btn-outline-primary view-customer-btn" href="/customers/${row._id}">
                                     <i class='bx bx-detail'></i>
 								</a>`;
 
-                        const updateBtn = `<button class="my-1 btn btn-sm btn-success edit-btn">
+                        const updateBtn = `<button class="my-1 btn btn-sm btn-outline-success edit-btn update-customer-btn">
                                     <i class='bx bx-edit'></i>
 								</button>`;
 
-                        const purchaseHistoryBtn = `<a class="my-1 btn btn-sm btn-success purchase-btn" href="/customers/${row._id}/purchase">
+                        const purchaseHistoryBtn = `<a class="my-1 btn btn-sm btn-outline-success history-customer-btn" href="/customers/${row._id}/purchase">
                                     <i class='bx bx-history'></i>
 								</a>`;
 

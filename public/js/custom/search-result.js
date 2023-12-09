@@ -8,18 +8,11 @@ $(() => {
             url: `/api/products/add-cart/${productId}`,
             type: 'PUT',
             success: (response) => {
-                console.log(`🚀 ------------------------------------------------------🚀`);
-                console.log(`🚀 🚀 file: 🚀 response`, response);
-                console.log(`🚀 ------------------------------------------------------🚀`);
                 toastr.success(response.message);
             },
             error: (error) => {
-                console.log(`🚀 ------------------------------------------------🚀`);
-                console.log(`🚀 🚀 file: 🚀 error`, error.responseJSON);
-                console.log(`🚀 ------------------------------------------------🚀`);
                 toastr.error(error.responseJSON?.message);
             }
         });
     });
-
 });

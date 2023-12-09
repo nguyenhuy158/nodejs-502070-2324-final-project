@@ -4,7 +4,7 @@ const fs = require("fs");
 let autoViews = [];
 exports.autoViews = (req, res, next) => {
     const queryPath = req.path.toLowerCase().trim();
-    const path = "./views/pages/auto" + queryPath + ".pug";
+    const path = "./views/pages/auto" + queryPath + ".ejs";
     if (autoViews[queryPath]) return res.render(autoViews[queryPath]);
 
     if (fs.existsSync(path)) {

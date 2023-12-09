@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <%- include('../partials/head') %>
+    
+</head>
+
+<body>
+    <%- include('../partials/fn') %>
+    <!--  -->
+    <%- include('../partials/pagination') %>
+    <!--  -->
+    <%- include('../partials/sidebar') %>
+
+    <main class="content"><%- body %></main>
+
+    <!-- assign variable is admin -->
+    <script>
+        const isAdmin = <%= user.role === 'admin' %>
+    </script>
+
+    <script src="/js/custom/home.js"></script>
+
+    <!-- Auto remove flash message - KEEP IT -->
+    <script>
+        setTimeout(() => {
+            $('.toast').each((index, value) => {
+                const toastBootstrap = bootstrap.Toast.getOrCreateInstance(value)
+                toastBootstrap.show()
+            })
+        }, 1000)
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('img').on('error', function() {
+                $(this).attr('src', 'https://placehold.co/200?text=Not+available&font=roboto')
+            })
+        })
+    </script>
+
+    <script src="/js/custom/lazy-image-loading.js"></script>
+    <script src="/js/custom/magnific-popup-config.js"></script>
+
+    <script>
+        $(() => {
+            lazyImageLoading()
+            magnificPopup()
+        })
+    </script>
+</body>
+
+</html>

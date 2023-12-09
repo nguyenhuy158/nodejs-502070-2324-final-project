@@ -1,0 +1,166 @@
+<link rel="stylesheet" href="/css/checkout.css" />
+
+<%- include('../../partials/nav') %>
+<div class="container-fluid">
+    <h1 class="heading">
+        <ion-icon name="cart-outline"></ion-icon>
+        Checkout
+    </h1>
+
+    <div class="item-flex mb-3" style="border-radius: 40px;overflow: hidden;">
+        <!-- customer information -->
+        <section class="checkout">
+            <h2 class="section-heading">Checkout Details</h2>
+
+            <div class="payment-form">
+                <!-- payment-form.ejs -->
+                <form id="customer-info" role="form" action="/checkout" method="post">
+
+                    <!-- phoneNumber-form -->
+                    <div class="phoneNumber-form">
+                        <label class="label-default" for="input-phone">Phone</label>
+                        <div class="input-group">
+                            <input id="phone-number" class="input-default form-control" name="phone" type="text" placeholder="Customer phone" />
+                            <!-- <button id="load-customer" class="btn btn-outline-secondary" type="button">
+                                <i class='bx bx-loader-circle'></i>
+                            </button> -->
+                        </div>
+                    </div>
+
+                    <!-- fullName-form -->
+                    <div class="fullName-form">
+                        <label class="label-default" for="full-name">Full Name</label>
+                        <input id="full-name" class="input-default" name="fullName" type="text" value="" placeholder="Customer name"/>
+                    </div>
+
+                    <!-- address-form-regions -->
+                    <div class="address-form-regions">
+                        <label class="label-default" for="regions">Regions</label>
+                        <select id="regions" class="form-select" name="regions"></select>
+                    </div>
+
+                    <!-- address-form-districts -->
+                    <div class="address-form-districts">
+                        <label class="label-default" for="districts">Districts</label>
+                        <select id="districts" class="form-select" name="districts"></select>
+                    </div>
+
+                    <!-- address-form-wards -->
+                    <div class="address-form-wards">
+                        <label class="label-default" for="wards">Wards</label>
+                        <select id="wards" class="form-select" name="wards"></select>
+                    </div>
+
+                    <!-- address-form-detail -->
+                    <div class="address-form-detail">
+                        <label class="label-default" for="address">Address</label>
+                        <input id="address" class="input-default" name="address" type="text" placeholder="Address detail"/>
+                    </div>
+
+                    <!-- note-form -->
+                    <div class="note-form">
+                        <label class="label-default" for="note">Note</label>
+                        <textarea id="note" class="input-default form-control" name="note" cols="30" rows="3" placeholder="Checkout note" >
+                        </textarea>
+                    </div>
+
+                    <!-- given-money -->
+                    <div class="given-money">
+                        <label class="label-default" for="given-money">Given money</label>
+                        <input id="input-given-money" class="input-default" name="givenMoney" maxlength="21"
+                            type="text" />
+                    </div>
+                </form>
+            </div>
+            <button class="btn btn-outline-primary btn-checkout">Checkout</button>
+        </section>
+
+        <!-- view product list in cart -->
+        <section class="cart">
+            <div class="cart-item-box">
+                <h2 class="section-heading">Product Summary</h2>
+
+                <!-- <label class="form-label" for="given-money">Search products:</label> -->
+
+                <div class="input-group proSearch w-100">
+                    <input class="w-100" id="autoCompleteProductCheckout"
+                        style="border: 0.05rem solid rgba(102, 204, 204, 0.5); color: #1976d2;" name="q" type="search"
+                        dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off">
+
+                    <!-- <input class="form-control" id="search-product" type="text" /> -->
+                    <!-- <button class="btn btn-sm btn-outline-secondary" id="load-product" type="button">
+                        <i class="bx bx-archive-in"></i>
+                    </button> -->
+                    <!-- button.btn.btn-sm.btn-outline-secondary#load-product load product in cart -->
+                </div>
+
+
+                <div class="col">
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <p class="mb-1"></p>
+                            <p class="mb-0">You have <strong id="total-products">0</strong> items in your cart</p>
+                        </div>
+                        <!-- <div>
+                            <p class="mb-0"><span class="text-muted">Sort by:</span>
+                                <a href="#!" class="text-body">
+                                    price
+                                    <i class="fas fa-angle-down mt-1"></i>
+                                </a>
+                            </p>
+                        </div> -->
+                    </div>
+                </div>
+
+                <div id="products-container">
+                    <!-- product list -->
+                </div>
+
+            </div>
+
+            <div class="wrapper">
+                <!-- redeem code -->
+                <form class="card p-2 my-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Promo code">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-outline-secondary">Redeem</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- prices list -->
+                <ul class="list-group mb-3">
+                    <!--  -->
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                            <h6 class="my-0">Total</h6>
+                            <small class="text-muted"></small>
+                        </div>
+                        <strong class="text-muted text-nowrap" id="total-money">0₫</strong>
+                    </li>
+                    <!--  -->
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <div class="text-success">
+                            <h6 class="my-0">Given</h6>
+                            <small></small>
+                        </div>
+                        <span class="text-success text-nowrap" id="given-money">0₫</span>
+                    </li>
+                    <!--  -->
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Exchange</span>
+                        <span id="exchange-money" class="text-nowrap">0₫</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</div>
+
+<iframe src="" frameborder="0" id="frMauIn" class="d-none" name="frMauIn" , width="300" , height="300"></iframe>
+<script src="/js/custom/checkout-utils.js"></script>
+<script src="/js/custom/checkout-address-select2.js"></script>
+<script defer src="/js/custom/checkout-autocomplete-product.js"></script>
+<script src="/js/custom/checkout.js"></script>

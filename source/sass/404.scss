@@ -1,0 +1,14 @@
+body.dark{
+    background: #000;
+    color: #fff;
+
+    .btn{
+        background: rgb(164, 206, 255);
+        color: #000;
+    }
+
+    .btn:hover{
+        background: #388e3c;
+        color: #fff;
+    }
+}

@@ -15,10 +15,11 @@
     .pagination {
         padding-right: 15px;
     }
-.dataTables_scrollHeadInner thead th,
-.dataTables_scrollBody tbody tr td:not(:last-child) {
-    text-align: center;
-}
+
+    .dataTables_scrollHeadInner thead th,
+    .dataTables_scrollBody tbody tr td:not(:last-child) {
+        text-align: center;
+    }
 }
 
 #button-container {
@@ -35,6 +36,7 @@
         border-radius: 5px;
     }
 }
+
 body.dark {
     .container {
         color: #fff;
@@ -52,7 +54,12 @@ body.dark {
 
     #button-container {
         .btn-group button {
-            background-color: #2591fd !important;
+            background: rgb(164, 206, 255) !important;
+            color: #000;
+        }
+
+        .btn-group button:hover {
+            background: #388e3c !important;
             color: #fff;
         }
     }

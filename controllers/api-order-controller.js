@@ -26,7 +26,10 @@ exports.checkAndParseObjectId = async (req, res, next) => {
 
 exports.getApiOrders = async (req, res) => {
     try {
-        let orders = await Order.find().populate('products.product').populate('customer');
+        let orders = await Order.find()
+            .populate('products.product')
+            .populate('customer')
+            .populate('seller');
 
         // orders = await Promise.all(orders.map(async (customer) => ({
         //     ...customer.toObject(),

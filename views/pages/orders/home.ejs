@@ -1,0 +1,29 @@
+<%- include('../../partials/nav') %>
+
+<div class="container">
+    <link rel="stylesheet" href="/css/order.css">
+    <div class="container">
+        <h2>Orders manager</h2>
+        <div id="button-container" class="mb-3"></div>
+
+        <table id="order-table" class="table table-sm table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th data-priority="1">STT</th>
+                    <th>Customer</th>
+                    <th>Total Amount</th>
+                    <th>Given Amount</th>
+                    <th>Change Amount</th>
+                    <th>Purchase Date</th>
+                    <th>Seller</th>
+                    <th data-priority="2"></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<iframe src="" frameborder="0" id="frMauIn" class="d-none" name="frMauIn" , width="300" , height="300"></iframe>
+<script src="/js/custom/order-datatables.js"></script>

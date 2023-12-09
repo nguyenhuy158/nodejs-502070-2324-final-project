@@ -1,0 +1,129 @@
+<!-- TODO: remove files -->
+<%- include('../../partials/nav') %> 
+<% sideLink = '';%>
+<link rel="stylesheet" href="/css/productForm.css" />
+<!-- Table plugin -->
+<div class="container-fluid">
+    <div class="header">
+        <h2><%= typeof product != 'undefined' && product.id ? 'Edit Product' : 'Create Product' %></h2>
+        <a class="btn btn-outline-primary" href="/products">Back to product list</a>
+    </div>
+    <form
+        id="add-product"
+        method="POST"
+        action="<%= typeof product != 'undefined' && product.id ? `/products/${product._id}/edit` : '/products' %>"
+        autocomplete="off"
+        enctype="multipart/form-data"
+        data-toggle="formcache"
+    >
+        <div class="mb-3 <%= typeof product != 'undefined' && product.id ? 'd-none' : '' %>">
+            <label for="barcode" class="form-label">Barcode</label>
+            <input
+                id="barcode"
+                class="form-control"
+                type="text"
+                name="barcode"
+                value="<%= typeof product != 'undefined' ? product.barcode : '' %>"
+                readonly="<%= typeof product != 'undefined' ? true : false %>"
+                required
+            />
+        </div>
+
+        <div class="mb-3">
+            <label for="productName" class="form-label">Product Name</label>
+            <input
+                id="productName"
+                class="form-control"
+                type="text"
+                name="productName"
+                value="<%= typeof product != 'undefined' ? product.productName : '' %>"
+                required
+            />
+        </div>
+
+        <div class="mb-3">
+            <label for="importPrice" class="form-label">Import Price</label>
+            <input
+                id="importPrice"
+                class="form-control"
+                type="number"
+                name="importPrice"
+                value="<%= typeof product != 'undefined' ? product.importPrice : '' %>"
+                min="1000"
+            />
+        </div>
+
+        <div class="mb-3">
+            <label for="retailPrice" class="form-label">Retail Price</label>
+            <input
+                id="retailPrice"
+                class="form-control"
+                type="number"
+                name="retailPrice"
+                value="<%= typeof product != 'undefined' ? product.retailPrice : '' %>"
+                min="1000"
+            />
+        </div>
+
+        <div class="mb-3">
+            <label for="imageUrls" class="form-label">Image URLs</label>
+            <input id="imageUrls" class="form-control" type="file" name="imageUrls" multiple />
+        </div>
+
+        <% if (typeof product != 'undefined' && product.imageUrls.length > 0) { %>
+        <div class="mb-3">
+            <label class="form-label">Current Image</label>
+            <% product.imageUrls.forEach(imageUrl => { %>
+            <img src="<%= imageUrl %>" alt="Current Image" height="100" width="100" class="img-preview" />
+            <% }); %>
+        </div>
+        <% } %>
+
+        <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select id="category" class="form-select" name="category">
+                <% categories.forEach(category => { %> <% const areEqual = String(typeof product != 'undefined' &&
+                product.category) === String(category._id); %>
+                <option value="<%= category._id %>" selected="<%= areEqual %>"><%= category.name %></option>
+                <% }); %>
+            </select>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn <%= typeof product != 'undefined' ? 'btn-success' : 'btn-outline-primary' %>">
+                <%= typeof product != 'undefined' ? 'Save' : 'Create' %>
+            </button>
+            <a class="btn btn-outline-secondary" href="/products">Cancel</a>
+        </div>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            const addForm = $('#add-product')
+
+            addForm.on('submit', function (e) {
+                e.preventDefault()
+
+                const formData = new FormData(this)
+                console.log('=>(form.pug:59) formData', formData)
+
+                $.ajax({
+                    url: '/api/products',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log('Response:', response)
+                        toastr.success(response.message)
+                        window.location = '/products'
+                    },
+                    error: function (error) {
+                        console.log('Error:', error)
+                        toastr.error(error)
+                    },
+                })
+            })
+        })
+    </script>
+</div>

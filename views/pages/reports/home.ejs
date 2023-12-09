@@ -1,0 +1,51 @@
+<%- include('../../partials/nav') %>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container my-3">
+    <h2>Reports</h2>
+
+    <!-- input type format -->
+    <select class="form-control"" name=" type" id="type">
+        <option value="DD-MM-YYYY">By Days</option>
+        <option value="MM-YYYY">By Months</option>
+        <option value="YYYY">By Years</option>
+    </select>
+
+    <!-- input date ranger -->
+    <input id="daterange" name="dates" type="text" class="form-control pull-right">
+
+    <!-- charts -->
+    <div class="container-fluid">
+        <!-- First Row -->
+        <div class="row">
+            <!-- First Column -->
+            <div class="col-6" style="border: 1px solid #ddd;">
+                <!-- Content for the first cell -->
+                <canvas id="salesChart"></canvas>
+            </div>
+            <!-- Second Column -->
+            <div class="col-6" style="border: 1px solid #ddd;">
+                <!-- Content for the second cell -->
+                <canvas id="profitChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Second Row -->
+        <div class="row">
+            <!-- Third Column -->
+            <div class="col-6" style="border: 1px solid #ddd;">
+                <!-- Content for the third cell -->
+                <canvas id="customerChart"></canvas>
+            </div>
+            <!-- Fourth Column -->
+            <div class="col-6" style="border: 1px solid #ddd;">
+                <!-- Content for the fourth cell -->
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="/js/custom/reports.js"></script>

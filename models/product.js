@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { formatTimestamp } = require("../utils/format");
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
@@ -36,25 +35,5 @@ const productSchema = new Schema({
 }, {
     timestamps: true,
 });
-
-productSchema.virtual("creationDateFormatted")
-    .get(function () {
-        return formatTimestamp(this.creationDate);
-    });
-
-productSchema.virtual("lastUpdateDateFormatted")
-    .get(function () {
-        return formatTimestamp(this.lastUpdateDate);
-    });
-
-productSchema.virtual("createdAtFormatted")
-    .get(function () {
-        return formatTimestamp(this.createdAt);
-    });
-
-productSchema.virtual("updatedAtFormatted")
-    .get(function () {
-        return formatTimestamp(this.updatedAt);
-    });
 
 module.exports = mongoose.model("Product", productSchema);

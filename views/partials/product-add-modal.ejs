@@ -1,0 +1,117 @@
+<div class="modal fade" id="modal-product-add" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title">Create new product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form id="add-product" method="POST" action="<%= typeof product != 'undefined' && product.id ? `/products/${product._id}/edit` : '/products' %>" autocomplete="off" enctype="multipart/form-data" data-toggle="formcache">
+
+                    <div class="mb-3">
+                        <label for="barcode" class="form-label">Barcode</label>
+                        <input id="barcode" class="form-control" type="text" name="barcode" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Product Name</label>
+                        <input id="productName" class="form-control" type="text" name="productName" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="importAddPrice" class="form-label">Import Price</label>
+                        <input id="importAddPrice" class="form-control money" type="text" name="importPrice" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="retailAddPrice" class="form-label">Retail Price</label>
+                        <input id="retailAddPrice" class="form-control money" type="text" name="retailPrice" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="imageUrls" class="form-label">Image URLs</label>
+                        <input id="imageUrls" class="form-control" type="file" name="imageUrls" multiple />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select id="category" class="form-select" name="category">
+                            <% categories.forEach(category => { %>
+                            <% const areEqual = String(typeof product != 'undefined' && product.category) === String(category._id); %>
+                            <option value="<%= category._id %>" selected="<%= areEqual %>">
+                                <%= category.name %>
+                            </option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-success" type="submit">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(() => {
+        $('#importAddPrice').val(VND(0).format());
+        $('#importAddPrice').on('input', function(e) {
+            if (e.originalEvent.inputType === 'deleteContentBackward') {
+                $(this).val(
+                    VND(
+                        Math.floor(VND($(this).val()).value / 10)
+                    ).format()
+                );
+            } else {
+                $(this).val(VND($(this).val()).format());
+            }
+        });
+        $('#retailAddPrice').val(VND(0).format());
+        $('#retailAddPrice').on('input', function(e) {
+            if (e.originalEvent.inputType === 'deleteContentBackward') {
+                $(this).val(
+                    VND(
+                        Math.floor(VND($(this).val()).value / 10)
+                    ).format()
+                );
+            } else {
+                $(this).val(VND($(this).val()).format());
+            }
+        });
+
+        const addForm = $('#add-product')
+
+        addForm.on('submit', function(e) {
+            e.preventDefault()
+
+            const formData = new FormData(this)
+
+            formData.set('importPrice', VND(formData.get('importPrice')).value);
+            formData.set('retailPrice', VND(formData.get('retailPrice')).value);
+
+            $.ajax({
+                url: '/api/products',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log('Response:', response);
+                    toastr.success(response.message);
+                    $('#add-product').trigger('reset');
+                },
+                error: function(response) {
+                    console.log('Error:', response)
+                    toastr.error(response.responseJSON?.message)
+                },
+            })
+        })
+    })
+</script>

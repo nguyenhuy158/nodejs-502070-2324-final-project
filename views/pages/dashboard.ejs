@@ -1,0 +1,121 @@
+<%- include('../partials/nav') %>
+
+<main>
+    <div class="header">
+        <div class="left">
+            <h1>Dashboard</h1>
+            <!-- <ul class="breadcrumb">
+                <li>
+                    <a href="#"></a>
+                    Analytics
+                </li>
+                /
+                <li><a class="active" href="#">Shop</a></li>
+            </ul> -->
+        </div>
+        <!-- <a class="report" href="#">
+            <i class="bx bx-cloud-download"></i>
+            <span>Download CSV</span>
+        </a> -->
+    </div>
+
+    <ul class="insights">
+        <li>
+            <i class="bx bx-cart"></i>
+            <span class="info">
+                <h3 class="text-nowrap"><%= totalOrderOfDay %></h3>
+                <p>Total number of orders today</p>
+            </span>
+        </li>
+        <li>
+            <i class="bx bx-show-alt"></i>
+            <span class="info">
+                <h3 class="text-nowrap"><%= VND(revenueOfMonth).format() %></h3>
+                <p>Monthly revenue</p>
+            </span>
+        </li>
+        <li>
+            <i class="bx bx-wallet-alt"></i>
+            <span class="info">
+                <h3 class="text-nowrap"><%= VND(revenueOfDay).format() %></h3>
+                <p>Daily revenue</p>
+            </span>
+        </li>
+
+        <li>
+            <i class="bx bx-dollar-circle"></i>
+            <span class="info">
+                <h3 class="text-nowrap"><%= totalQuantityOfDay %></h3>
+                <p>Number of products sold today</p>
+            </span>
+        </li>
+    </ul>
+
+    <div class="bottom-data">
+        <div class="orders">
+            <div class="header">
+                <h3>
+                    <i class="bx bx-money"></i>
+                    Bestselling Product
+                </h3>
+                <!-- <i class="bx bx-filter"></i>
+                <i class="bx bx-search"></i> -->
+            </div>
+            <table>
+                <thead></thead>
+                <tbody>
+                    <tr>
+                        <% for( let index = 0; index < bestSellerOfDay.length; index++ ) { %> <% let item =
+                        bestSellerOfDay[index] %>
+                        <div class="row">
+                            <input type="hidden" name="" value="<%= item.productId %>" />
+                            <div class="col">
+                                <img
+                                    width="100"
+                                    height="100"
+                                    class="object-fit-cover"
+                                    src="<%= item.imageUrl %>"
+                                    onerror="https://placehold.co/200?text=Not+available&amp;font=roboto"
+                                />
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <span><%= item.productName %></span>
+                            </div>
+                            <div class="col-auto d-flex align-items-center"><%= item.salesQuantity %></div>
+                            <div class="col-auto d-flex align-items-center">
+                                <span class="status <%= ['completed', 'pending', 'process'][index % 3] %>">
+                                    <%= VND(item.salePrice).format() %>
+                                </span>
+                            </div>
+                        </div>
+
+                        <% } %>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="reminders">
+            <div class="header">
+                <h3>
+                    <i class="bx bxs-user-check"></i>
+                    Top Seller
+                </h3>
+                <!-- <i class="bx bx-filter"></i>
+                <i class="bx bx-plus"></i> -->
+            </div>
+            <!--  -->
+            <ul class="task-list">
+                <% for( let index = 0; index < topSeller.length; index++ ) { %> <% let item = topSeller[index] %>
+                <li class="<%= ['completed', 'not-completed'][index % 2] %> d-flex align-items-center">
+                    <input type="hidden" name="" value="<%= item.sellerId %>" />
+                    <i class="bx bx-check-circle"></i>
+                    <span><%= item.sellerName %></span>
+                    <span><%= VND(item.salesAmount).format() %></>
+                    <i class="bx bx-dots-vertical-rounded"></i>
+                </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</main>

@@ -22,10 +22,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-.bx {
-    font-size: 1.7rem;
-}
-
 a {
     text-decoration: none;
 }
@@ -183,7 +179,7 @@ body {
 }
 
 .content nav {
-    height: 56px;
+    height: 70px;
     background: var(--light);
     padding: 0 24px 0 0;
     display: flex;
@@ -255,7 +251,7 @@ body {
 }
 
 .content nav .notif {
-    font-size: 20px;
+    font-size: 25px;
     position: relative;
 }
 
@@ -497,7 +493,7 @@ body {
     background: var(--grey);
 }
 
-.content main .bottom-data .orders table tr td .status {
+.content main .bottom-data .orders .status {
     font-size: 10px;
     padding: 6px 16px;
     color: var(--light);
@@ -505,15 +501,15 @@ body {
     font-weight: 700;
 }
 
-.content main .bottom-data .orders table tr td .status.completed {
+.content main .bottom-data .orders .status.completed {
     background: var(--success);
 }
 
-.content main .bottom-data .orders table tr td .status.process {
+.content main .bottom-data .orders .status.process {
     background: var(--primary);
 }
 
-.content main .bottom-data .orders table tr td .status.pending {
+.content main .bottom-data .orders .status.pending {
     background: var(--warning);
 }
 

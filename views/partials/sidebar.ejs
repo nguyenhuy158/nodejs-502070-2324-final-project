@@ -1,0 +1,72 @@
+
+<div class="sidebar">
+  <a class="logo" href="/">
+      <i class="bx bx-store-alt"></i>
+      <div class="logo-name">
+          <span>Tech</span>
+          Hut
+      </div>
+  </a>
+  <ul class="side-menu">
+      <li class="<%= sideLink === 'Home' ? 'active' : '' %>">
+          <a href="/">
+              <i class="bx bxs-dashboard"></i>
+              Dashboard
+          </a>
+      </li>
+      <li class="<%= sideLink === 'Product' ? 'active' : '' %>">
+          <a href="/products">
+              <i class="bx bx-store-alt"></i>
+              Shop
+          </a>
+      </li>
+      <li class="<%= sideLink === 'Checkout' ? 'active' : '' %>">
+          <a href="/checkout">
+              <i class="bx bx-analyse"></i>
+              Checkout
+          </a>
+      </li>
+      <li class="<%= sideLink === 'Order' ? 'active' : '' %>">
+          <a href="/orders">
+              <i class="bx bx-money"></i>
+              Orders
+          </a>
+      </li>
+      <li class="<%= sideLink === 'Customer' ? 'active' : '' %>">
+          <a href="/customers">
+              <i class="bx bx-group"></i>
+              Customer
+          </a>
+      </li>
+      <li class="<%= sideLink === 'User' ? 'active' : '' %>">
+          <a href="/users">
+              <i class="bx bx-id-card"></i>
+              Salepeoples
+          </a>
+      </li>
+      <li class="<%= sideLink === 'Report' ? 'active' : '' %>">
+          <a href="/reports">
+              <i class="bx bxs-report"></i>
+              Reports
+          </a>
+      </li>
+
+      <!-- TODO: Add this later -->
+      <!-- <li>
+          <a href="#">
+              <i class="bx bx-message-square-dots"></i>
+              Tickets
+          </a>
+      </li> -->
+  </ul>
+  <ul class="side-menu">
+      <li>
+          <a class="logout" href="/logout#">
+              <i class="bx bx-log-out-circle"></i>
+              Logout
+          </a>
+      </li>
+  </ul>
+</div>
+
+ <!-- block content  -->

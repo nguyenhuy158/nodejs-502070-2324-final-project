@@ -43,10 +43,11 @@ exports.changeProfilePicture = async (req, res, next) => {
 };
 
 exports.viewProfile = async (req, res, next) => {
+    console.log("🚀 ~ file: userController.js:31 ~ exports.viewProfile= ~ req.user", req.user);
     try {
-        addFlash.addFlash(req, "success", "get info success");
         res.render("pages/users/profile", {
-            pageTitle: "Profile - Tech Hut"
+            pageTitle: "Profile - Tech Hut",
+            user: req.user
         });
     } catch (error) {
         logger.error(error);
@@ -54,7 +55,7 @@ exports.viewProfile = async (req, res, next) => {
     }
 };
 
-exports.deleteUser = async (req, res, next) => {
+exports.deleteUser = async (req, res) => {
     const id = req.params[0];
     console.log("=>(userController.js:55) id", id);
     console.log("=>(userController.js:56) ObjectId.isValid(id)", ObjectId.isValid(id));
@@ -105,7 +106,10 @@ exports.getUser = async (req, res, next) => {
     const userId = req.params[0];
     if (ObjectId.isValid(userId)) {
         const user = await User.findById(userId);
-        return res.render("pages/users/detail", { user });
+        return res.render("pages/users/detail", {
+            user,
+            pageTitle: user.fullName + " User Detail - Tech Hut",
+        });
     }
     next();
 };
@@ -143,30 +147,6 @@ exports.getUsers = async function (req, res, next) {
     }
 };
 
-exports.register = function (req, res, next) {
-    User.findOne({ email: req.body.email }, (err, user) => {
-        if (user == null) {
-            bcrypt.hash(req.body.password, 10, function (err, hash) {
-                if (err) {
-                    return next(err);
-                }
-                const user = new User(req.body);
-                user.role = ["salespeople"];
-                user.password = hash;
-                user.password_confirm = hash;
-                user.save((err, result) => {
-                    if (err) {
-                        return res.json({ err });
-                    }
-                    res.json({ user: result });
-                });
-            });
-        } else {
-            res.json({ err: "Email has been used" });
-        }
-    });
-};
-
 exports.resendEmail = async function resendEmail(req, res, next) {
     const id = req.params[0];
 
@@ -174,11 +154,6 @@ exports.resendEmail = async function resendEmail(req, res, next) {
         const user = await User.findById(id);
 
         if (!user) {
-            // return res.render('pages/auth/login', {
-            //     isRegister: false,
-            //     status: 'failed',
-            //     message: 'No user found with the provided email address.',
-            // });
             addFlash.addFlash(req, "warning", `No user found with the provided ${id}.`);
             return res.redirect("/users");
         }
@@ -193,23 +168,17 @@ exports.resendEmail = async function resendEmail(req, res, next) {
 
         addFlash.addFlash(req, "success", "Email has been resent. Please check your email for further instructions.");
         res.redirect("/users");
-
-        // res.render('pages/auth/login', {
-        //     isRegister: false,
-        //     status: 'success',
-        //     message: 'Email has been resent. Please check your email for further instructions.',
-        // });
     } catch (error) {
         console.error("Error resending email:", error);
         next(error);
     }
 };
 // CREATE NEW SALE PEOPLE
-exports.getCreateAccount = (req, res) => {
-    res.render("pages/users/create-account", {
-        pageTitle: "Create Account - Tech Hut",
-    });
-};
+// exports.getCreateAccount = (req, res) => {
+//     res.render("pages/users/create-account", {
+//         pageTitle: "Create Account - Tech Hut",
+//     });
+// };
 // exports.postCreateAccount = async (req, res, next) => {
 //     const { fullName, email } = req.body;
 

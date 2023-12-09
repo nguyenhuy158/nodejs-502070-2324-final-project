@@ -1,5 +1,68 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 $(() => {
+    const columnsConfig = [
+        {
+            data: null,
+            render: function (data, type, row, meta) {
+                return meta.row + 1;
+            },
+            orderable: false
+        },
+        { data: 'barcode' },
+        {
+            data: 'productName',
+            render: function (data, type, row) {
+                return `<a href="/products/${row._id}">${DataTable.render.ellipsis(20, true)(data, type, row)}</a>`;
+            }
+        },
+        {
+            data: 'importPrice',
+            render: function (data) {
+                return VND(data).format();
+
+            }
+        },
+        {
+            data: 'retailPrice',
+            render: function (data) {
+                return VND(data).format();
+            }
+        },
+        { data: 'category.name' },
+        {
+            data: 'imageUrls',
+            render: function (data, type, row) {
+                return `<a class="image-popup d-block" href=${data[0]} title="${row.productName}">
+                <img class="lazy" width="100" height="100" data-src="${data[0]}"/>
+                </a>`;
+            }
+        },
+    ];
+    // TODO add feature or button for salespeople to add product to cart, then checkout
+    if (isAdmin) {
+        columnsConfig.push({
+            data: null,
+            render: function (data, type, row, meta) {
+
+                const viewBtn = `<a class="my-1 btn btn-sm btn-outline-primary view-product-btn" href="/products/${row._id}">
+                    <i class='bx bx-detail'></i>
+                </a>`;
+                const updateBtn = `<button class="my-1 btn btn-sm btn-outline-success btn-edit edit-product-btn">
+                    <i class='bx bx-edit'></i>
+                </button>`;
+                const deleteBtn = `<button class="my-1 btn btn-sm btn-outline-danger delete-btn delete-product-btn">
+                    <i class='bx bx-trash-alt'></i>
+                </button>`;
+                const demo = ``;
+
+
+                return `${viewBtn} ${updateBtn} ${deleteBtn} ${demo}`;
+            }
+        });
+    }
+
+    
     let table = $("#product-table")
         .DataTable({
             colReorder: {
@@ -10,7 +73,7 @@ $(() => {
                 {
                     text: 'Add product',
                     action: function (e, dt, node, config) {
-                        window.location = '/products/add';
+                        $('#modal-product-add').modal('show');
                     }
                 },
                 {
@@ -22,7 +85,7 @@ $(() => {
                 'spacer',
                 {
                     extend: 'collection',
-                    className: 'custom-html-collection',
+                    className: 'options-btn',
                     buttons: [
                         '<h3>Export</h3>',
                         'copy',
@@ -76,69 +139,7 @@ $(() => {
                     render: DataTable.render.hyperLink('Download', 'popup', 1000, 500)
                 }
             ],
-            columns: [
-                {
-                    data: null,
-                    render: function (data, type, row, meta) {
-                        return meta.row + 1;
-                    },
-                    orderable: false
-                },
-                { data: 'barcode' },
-                {
-                    data: 'productName',
-                    render: function (data, type, row) {
-                        return `<a href="/products/${row._id}">${DataTable.render.ellipsis(20, true)(data, type, row)}</a>`;
-                    }
-                },
-                {
-                    data: 'importPrice',
-                    render: function (data, type, row) {
-                        const number = parseInt(data, 10);
-                        return number.toLocaleString('vi-VN', {
-                            style: 'currency',
-                            currency: 'VND'
-                        });
-                    }
-                },
-                {
-                    data: 'retailPrice',
-                    render: function (data, type, row) {
-                        const number = parseInt(data, 10);
-                        return number.toLocaleString('vi-VN', {
-                            style: 'currency',
-                            currency: 'VND'
-                        });
-                    }
-                },
-                { data: 'category.name' },
-                {
-                    data: 'imageUrls',
-                    render: function (data, type, row) {
-                        return `<a class="image-popup d-block" href=${data[0]} title="${row.productName}">
-                        <img class="lazy" width="100" height="100" data-src="${data[0]}"/>
-                        </a>`;
-                    }
-                },
-                {
-                    data: null,
-                    render: function (data, type, row, meta) {
-                        const viewBtn = `<a class="my-1 btn btn-sm btn-primary" href="/products/${row._id}">
-                            <i class='bx bx-detail'></i>
-                        </a>`;
-                        const updateBtn = `<button class="my-1 btn btn-sm btn-success btn-edit">
-                            <i class='bx bx-edit'></i>
-                        </button>`;
-                        const deleteBtn = `<button class="my-1 btn btn-sm btn-danger delete-btn">
-                            <i class='bx bx-trash-alt'></i>
-                        </button>`;
-                        const demo = ``;
-
-
-                        return `${viewBtn} ${updateBtn} ${deleteBtn} ${demo}`;
-                    }
-                },
-            ]
+            columns: columnsConfig
         });
     table.on('draw.dt', function () {
         var info = table.page.info();

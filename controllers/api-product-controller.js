@@ -49,7 +49,11 @@ exports.postApiProduct = async (req, res) => {
 
         await product.save();
 
-        res.status(201).json(product);
+        res.status(201).json({
+            error: false,
+            product,
+            message: "Created successfully"
+        });
     } catch (error) {
         res.status(500).json({ error: true, message: 'Could not create the product' + error });
     }

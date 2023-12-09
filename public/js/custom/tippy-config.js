@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 $(() => {
     tippy("button:has(.bx.bx-search)", {
         content: "Search products",
@@ -46,14 +47,94 @@ $(() => {
     });
 
 
-    // Datatables
-    tippy(".purchase-btn", {
-        content: "View history purchase of customer",
+    // orders
+    $(document).on('mouseenter', '.print-btn', function () {
+        tippy(this, {
+            content: "Print order",
+        });
     });
-    tippy(".edit-btn", {
-        content: "Edit data",
+    $(document).on('mouseenter', '.view-order-btn', function () {
+        tippy(this, {
+            content: "View order detail",
+        });
     });
-    tippy(".delete-btn", {
-        content: "Delete data",
+    // datatables
+    $(document).on('mouseenter', '.reload-btn', function () {
+        tippy(this, {
+            content: "Reload",
+        });
+    });
+    $(document).on('mouseenter', '.add-salespeople-btn', function () {
+        tippy(this, {
+            content: "Add salespeople",
+        });
+    });
+    $(document).on('mouseenter', '.options-btn', function () {
+        tippy(this, {
+            content: "Options",
+        });
+    });
+    // products
+    $(document).on('mouseenter', '.view-product-btn', function () {
+        tippy(this, {
+            content: "View product detail",
+        });
+    });
+    $(document).on('mouseenter', '.edit-product-btn', function () {
+        tippy(this, {
+            content: "Edit product",
+        });
+    });
+    $(document).on('mouseenter', '.delete-product-btn', function () {
+        tippy(this, {
+            content: "Delete product",
+        });
+    });
+    // salespeople
+    $(document).on('mouseenter', '.view-user-btn', function () {
+        tippy(this, {
+            content: "View account detail",
+        });
+    });
+    $(document).on('mouseenter', '.edit-user-btn', function () {
+        tippy(this, {
+            content: "Edit account detail",
+        });
+    });
+    $(document).on('mouseenter', '.delete-user-btn', function () {
+        tippy(this, {
+            content: "Delete account detail",
+        });
+    });
+    $(document).on('mouseenter', '.lock-user-btn', function () {
+        tippy(this, {
+            content: "Lock account detail",
+        });
+    });
+    $(document).on('mouseenter', '.unlock-user-btn', function () {
+        tippy(this, {
+            content: "Unlock account detail",
+        });
+    });
+    $(document).on('mouseenter', '.resent-user-btn', function () {
+        tippy(this, {
+            content: "Resent link 1 minute",
+        });
+    });
+    // customer
+    $(document).on('mouseenter', '.view-customer-btn', function () {
+        tippy(this, {
+            content: "View customer detail",
+        });
+    });
+    $(document).on('mouseenter', '.update-customer-btn', function () {
+        tippy(this, {
+            content: "Edit customer",
+        });
+    });
+    $(document).on('mouseenter', '.history-customer-btn', function () {
+        tippy(this, {
+            content: "View history purchase of customer",
+        });
     });
 });

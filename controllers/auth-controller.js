@@ -70,7 +70,8 @@ exports.getLogin = async function (req, res, next) {
     } else {
         return res.render('pages/auth/login', {
             messages: req.flash('info'),
-            pageTitle: 'Login - Tech Hut'
+            pageTitle: 'Login - Tech Hut',
+            layout: 'pages/auth-layout'
         });
     }
 };
@@ -84,12 +85,32 @@ exports.customAuthenticateCallback = (req, res, next) => {
         }
 
         if (!user) {
-            return res.status(401).json({ message: 'Username or Password not correct ', error: true });
+            return res.status(401).json({
+                message: 'Username or Password not correct',
+                error: true
+            });
+        }
+
+        if (user.token) {
+            return res.status(401).json({
+                message: 'Please login by clicking on the link in your email',
+                error: true
+            });
+        }
+
+        if (user.lockedStatus) {
+            return res.status(401).json({
+                message: 'Account is locked, please contact to admin to unlock.',
+                error: true
+            });
         }
 
         req.login(user, (loginErr) => {
             if (loginErr) {
-                return res.status(500).json({ message: 'Username or Password not correct', error: true });
+                return res.status(500).json({
+                    message: 'Username or Password not correct',
+                    error: true
+                });
             }
 
             return res.status(200).json({ message: 'Login successful', user, error: false });
@@ -98,48 +119,61 @@ exports.customAuthenticateCallback = (req, res, next) => {
 };
 // LOGIN
 
-exports.emailConfirm = async (req, res, next) => {
-    const token = req.query.token;
-    console.log('=>(authController.js:70) token', token);
-
+exports.getEmailConfirm = async (req, res) => {
+    res.render('pages/auth/email-confirm', {
+        pageTitle: 'Redirect ..',
+        layout: 'pages/layout-none'
+    });
+};
+exports.emailConfirm = async (req, res) => {
+    const token = req.body.token;
     if (token) {
         try {
             const salesperson = await User.findOne({ token });
 
             if (!salesperson) {
-                req.flash(
-                    'info',
-                    'Link invalid or used, please contact to admin and try again.',
-                );
-                return res.redirect('/login');
+                return res.status(401).json({
+                    error: true,
+                    message: 'Link invalid or used, please contact to admin and try again.'
+                });
             }
 
             if (salesperson && salesperson.tokenExpiration < moment()) {
-                req.flash(
-                    'info',
-                    'Link expired, please contact to admin and try again.',
-                );
-                return res.redirect('/login');
+                return res.status(401).json({
+                    error: true,
+                    message: 'Link expired, please contact to admin and try again.'
+                });
             }
 
-            req.login(salesperson, async (err) => {
-                console.log('=>(authController.js:138) err', err);
-                if (err) {
-                    return next(err);
+            req.login(salesperson, async (error) => {
+                if (error) {
+                    logger.error('=>(authController.js:138) error' + error);
+                    return res.status(401).json({
+                        error: true,
+                        message: 'Oops, something went wrong.'
+                    });
                 }
-                req.flash('info', 'Welcome Now you are salespeople.');
 
                 salesperson.token = undefined;
                 salesperson.tokenExpiration = undefined;
                 await salesperson.save();
-                return res.redirect('/');
+                return res.status(200).json({
+                    error: false,
+                    message: 'Welcome! Now you are salespeople.'
+                });
             });
         } catch (error) {
-            req.flash('error', 'An error occurred while logging in.');
-            next(error);
+            logger.error('=>(authController.js:138) err' + error);
+            return res.status(401).json({
+                error: true,
+                message: 'Ops, something went wrong.'
+            });
         }
     } else {
-        return res.redirect('/login');
+        return res.status(401).json({
+            error: true,
+            message: 'Oops, missing token.'
+        });
     }
 };
 
@@ -251,9 +285,7 @@ exports.logout = function (req, res) {
     });
 };
 
-exports.getRegister = async function (req, res) {
-    res.render('pages/auth/login', { isRegister: true });
-};
+
 
 // CHANGE PASSWORD 
 exports.getChangePassword = async function (req, res) {
@@ -261,6 +293,7 @@ exports.getChangePassword = async function (req, res) {
         return res.render('pages/auth/change-password', {
             isFirstLogin: true,
             currentPassword: req.user.username,
+            pageTitle: 'Change Password - Tech Hut'
         });
     }
     return res.render(
@@ -314,7 +347,8 @@ exports.postChangePassword = async function (req, res, next) {
 // PASSWORD RESET | FORGOT PASSWORD
 exports.getResetPassword = async (req, res) => {
     return res.render('pages/auth/reset-password', {
-        pageTitle: 'Reset Password - Tech Hut'
+        pageTitle: 'Reset Password - Tech Hut',
+        layout: 'pages/auth-layout'
     });
 };
 exports.postResetPassword = async (req, res) => {

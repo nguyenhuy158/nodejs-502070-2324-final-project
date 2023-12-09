@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const User = require('../models/user');
+
+const logger = require('../config/logger');
 const { generateToken, getFullUrlForMailConfirm, sendEmail } = require("../utils/utils");
 
 
@@ -13,6 +15,7 @@ exports.checkAndParseObjectId = async (req, res, next) => {
             req.apiUser = apiUser;
             return next();
         } catch (error) {
+            logger.error(error);
             res.status(400).json({
                 error: true,
                 message: 'Id not found! please reload and try again!'
@@ -109,34 +112,23 @@ exports.deleteApiUserById = async (req, res) => {
 
 exports.getApiResentMail = async (req, res) => {
     try {
-        const user = await User.findById(req.id);
+        const user = req.apiUser;
+        const token = generateToken();
 
-        const resetToken = generateToken();
+        // sent mail
+        await user.sentMail(token);
+        await sendEmail(req, user, token, "create-account");
 
-        user.reSentMail(resetToken);
-
-        const resetLink = getFullUrlForMailConfirm(req, resetToken);
-
-        const mailOptions = {
-            from: process.env.FROM_EMAIL,
-            to: user.email,
-            subject: "Welcome to Tech Hut - Activate Sales Account [Retail Store]",
-            text: `Dear ${user.fullName}\n\n` +
-                `An account has been created for you in the Sales System. To log in, please click the following link within 1 minute:\n\n` +
-                `${resetLink}\n\n` +
-                `Best regards,` +
-                `${req.user.fullName}`,
-        };
-
-        sendEmail(req, user, resetToken, mailOptions);
-        return res.json({
+        return res.status(201).json({
             error: false,
-            message: "Resent success, please check mail to login."
+            message: 'Resent success, please check mail to login.',
         });
+
     } catch (error) {
+        logger.error(error);
         return res.json({
             error: true,
-            message: error
+            message: 'Ops, something went wrong, please try again.'
         });
     }
 };
@@ -185,9 +177,10 @@ exports.putApiLockAccount = async (req, res) => {
             message: `${req.apiUser.fullName} is locked`
         });
     } catch (error) {
+        logger.error('putApiLockAccount', error);
         return res.json({
             error: true,
-            message: error
+            message: "Ops, something went wrong, please try again."
         });
     }
 };
@@ -200,9 +193,10 @@ exports.putApiUnLockAccount = async (req, res) => {
             message: `${req.apiUser.fullName} is unlocked`
         });
     } catch (error) {
+        logger.error('putApiUnLockAccount', error);
         return res.json({
             error: true,
-            message: error
+            message: "Ops, something went wrong, please try again."
         });
     }
 };

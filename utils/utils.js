@@ -1,7 +1,56 @@
-const { transporter } = require("../config/email");
 const { v2: cloudinary } = require("cloudinary");
-const compiledFunctionCreateAccount = require("pug").compileFile("./views/email/email-template-create-account.pug");
-const compiledFunctionForgotPassword = require("pug").compileFile("./views/email/email-template-forgot-password.pug");
+const { transporter } = require("../config/email");
+const ejs = require("ejs");
+const fs = require("fs");
+
+const emailTemplateCreateAccount = fs.readFileSync("./views/email/email-template-create-account.ejs", "utf-8");
+const emailTemplateForgotPassword = fs.readFileSync("./views/email/email-template-forgot-password.ejs", "utf-8");
+
+exports.sendEmail = async function (req, user, token, type = "create-account") {
+    const mailOptions = {
+        from: process.env.FROM_EMAIL,
+        to: user.email,
+
+    };
+
+    let emailTemplate;
+    let subject;
+
+    switch (type) {
+        case "create-account":
+            subject = "Your New Retail Store Login Account";
+            emailTemplate = ejs.compile(emailTemplateCreateAccount);
+            break;
+
+        case "forgot-password":
+            subject = "Your Retail Store System Password Reset";
+            emailTemplate = ejs.compile(emailTemplateForgotPassword);
+            break;
+
+        default:
+            break;
+    }
+    try {
+
+        if (emailTemplate) {
+            const htmlContent = emailTemplate({
+                name: user.fullName,
+                url: req.protocol + "://" + req.get("host") + "/email-confirm?token=" + token,
+                admin: req.user.fullName || "Admin",
+            });
+
+            mailOptions.subject = subject;
+            mailOptions.html = htmlContent;
+        }
+        await transporter.sendMail(mailOptions, (err, info) => {
+            console.log(`[SEND MAIL] ${err ? 'Fail' : 'Success'}`);
+            console.log("[SEND MAIL][INFO]", info.accepted);
+            console.log("[SEND MAIL][ERR]", err);
+        });
+    } catch (error) {
+        console.log("[SEND MAIL][ERR]", error);
+    }
+};
 
 exports.isNumeric = function isNumeric(value) {
     return !isNaN(value) && typeof value !== 'boolean';
@@ -25,46 +74,6 @@ exports.generateToken = function () {
         token += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     return token;
-};
-
-exports.sendEmail = async function (req, user, token, type = "create-account") {
-    const mailOptions = {
-        from: process.env.FROM_EMAIL,
-        to: user.email,
-    };
-
-
-    switch (type) {
-        case "create-account":
-            mailOptions.subject = "Your New Retail Store Login Account";
-            mailOptions.html = compiledFunctionCreateAccount({
-                name: user.fullName,
-                url: req.protocol + "://" + req.get("host") + "/email-confirm?token=" + token,
-                admin: req.user.fullName || "Admin",
-            });
-            break;
-
-        case "forgot-password":
-            mailOptions.subject = "Your Retail Store System Password Reset";
-            mailOptions.html = compiledFunctionForgotPassword({
-                name: user.fullName,
-                url: req.protocol + "://" + req.get("host") + "/email-confirm?token=" + token,
-                admin: "Admin",
-            });
-            break;
-
-        default:
-            break;
-    }
-    try {
-        await transporter.sendMail(mailOptions, (err, info) => {
-            console.log(`[SEND MAIL] ${err ? 'Fail' : 'Success'}`);
-            console.log("[SEND MAIL][INFO]", info.accepted);
-            console.log("[SEND MAIL][ERR]", err);
-        });
-    } catch (error) {
-        console.log("[SEND MAIL][ERR]", error);
-    }
 };
 
 exports.uploadImage = async (imagePath) => {

@@ -10,12 +10,14 @@ $(() => {
             buttons: [
                 {
                     text: 'New Sale People',
+                    className: 'add-salespeople-btn',
                     action: function (e, dt, node, config) {
-                        window.location = '/users/create-account';
+                        $('#modal-create-salespeople').modal('show');
                     }
                 },
                 {
                     text: 'Reload',
+                    className: 'reload-btn',
                     action: function (e, dt, node, config) {
                         dt.ajax.reload();
                     }
@@ -23,7 +25,7 @@ $(() => {
                 'spacer',
                 {
                     extend: 'collection',
-                    className: 'custom-html-collection',
+                    className: 'options-btn',
                     buttons: [
                         '<h3>Export</h3>',
                         'copy',
@@ -101,29 +103,31 @@ $(() => {
                 {
                     data: null,
                     render: function (data, type, row, meta) {
-                        const viewBtn = `<a class="my-1 btn btn-sm btn-primary" href="/users/${row._id}">
+                        const viewBtn = `<a href="/users/${row._id}" class="my-1 btn btn-sm btn-outline-primary view-user-btn">
                                     <i class='bx bx-detail'></i>
 								</a>`;
 
-                        const updateBtn = `<button class="my-1 btn btn-sm btn-success edit-btn">
+                        const updateBtn = `<button class="my-1 btn btn-sm btn-outline-success edit-btn edit-user-btn">
                                     <i class='bx bx-edit'></i>
 								</button>`;
 
-                        const deleteBtn = `<button class="my-1 btn btn-sm btn-danger delete-btn">
+                        const deleteBtn = `<button class="my-1 btn btn-sm btn-outline-danger delete-btn delete-user-btn">
                                     <i class='bx bx-trash-alt'></i>
 								</button>`;
 
-                        const lockBtn = `<button class="my-1 btn btn-sm btn-dark lock-btn">
+                        const lockBtn = `<button class="my-1 btn btn-sm btn-outline-dark lock-btn lock-user-btn">
                                     <i class='bx bx-lock-alt'></i>
 								</button>`;
 
-                        const unLockBtn = `<button class="my-1 btn btn-sm btn-dark unlock-btn">
+                        const unLockBtn = `<button class="my-1 btn btn-sm btn-outline-dark unlock-btn unlock-user-btn">
                                     <i class='bx bx-lock-open-alt' ></i>
 								</button>`;
 
-                        const resentBtn = `<button class="my-1 btn btn-sm btn-secondary resent-btn">
+                        const resentBtn = `<button class="my-1 btn btn-sm btn-outline-secondary resent-btn resent-user-btn">
                                     <i class='bx bx-mail-send'></i>
 								</button>`;
+
+                        tippy('[data-tippy-content]');
 
                         return `${viewBtn} ${updateBtn} ${deleteBtn} ${row.lockedStatus ? unLockBtn : lockBtn} ${resentBtn}`;
                     }

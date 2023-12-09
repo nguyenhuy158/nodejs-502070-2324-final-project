@@ -66,8 +66,8 @@ exports.getApiCustomer = async (req, res) => {
 
 exports.checkAndCheckPhone = async (req, res, next) => {
     const phone = req.params[0];
-    console.log(`🚀 🚀 file: apiCustomerController.js:62 🚀 exports.checkAndCheckPhone= 🚀 req.params`, req.params);
-    console.log(`🚀 🚀 file: apiCustomerController.js:61 🚀 exports.checkAndCheckPhone= 🚀 phone`, phone);
+    // console.log(`🚀 🚀 file: apiCustomerController.js:62 🚀 exports.checkAndCheckPhone= 🚀 req.params`, req.params);
+    // console.log(`🚀 🚀 file: apiCustomerController.js:61 🚀 exports.checkAndCheckPhone= 🚀 phone`, phone);
     try {
         const customer = await Customer.findOne({ phone });
         req.apiCustomer = customer;
@@ -80,14 +80,20 @@ exports.checkAndCheckPhone = async (req, res, next) => {
     }
 };
 
-exports.getApiCustomerByPhone = async (req, res) => {
-    try {
-        const customer = await Customer.findOne({ phone: req.phone });
-        if (!customer) return res.json({ error: false, message: 'Customer no payment before.', customer });
-        return res.json({ error: false, message: 'Get info customer successfully.', customer });
-    } catch (error) {
-        res.status(500).json({ error: true, message: 'Could not get the customer by phone' + error });
+exports.getApiCustomerByPhone = (req, res) => {
+    const customer = req.apiCustomer;
+    if (!customer) {
+        return res.status(400).json({
+            error: false,
+            message: 'Customer no payment before.',
+        });
     }
+
+    return res.json({
+        error: false,
+        message: 'Get info customer successfully.',
+        customer
+    });
 };
 
 

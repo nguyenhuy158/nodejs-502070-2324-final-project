@@ -1,6 +1,5 @@
 const Product = require("../models/product");
 const ProductCategory = require("../models/product-category");
-const User = require("../models/user");
 
 
 const isFormSubmit = (req) => {
@@ -13,26 +12,25 @@ exports.searchResults = async (req, res, next) => {
     let page = parseInt(req.query.page) || 1;
 
     try {
-        const products = await Product.find({
-            productName: {
-                $regex: q,
-                $options: "i"
-            }
-        })
-            .populate("category")
-            .skip(perPage * page - perPage)
-            .limit(perPage)
-            .exec();
-        const count = await Product.countDocuments({
-            productName: {
-                $regex: q,
-                $options: "i"
-            }
-        });
-        const nextPage = parseInt(page) + 1;
-        const hasNextPage = nextPage <= Math.ceil(count / perPage);
-
         if (isFormSubmit(req)) {
+            const products = await Product.find({
+                productName: {
+                    $regex: q,
+                    $options: "i"
+                }
+            })
+                .populate("category")
+                .skip(perPage * page - perPage)
+                .limit(perPage)
+                .exec();
+            const count = await Product.countDocuments({
+                productName: {
+                    $regex: q,
+                    $options: "i"
+                }
+            });
+            const nextPage = parseInt(page) + 1;
+            const hasNextPage = nextPage <= Math.ceil(count / perPage);
             const response = {
                 products,
                 current: page,
@@ -49,19 +47,23 @@ exports.searchResults = async (req, res, next) => {
                 pageTitle: "Search Results - Tech Hut"
             });
         } else {
-            const users = await User.find({
-                fullName: {
-                    $regex: q,
-                    $options: "i"
-                }
-            })
-                .limit(5);
+            const products = await Product.find().populate("category").exec();
+            let response = [];
+            products.forEach(product => {
+                response.push({
+                    _id: product._id,
+                    barcode: product.barcode,
+                    name: product.productName,
+                    price: product.retailPrice,
+                    image: product.productImage,
+                    phone: product.category.name == "Phone" ? product.productName : '',
+                    accessories: product.category.name == "Accessories" ? product.productName : '',
+                    imageUrl: product.imageUrls[0],
+                    desc: product.desc || ''
+                });
 
-            res.json({
-                error: false,
-                message: "Get data success",
-                results: [...products, ...users]
             });
+            res.json(response);
         }
     } catch (error) {
         console.log(`🚀 🚀 file: indexController.js:224 🚀 exports.searchResults= 🚀 error`, error);

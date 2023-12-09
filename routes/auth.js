@@ -4,14 +4,16 @@ const authController = require("../controllers/auth-controller");
 const { validateResetPassword, validateLogin } = require('../middlewares/validation');
 
 router
+    .post("/email-confirm",
+        authController.emailConfirm)
+    .get("/email-confirm",
+        authController.getEmailConfirm)
+
     .get("/login",
         authController.getLogin)
     .post("/login",
         validateLogin,
         authController.customAuthenticateCallback)
-
-    .get("/email-confirm",
-        authController.emailConfirm)
 
     .get("/reset-password",
         authController.getResetPassword)

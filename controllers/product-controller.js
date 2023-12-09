@@ -1,6 +1,7 @@
 const Product = require("../models/product");
 const ProductCategory = require("../models/product-category");
 
+const currency = require('currency.js');
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const sharp = require("sharp");
@@ -17,7 +18,10 @@ function product(productId) {
 }
 
 exports.add = async function (req, res) {
-    res.render("pages/products/form", { categories: await categories() });
+    res.render("pages/products/form", {
+        categories: await categories(),
+        pageTitle: "Add Product - Tech Hut"
+    });
 };
 
 exports.create = async function (req, res) {
@@ -196,19 +200,22 @@ exports.edit = async function (req, res, next) {
     }
 };
 
-exports.detail = async function (req, res, next) {
+exports.getProductDetail = async function (req, res, next) {
 
     try {
         const id = req.params[0];
 
-        const product = await Product.findById({ _id: id });
+        const product = await Product.findById({ _id: id }).populate('category');
         if (req.xhr) {
             return res.json({
                 error: false,
                 product
             });
         } else {
-            res.render("pages/products/detail", { product });
+            res.render("pages/products/detail", {
+                product,
+                pageTitle: product.productName + "Product Detail - Tech Hut",
+            });
         }
     } catch (error) {
         console.error("Error fetching products:", error);
@@ -336,7 +343,7 @@ exports.seedDatabaseV1 = async function () {
     }
 };
 
-exports.processImageUrlsBeforeStore = (files) => {
+function processImageUrlsBeforeStore(files) {
     return Promise.all(files
         .map((file) => file.path)
         .map(async file => {
@@ -361,22 +368,29 @@ exports.processImageUrlsBeforeStore = (files) => {
 
             return newFilePath;
         }));
-};
+}
+exports.processImageUrlsBeforeStore = processImageUrlsBeforeStore;
 
 exports.addThumbnails = async (req, res) => {
     const imageUrls = await processImageUrlsBeforeStore(req.files);
     const productId = req.params[0];
-    console.log(`=>(productController.js:369) productId`, productId);
+    console.log(`=>(productController.js:371) productId`, productId); 
+
     try {
-        const result = await Product.updateOne({ _id: productId }, { $push: { imageUrls: { $each: imageUrls } } });
+        const result = await Product.findOneAndUpdate(
+            { _id: productId },
+            { $push: { imageUrls: { $each: imageUrls } } },
+            { upsert: false, new: true }
+        );
+        const p = await Product.find({ _id: productId });
+        console.log(`=>(productController.js:371) p`, p); 
         console.log(`=>(productController.js:371) result`, result);
 
         return res.json({
             error: false,
-            result
+            result,
         });
     } catch (error) {
-        console.log(`=>(productController.js:377) error`, error);
         return res.json({
             error: true,
             message: error
@@ -387,6 +401,7 @@ exports.addThumbnails = async (req, res) => {
 exports.removeThumbnails = async (req, res) => {
     const imageUrls = req.body.imageUrls;
     const productId = req.params[0];
+
     try {
         const result = await Product.updateOne({ _id: productId }, { $pull: { imageUrls: imageUrls } });
         console.log(`=>(productController.js:371) result`, result);
@@ -441,7 +456,7 @@ exports.mainThumbnail = async (req, res) => {
 
         return res.json({
             error: false,
-            message: "Last image moved to the first position and saved"
+            message: "Change main thumbnail successfully"
         });
     } catch (error) {
         return res.json({

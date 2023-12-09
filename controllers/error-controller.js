@@ -32,7 +32,8 @@ exports.serverErrorHandler = function (err, req, res, next) {
     res.status(500).render("pages/error/500", {
         error: "Something failed!",
         message: err.message,
-        pageTitle: "Server Error - Tech Hut"
+        pageTitle: "Server Error - Tech Hut",
+        layout: "./pages/auth-layout",
     });
 };
 

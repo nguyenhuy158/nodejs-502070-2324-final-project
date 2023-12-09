@@ -19,6 +19,7 @@ $(() => {
             },
             buttons: [
                 {
+                    className: 'reload-btn',
                     text: 'Reload',
                     action: function (e, dt, node, config) {
                         dt.ajax.reload();
@@ -27,7 +28,7 @@ $(() => {
                 'spacer',
                 {
                     extend: 'collection',
-                    className: 'custom-html-collection',
+                    className: 'options-btn',
                     buttons: [
                         '<h3>Export</h3>',
                         'copy',
@@ -90,19 +91,19 @@ $(() => {
                 {
                     data: 'totalAmount',
                     render: function (data, type, row) {
-                        return data || '';
+                        return VND(data).format();
                     },
                 },
                 {
                     data: 'givenAmount',
                     render: function (data, type, row) {
-                        return data || '';
+                        return VND(data).format();
                     },
                 },
                 {
                     data: 'changeAmount',
                     render: function (data, type, row) {
-                        return data || '';
+                        return `-${VND(-data).format()}`;
                     },
                 },
                 {
@@ -112,25 +113,37 @@ $(() => {
                     },
                 },
                 {
+                    data: 'seller',
+                    render: function (data, type, row) {
+                        return data.fullName;
+                    },
+                },
+                {
                     data: null,
                     render: function (data, type, row, meta) {
-                        const viewBtn = `<a class="my-1 btn btn-sm btn-primary" href="/customers/${row._id}">
+                        const viewBtn = `<a class="my-1 btn btn-sm btn-outline-primary view-order-btn" href="/orders/${row._id}">
                                     <i class='bx bx-detail'></i>
 								</a>`;
 
-                        const updateBtn = `<button class="my-1 btn btn-sm btn-success edit-btn">
-                                    <i class='bx bx-edit'></i>
+                        const printOrderBtn = `<button class="my-1 btn btn-sm btn-outline-success print-btn" data-order-id="${row._id}">
+                                    <i class='bx bx-printer'></i>
 								</button>`;
 
-                        const purchaseHistoryBtn = `<a class="my-1 btn btn-sm btn-success purchase-btn" href="/customers/${row._id}/purchase">
-                                    <i class='bx bx-history'></i>
-								</a>`;
-
-                        return `${viewBtn} ${updateBtn} ${purchaseHistoryBtn}`;
+                        return `${viewBtn} ${printOrderBtn}`;
                     }
                 },
             ]
         });
+
+    $(document).off('click', '.print-btn').on('click', '.print-btn', function () {
+        const orderId = $(this).data('order-id');
+        // print recipe
+        $('#frMauIn').attr('src', `/checkout/recipe/${orderId}`);
+        setTimeout(function () {
+            window.frames["frMauIn"].focus();
+            window.frames["frMauIn"].print();
+        }, 3000);
+    });
 
     table.on('draw.dt', function () {
         var info = table.page.info();
@@ -139,9 +152,6 @@ $(() => {
             .each(function (cell, i) {
                 cell.innerHTML = i + 1 + info.start;
             });
-        lazyImageLoading();
-        magnificPopup();
-
     });
 
     table.buttons().container().appendTo($('#button-container'));

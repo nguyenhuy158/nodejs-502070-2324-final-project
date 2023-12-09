@@ -76,7 +76,6 @@
     "css.lint.emptyRules": "warning",
     "debug.console.fontFamily": "Cascadia Code, Fira Code, Hasklig, VictorMono, Monoid, Consolas, 'Courier New', monospace",
     "debug.console.wordWrap": false,
-    "debug.toolBarLocation": "commandCenter",
     "diffEditor.codeLens": false,
     "diffEditor.diffAlgorithm": "advanced",
     "diffEditor.experimental.showEmptyDecorations": false,
@@ -110,8 +109,8 @@
     "editor.fontSize": 16,
     "editor.fontVariations": true,
     "editor.fontWeight": "500",
-    "editor.formatOnSave": true,
-    "editor.formatOnSaveMode": "modifications",
+    "editor.formatOnSave": false,
+    "editor.formatOnSaveMode": "file",
     "editor.guides.highlightActiveIndentation": "always",
     "editor.guides.indentation": true,
     "editor.hover.delay": 10,
@@ -135,7 +134,7 @@
     "editor.mouseWheelZoom": true,
     "editor.multiCursorModifier": "alt",
     "editor.multiDocumentOccurrencesHighlight": true,
-    "editor.occurrencesHighlight": false,
+    "editor.occurrencesHighlight": "off",
     "editor.parameterHints.enabled": false,
     "editor.quickSuggestionsDelay": 10,
     "editor.roundedSelection": true,
@@ -242,7 +241,7 @@
     "window.titleSeparator": "👻",
     "workbench.activityBar.iconClickBehavior": "toggle",
     "workbench.activityBar.location": "top",
-    "workbench.colorTheme": "Visual Studio Light",
+    "workbench.colorTheme": "Default Light+",
     "workbench.editor.enablePreview": false,
     "workbench.editor.pinnedTabsOnSeparateRow": true,
     "workbench.editor.restoreViewState": false,
@@ -266,6 +265,10 @@
     "[jade]": {
         "editor.defaultFormatter": "ducfilan.pug-formatter"
     },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "js-beautify.indent_size": 4,
     // "editor.defaultFormatter": "GitHub.copilot",
     // "editor.defaultFoldingRangeProvider": "GitHub.copilot",
     // "editor.cursorBlinking": "smooth",

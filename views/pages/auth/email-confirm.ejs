@@ -1,0 +1,36 @@
+<title>Redirecting ...</title>
+
+<script>
+    const currentUrl = window.location.search;
+
+    // Create a URLSearchParams object from the URL
+    const urlParams = new URLSearchParams(currentUrl);
+
+    // Get the value of the 'token' parameter from the URL
+    const token = urlParams.get('token');
+
+    // send the token to the server using ajax
+    $.ajax({
+        url: '/email-confirm',
+        method: 'POST',
+        data: {
+            token
+        },
+        success: (res) => {
+            console.log(`🚀 🚀 file: email-confirm.ejs:30 🚀 res`, res);
+            // redirect to the home page
+            toastr.success(res.message);
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 2000);
+        },
+        error: (err) => {
+            console.log(`🚀 🚀 file: email-confirm.ejs:38 🚀 err`, err);
+            // redirect to the login page
+            toastr.error(err.responseJSON?.message);
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+        }
+    });
+</script>

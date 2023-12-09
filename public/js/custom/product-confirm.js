@@ -22,10 +22,10 @@ function assignEditEvent() {
                     .val(data.productName);
 
                 editForm.find("input[name=\"importPrice\"]")
-                    .val(data.importPrice);
+                    .val(VND(data.importPrice).format());
 
                 editForm.find("input[name=\"retailPrice\"]")
-                    .val(data.retailPrice);
+                    .val(VND(data.retailPrice).format());
 
                 editForm.find("textarea[name=\"desc\"]")
                     .val(data.desc);
@@ -41,6 +41,9 @@ function assignEditEvent() {
         editForm.off('submit').on("submit", function (e) {
             e.preventDefault();
             const formData = new FormData(this);
+
+            formData.set('importPrice', VND(formData.get('importPrice')).value);
+            formData.set('retailPrice', VND(formData.get('retailPrice')).value);
 
             $.ajax({
                 url: `/api/products/${productId}`,
@@ -94,3 +97,4 @@ function assignDeleteEvent() {
         });
     });
 }
+

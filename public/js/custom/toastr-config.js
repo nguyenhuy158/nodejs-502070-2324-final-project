@@ -2,7 +2,6 @@
 /* eslint-disable no-undef */
 $(() => {
     const notification = JSON.parse(localStorage.getItem('notification')) || undefined;
-    console.log(`🚀 🚀 file: toastr-config.js:5 🚀 notification`, notification);
 
     if (notification) {
         const notificationType = Object.keys(notification)[0];
@@ -22,7 +21,7 @@ $(() => {
 
 toastr.options = {
     closeButton: true,
-    debug: true,
+    debug: false,
     newestOnTop: true,
     progressBar: true,
     positionClass: 'toast-top-right',

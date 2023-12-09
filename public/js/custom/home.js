@@ -33,17 +33,18 @@ const searchBtnIcon = document.querySelector(
 );
 const searchForm = document.querySelector(".content nav form");
 
-searchBtn.addEventListener("click", function (e) {
-	if (window.innerWidth < 576) {
-		e.preventDefault;
-		searchForm.classList.toggle("show");
-		if (searchForm.classList.contains("show")) {
-			searchBtnIcon.classList.replace("bx-search", "bx-x");
-		} else {
-			searchBtnIcon.classList.replace("bx-x", "bx-search");
-		}
-	}
-});
+// TODO uncomment
+// searchBtn.addEventListener("click", function (e) {
+// 	if (window.innerWidth < 576) {
+// 		e.preventDefault;
+// 		searchForm.classList.toggle("show");
+// 		if (searchForm.classList.contains("show")) {
+// 			searchBtnIcon.classList.replace("bx-search", "bx-x");
+// 		} else {
+// 			searchBtnIcon.classList.replace("bx-x", "bx-search");
+// 		}
+// 	}
+// });
 
 window.addEventListener("resize", () => {
 	if (window.innerWidth < 768) {
@@ -52,7 +53,7 @@ window.addEventListener("resize", () => {
 		sideBar.classList.remove("close");
 	}
 	if (window.innerWidth > 576) {
-		searchBtnIcon.classList.replace("bx-x", "bx-search");
+		// searchBtnIcon.classList.replace("bx-x", "bx-search");
 		searchForm.classList.remove("show");
 	}
 });

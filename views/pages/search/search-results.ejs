@@ -1,0 +1,233 @@
+<%- include('../../partials/nav') %>
+<!--  -->
+<% sideLink = '' %>
+<link rel="stylesheet" href="/css/search-result.css" />
+<div class="container">
+    <div class="container">
+        <div class="row">
+            <!-- BEGIN SEARCH RESULT -->
+            <section>
+                <form action="/search" method="get" data-toggle="formcache">
+                    <div class="input-group">
+                        <input type="text" name="q" placeholder="Search..." value="<%= q %>" />
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </section>
+            <section class="row search-result">
+                <div class="col-md-3">
+                    <h4 class="grid-title">
+                        <i class="fa fa-filter"></i>
+                        Filters
+                    </h4>
+                    <hr />
+                    <!-- BEGIN FILTER BY CATEGORY -->
+                    <p><b>By category</b></p>
+                    <% for(let category of categories) { %>
+                    <div class="form-check d-flex align-items-center">
+                        <input class="form-check-input align-self-center" type="checkbox" value=""
+                            id="<%= 'ct' + category.name %>" />
+                        <label class="form-check-label ms-2" for="<%= 'ct' + category.name %>">
+                            <%= category.name %>
+                        </label>
+                    </div>
+                    <% } %>
+                    <!-- END FILTER BY CATEGORY -->
+                    <div class="p-3"></div>
+                    <!-- BEGIN FILTER BY DATE -->
+                    <p><b>By date</b></p>
+                    From
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
+                        <input class="form-control" type="date" data-date-format="dd-mm-yyyy"
+                            value="<%= new Date().toISOString().split('T')[0] %>" />
+                    </div>
+                    To
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
+                        <input class="form-control" type="date" data-date-format="dd-mm-yyyy"
+                            value="<%= new Date().toISOString().split('T')[0] %>" />
+                    </div>
+                    <!-- END FILTER BY DATE -->
+
+
+                    <div class="p-3"></div>
+
+
+                    <!-- BEGIN FILTER BY PRICE -->
+                    <p><b>By price</b></p>
+                    <!-- Between
+                    <div id="price1">$300</div>
+                    to
+                    <div id="price2">$800</div> -->
+                    <!-- <input class="slider form-range" type="range" value="" data-slider-min="0" data-slider-max="1000"
+                        data-slider-step="1" data-slider-value="[300,800]" data-slider-tooltip="hide" /> -->
+                    <div class="col">
+                        <label class="select" for="slct">
+                            <select id="slct" required="required">
+                                <option value="" disabled="disabled" selected="selected">Prices</option>
+                                <option>1$</option>
+                                <option>2$</option>
+                                <option>5$</option>
+                                <option>10$</option>
+                                <option>20$</option>
+                                <option>50$</option>
+                                <option>100$</option>
+                                <option>200$</option>
+                                <option>500$</option>
+                                <option>1000$</option>
+                            </select>
+                            <svg>
+                                <use xlink:href="#select-arrow-down"></use>
+                            </svg>
+                        </label>
+                        <span>to</span>
+                        <label class="select" for="slct">
+                            <select id="slct" required="required">
+                                <option value="" disabled="disabled" selected="selected">Prices</option>
+                                <option>1$</option>
+                                <option>2$</option>
+                                <option>5$</option>
+                                <option>10$</option>
+                                <option>20$</option>
+                                <option>50$</option>
+                                <option>100$</option>
+                                <option>200$</option>
+                                <option>500$</option>
+                                <option>1000$</option>
+                            </select>
+                            <svg>
+                                <use xlink:href="#select-arrow-down"></use>
+                            </svg>
+                        </label>
+                    </div>
+                    <!-- SVG Sprites-->
+                    <svg class="sprites">
+                        <symbol id="select-arrow-down" viewbox="0 0 10 6">
+                            <polyline points="1 1 5 5 9 1"></polyline>
+                        </symbol>
+                    </svg>
+                    <div class="col">
+                        <button class="btn btn-outline-primary">Apply</button>
+                    </div>
+                    <!-- END FILTER BY PRICE -->
+                </div>
+                <div class="col-md-9">
+                    <h4>
+                        <i class="fa fa-file-o"></i>
+                        Result
+                    </h4>
+                    <hr />
+                    <!-- PAGINATION -->
+                    <% url = '/search' %>
+                    <ul class="justify-content-center pagination">
+                        <!-- First -->
+                        <li class="page-item <%= current === 1 ? 'disabled' : '' %>">
+                            <a class="page-link"
+                                href="<%= current === 1 ? '#' : `${url}?q=${q}&page=1&perPage=${perPage}` %>">First</a>
+                        </li>
+
+                        <% let prevPage = parseInt(current) - 1; %>
+                        <% let nextPage = parseInt(current) + 1; %>
+                        <% const totalPages = Math.ceil(count / perPage); %>
+
+                        <!-- Back -->
+                        <li class="page-item <%= prevPage <= 0 ? 'disabled' : '' %>">
+                            <a class="page-link"
+                                href="<%= prevPage <= 0 ? '#' : `${url}?q=${q}&page=${prevPage}&perPage=${perPage}` %>">Back</a>
+                        </li>
+
+                        <!-- Next -->
+                        <li class="page-item <%= nextPage > totalPages ? 'disabled' : '' %>">
+                            <a class="page-link"
+                                href="<%= nextPage > totalPages ? '#' : `${url}?q=${q}&page=${nextPage}&perPage=${perPage}` %>">Next</a>
+                        </li>
+
+                        <!-- Last -->
+                        <% console.log("=>(pagination.ejs:22) totalPages", totalPages); %>
+                        <% console.log("=>(pagination.ejs:22) current", current); %>
+                        <li class="page-item <%= current === totalPages || totalPages === 0 ? 'disabled' : '' %>">
+                            <a class="page-link"
+                                href="<%= current === totalPages ? '#' : `${url}?q=${q}&page=${totalPages}&perPage=${perPage}` %>">Last</a>
+                        </li>
+                    </ul>
+                    <!-- END PAGINATION -->
+
+                    <!-- Display the message -->
+                    <span>
+                        Display <%= Math.min((current - 1) * perPage + 1, count) %> to <%= Math.min(current
+                        * perPage, count) %> of <%= count %> data
+                    </span>
+
+                    <ol class="list-group list-group-numbered mt-3">
+                        <% if(products) { %> <% products.forEach(product => { %>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <% if(product.imageUrls.length > 0) { %>
+                                <div class="col-2">
+                                    <img src="<%= product.imageUrls[0] %>" alt="<%= product.productName %>" width="100"
+                                        height="100" />
+                                </div>
+                                <% } %>
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div>
+                                            <a class="fw-bold text-decoration-none" href="/products/<%= product._id %>">
+                                                <%= product.productName %>
+                                            </a>
+                                            <p>Code: <%= product.barcode %></p>
+                                        </div>
+                                        <div>
+                                            <input type="hidden" name="_id" value="<%= product._id %>" />
+                                            <button class="add-product-to-cart me-2 btn btn-outline-primary">
+                                                Add to cart
+                                            </button>
+                                            <button class="me-2 btn btn-outline-primary">View revenue</button>
+                                            <button class="me-2 btn btn-outline-primary">Other</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="row mb-1">
+                                        <span
+                                            class="badge bg-warning w-auto text-wrap lh-sm p-1 overflow-hidden text-truncate">
+                                            <%= product.category.name %>
+                                        </span>
+                                    </div>
+                                    <% if(user.isAdmin()) { %>
+                                    <div class="row mb-1">
+                                        <span class="badge bg-info rounded-pill w-auto">
+                                            <%= product.importPrice %>
+                                        </span>
+                                    </div>
+                                    <% } %>
+                                    <div class="row mb-1">
+                                        <span class="badge bg-primary rounded-pill w-auto">
+                                            <%= product.retailPrice %>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <% }); %> <% } %>
+                    </ol>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<script src="/js/custom/search-result.js"></script>
+<script>
+    $('#view-list').on('click', () => {
+        $('#view-table').toggleClass('disabled')
+        $('#view-list').toggleClass('disabled')
+    })
+
+    $('#view-table').on('click', () => {
+        $('#view-list').toggleClass('disabled')
+        $('#view-table').toggleClass('disabled')
+    })
+</script>

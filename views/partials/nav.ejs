@@ -1,0 +1,85 @@
+<style>
+    .no_result {
+        margin: 0.3rem;
+        padding: 0.3rem 0.5rem;
+        list-style: none;
+        text-align: left;
+        font-size: 1rem;
+        color: #212121;
+        transition: all 0.1s ease-in-out;
+        border-radius: 0.35rem;
+        background-color: rgba(255, 255, 255, 1);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+
+    .no_result>span {
+        display: flex;
+        align-items: center;
+        font-weight: 100;
+        color: rgba(0, 0, 0, .2);
+    }
+
+    .autoComplete-wrapper {
+        background-color: #1976d2 !important;
+        color: #fff !important;
+    }
+
+    form input::placeholder{
+        color: #1976d2 !important;
+    }
+</style>
+
+<nav>
+    <i class="bx bx-menu"></i>
+
+    <form id="search-form" action="/search" method="get" role="search" autocomplete="off"
+        enctype="application/x-www-form-urlencoded">
+        <!-- new search -->
+        <div class="autoComplete_wrapper">
+            <input id="autoComplete" style="border: 0.05rem solid rgba(102, 204, 204, 0.5); color: #1976d2;" name="q" type="search"
+                dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off">
+        </div>
+    </form>
+
+    <!-- button change darkmode -->
+    <input id="theme-toggle" type="checkbox" hidden>
+    <label class="theme-toggle" for="theme-toggle"></label>
+
+    <a class="notif" href="/checkout">
+        <i class="bx bx-cart"></i>
+        <span id="total-product-in-cart" class="count"></span>
+    </a>
+
+    <a class="profile" href="/profile">
+        <img src="<%= user.profilePicture || 'https://placehold.co/30?text=Empty' %>">
+    </a>
+
+
+
+    <!-- update total quantity cart -->
+    <script>
+        function getTotalQuantiy() {
+            $.ajax({
+                url: '/api/carts/current',
+                method: 'GET',
+                success: (response) => {
+                    const totalQuantity = response.cart.products.reduce((total, item) => total + item.quantity, 0)
+                    $('#total-product-in-cart').text(totalQuantity)
+                },
+                error: () => {
+                    $('#total-product-in-cart').text(0);
+                }
+            })
+        }
+        $(() => {
+            getTotalQuantiy();
+        })
+    </script>
+    <!-- TODO search continue -->
+    <script defer src="/js/custom/search.js"></script>
+    <script src="/js/custom/dark-mode.js"></script>
+</nav>

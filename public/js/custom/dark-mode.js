@@ -8,7 +8,7 @@ function getSetting() {
         url: `/api/setting`,
         method: "GET",
         success: function (data) {
-            console.log("Settings updated:", data.darkMode);
+            // console.log("Settings updated:", data.darkMode);
             changeMode(data.darkMode);
         },
         error: function (error) {
@@ -24,7 +24,7 @@ function postSetting(darkMode) {
         method: "POST",
         data: { darkMode: darkMode },
         success: function (data) {
-            console.log("Settings updated:", data);
+            // console.log("Settings updated:", data);
             return true;
         },
         error: function (error) {

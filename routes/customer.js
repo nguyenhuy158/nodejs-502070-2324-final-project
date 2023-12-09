@@ -6,7 +6,7 @@ router
     .get("/", customerController.getCustomers)
     .get(/^\/([0-9a-fA-F]{24})$/,
         customerController.checkAndParseObjectId,
-        customerController.getCustomerWithPurchase)
+        customerController.getCustomerWithoutPurchase)
     .get(/^\/([0-9a-fA-F]{24})\/purchase$/,
         customerController.checkAndParseObjectId,
         customerController.getCustomerWithPurchase);

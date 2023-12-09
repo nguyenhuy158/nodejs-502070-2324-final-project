@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { formatTimestamp } = require("../utils/format");
 const passportLocalMongoose = require("passport-local-mongoose");
 
 const userSchema = new Schema({
@@ -34,8 +33,8 @@ const userSchema = new Schema({
 userSchema.methods.sentMail = async function (token) {
     this.token = token;
     this.tokenExpiration = new Date(Date.now() + 1 * 60 * 1000);
-    this.isPasswordReset = true;
     this.isFirstLogin = true;
+    this.isPasswordReset = true;
     await this.save();
 };
 
@@ -97,16 +96,6 @@ userSchema.methods.validPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 };
 
-
-userSchema.virtual("createdAtFormatted")
-    .get(function () {
-        return formatTimestamp(this.createdAt);
-    });
-
-userSchema.virtual("updatedAtFormatted")
-    .get(function () {
-        return formatTimestamp(this.updatedAt);
-    });
 
 userSchema.methods.generateAccessJWT = function () {
     let payload = {

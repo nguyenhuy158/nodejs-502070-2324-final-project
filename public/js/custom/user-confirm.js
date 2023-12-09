@@ -62,7 +62,7 @@ function assignResentEmailEvent() {
     const confirmModalBody = $("#modalDelete .modal-body");
     const confirmButton = $("#modalDelete .btn.btn-submit");
 
-    // confirmButton.removeClass('btn-danger').addClass('btn-secondary');
+    // confirmButton.removeClass('btn-danger').addClass('btn-outline-secondary');
     confirmButton.text("Resent");
 
     resentButtons.off('click').on('click', function () {

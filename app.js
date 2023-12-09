@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const sassMiddleware = require("node-sass-middleware");
+const expressLayouts = require('express-ejs-layouts')
 
 const path = require("path");
 
@@ -63,22 +64,21 @@ app.use(flash());
 
 app.use((req, res, next) => {
     const { method, originalUrl, xhr } = req;
-    res.locals.message = req.flash();
-    let fullUrl = process.env.NODE_ENV === 'production' ?
-        `${req.protocol}://${req.get("host")}${req.originalUrl}` :
-        `${req.originalUrl}`;
+    // res.locals.message = req.flash();
+    // let fullUrl = process.env.NODE_ENV === 'production' ?
+    //     `${req.protocol}://${req.get("host")}${req.originalUrl}` :
+    //     `${req.originalUrl}`;
 
-    logger.info(`[👻👻👻👻👻👻👻👻👻👻]`);
+    // logger.info(`[👻👻👻👻👻👻👻👻👻👻]`);
 
-    logger.http(`[URL] ${fullUrl}`);
-    logger.http(`[METHOD] ${method}`);
-    logger.http(`[METHOD] ${originalUrl}`);
-    logger.http(`[XHR] ${xhr}`);
+    // logger.http(`[URL] ${fullUrl}`);
+    logger.http(`[METHOD] ${method} ${originalUrl}`);
+    // logger.http(`[XHR] ${xhr}`);
 
-    logger.http(`[USERNAME] ${res.app.locals.user?.username}`);
-    logger.http(`[Session ID] ${req.sessionID}`);
+    // logger.http(`[USERNAME] ${res.app.locals.user?.username}`);
+    // logger.http(`[Session ID] ${req.sessionID}`);
 
-    logger.http(`[FLASH] ${JSON.stringify(res.locals.message)}`);
+    // logger.http(`[FLASH] ${JSON.stringify(res.locals.message)}`);
 
     next();
 });
@@ -93,12 +93,6 @@ passport.use(new LocalStrategy(async function (username, password, done) {
 
         if (!user) {
             return done(null, false, { message: "Incorrect username." });
-        }
-
-        if (user.token) {
-            return done(null, false, {
-                message: "Please login by clicking on the link in your email"
-            });
         }
 
         const isPasswordValid = await user.validPassword(password);
@@ -126,8 +120,10 @@ passport.deserializeUser(async function (id, done) {
     }
 });
 
-app.set("view engine", "pug");
-app.set("views", __dirname + "/views");
+app.use(expressLayouts);
+app.set("view engine", "ejs");
+app.set('layout', './pages/layout');
+// app.set("views", __dirname + "/views");
 
 app.use(sassMiddleware(config.sassOptions));
 app.use("/public", express.static(path.join(__dirname, "public"), config.staticOptions));

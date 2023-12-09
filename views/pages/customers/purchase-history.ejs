@@ -1,0 +1,198 @@
+<%- include('../../partials/nav') %>
+<% sideLink = '' %>
+
+<link rel="stylesheet" href="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/orderlist/pcmall-orderlist.ba7045d57296d1a003fb.legacy.css">
+<link rel="stylesheet" href="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/orderlist/1560.1177d584668a3aba066f.legacy.css">
+<link rel="stylesheet" data-modern="true" href="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/8357.b38b00cc524f5ff4.css">
+<link rel="stylesheet" data-modern="true" href="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/bundle.227c6e3c1bdc6350.css">
+
+
+<div class="container">
+    <div class="container mt-4">
+        <h1>
+            <a href="/customers" class="text-decoration-none text-dark">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            Customer Purchase History
+        </h1>
+
+        <!-- Customer Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                Customer Information
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong>Name:</strong>
+                    <%= customer.fullName %>
+                </p>
+
+                <p>
+                    <strong>Phone:</strong>
+                    <%= customer.phone %>
+                </p>
+
+                <p>
+                    <strong>Gender:</strong>
+                    <%= customer.gender %>
+                </p>
+
+                <p>
+                    <strong>Rank:</strong>
+                    <%= customer.rank %>
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    <%= customer.email %>
+                </p>
+
+                <p>
+                    <strong>Birthday:</strong>
+                    <%= moment(customer.birthDay).format('DD/MM/YYYY HH:mm') %>
+                </p>
+
+                <p>
+                    <strong>Address:</strong>
+                    <%= customer.fullAddress %>
+                </p>
+            </div>
+        </div>
+
+        <!-- Product List -->
+        <div class="card mb-3">
+            <div class="card-header">Order history</div>
+
+            <% for( let index = 0; index < customer.orders?.length; index++ ) { %>
+            <% let order = customer.orders[index] %>
+            <% let product = order.products[0] %>
+
+            <!-- one order -->
+            <div class="hiXKxx">
+
+                <div>
+                    <div class="x0QT2k">
+                        <section>
+                            <h3 class="a11y-hidden"></h3>
+                            <a href="/orders/<%= order._id %>">
+                                <div>
+                                    <div class="_0OiaZ-">
+                                        <div class="FbLutl">
+                                            <div>
+                                                <section>
+                                                    <div class="x7nENX">
+                                                        <div class="aybVBK">
+                                                            <img src="<%= product.product.imageUrls[0] %>" class="rGP9Yd">
+                                                            <div class="_7uZf6Q">
+                                                                <div>
+                                                                    <div class="iJlxsT">
+                                                                        <span class="x5GTyN">
+                                                                            <!-- TODO: product name -->
+                                                                            <%= product.product.productName %>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <div class="vb0b-P">
+                                                                        <!-- TODO: desc -->
+                                                                        <%= product.product.desc %>
+                                                                    </div>
+                                                                    <div class="_3F1-5M">
+                                                                        x
+                                                                        <!-- TODO: quantity -->
+                                                                        <%= product.quantity %>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="_9UJGhr">
+                                                            <div class="rjqzk1">
+                                                                <span class="j2En5+">
+                                                                    <%# VND(700000).format() %>
+                                                                </span>
+                                                                <span class="-x3Dqh OkfGBc">
+                                                                    <%= VND(product.salePrice).format() %>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="O2KPzo">
+                    <div class="mn7INg xFSVYg"> </div>
+                    <div class="mn7INg EfbgJE"> </div>
+                </div>
+
+                <div class="kvXy0c">
+                    <div class="-78s2g"><span class="JMmT2C">
+                            <label class="_0NMXyN">Total:</label>
+                            <div class="DeWpya">
+                                <%= VND(order.totalAmount).format() %>
+                            </div>
+                    </div>
+                </div>
+
+                <!-- footer -->
+                <div class="AM4Cxf">
+                    <div class="qtUncs">
+                        <span class="OwGaHA">
+                            Purchase date:
+                            <div class="shopee-drawer" id="pc-drawer-id-1">
+                                <u class="M7wYu+" aria-describedby="0.1064846764658478">
+                                    <!-- TODO: add purchase date -->
+                                    <%= moment(order.createdAt).format('DD/MM/YYYY HH:mm') %>
+                                </u>
+                            </div>
+                        </span>
+                    </div>
+
+                    <section class="EOjXew">
+                        <h3 class="a11y-hidden"></h3>
+                        <div class="PF0-AU">
+                            <div>
+                                <!-- TODO: add order id -->
+                                <a href="/orders/<%= order._id %>" class="stardust-button stardust-button--primary WgYvse">
+                                    View more
+                                </a>
+                            </div>
+                        </div>
+                        <div class="PgtIur">
+                            <div>
+                                <button data-order-id="<%= order._id %>" class="print-btn stardust-button stardust-button--secondary WgYvse">
+                                    Print recipe
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+
+            </div>
+            <% } %>
+
+
+        </div>
+    </div>
+</div>
+
+<iframe src="" frameborder="0" id="frMauIn" class="d-none" name="frMauIn" , width="300" , height="300"></iframe>
+<script>
+    $(() => {
+        $('.print-btn').on('click', function() {
+            const orderId = $(this).data('order-id')
+            $('#frMauIn').attr('src', `/checkout/recipe/${orderId}`);
+                setTimeout(function () {
+                    window.frames["frMauIn"].focus();
+                    window.frames["frMauIn"].print();
+                }, 3000);
+        })
+    })
+</script>

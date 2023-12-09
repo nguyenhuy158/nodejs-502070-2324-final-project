@@ -18,16 +18,16 @@ router
     .delete(/^\/([0-9a-fA-F]{24})$/,
         userApiController.checkAndParseObjectId,
         userApiController.deleteApiUserById)
-    .get("/resent/:id",
+    .get(/^\/resent\/([0-9a-fA-F]{24})$/,
         userApiController.checkAndParseObjectId,
         userApiController.getApiResentMail)
-    .get("/sent/:id",
-        userApiController.checkAndParseObjectId,
-        userApiController.getApiSentMail)
-    .put("/:id/lock",
+    // .get("/sent/:id",
+    //     userApiController.checkAndParseObjectId,
+    //     userApiController.getApiSentMail)
+    .put(/^\/([0-9a-fA-F]{24})\/lock$/,
         userApiController.checkAndParseObjectId,
         userApiController.putApiLockAccount)
-    .put("/:id/unlock",
+    .put(/^\/([0-9a-fA-F]{24})\/unlock$/,
         userApiController.checkAndParseObjectId,
         userApiController.putApiUnLockAccount);
 

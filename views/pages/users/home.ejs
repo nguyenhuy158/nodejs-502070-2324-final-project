@@ -1,0 +1,41 @@
+
+<%- include('../../partials/nav') %>
+
+<div class="container">
+	<link rel="stylesheet" href="/css/users.css">
+	<div class="container">
+
+		<h2>Salespeople manager</h2>
+		
+		<div id="button-container" class="mb-3"></div>
+
+		<table id="user-table" class="table table-sm table-striped table-bordered align-middle" style="width:100%">
+			<thead class="align-middle">
+				<tr>
+					<th>STT</th>
+					<th>Avatar</th>
+					<th>Email</th>
+					<th>Username</th>
+					<th>Full Name</th>
+					<th>Role</th>
+					<th>First Login</th>
+					<th>Active</th>
+					<th>
+						<span class="iconify" data-icon="material-symbols:lock-outline"></span>
+					</th>
+					<th>Handle</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+
+	<!-- Confirm Modal -->
+	<%- include('../../partials/confirm-delete-modal') %>
+	<%- include('../../partials/create-salespeople-modal') %>
+	<%- include('../../partials/product-edit-modal') %>
+</div>
+<!-- Confirm Script -->
+<script src="/js/custom/user-confirm.js"></script>
+<!-- Datatables Plugin Script -->
+<script src="/js/custom/user-datatable.js"></script>

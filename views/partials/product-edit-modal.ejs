@@ -1,0 +1,80 @@
+<div class="modal fade" id="modal-product-edit" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form id="edit-product" autocomplete="off" enctype="multipart/form-data" data-toggle="formcache">
+                    <p>Leave if you don't want to change this field</p>
+
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Product Name:</label>
+                        <input id="productName" class="form-control" type="text" name="productName" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="importEditPrice" class="form-label">Import Price:</label>
+                        <input id="importEditPrice" class="form-control" type="text" name="importPrice">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="retailEditPrice" class="form-label">Retail Price:</label>
+                        <input id="retailEditPrice" class="form-control" type="text" name="retailPrice">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description:</label>
+                        <textarea class="form-control" name="desc"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category:</label>
+                        <select id="category" class="form-select" name="category">
+                            <% categories.forEach(function(category) { %>
+                            <option value="<%= category._id %>"><%= category.name %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-success" type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(() => {
+        $('#importEditPrice').on('input', function(e) {
+            if (e.originalEvent.inputType === 'deleteContentBackward') {
+                $(this).val(
+                    VND(
+                        Math.floor(VND($(this).val()).value / 10)
+                    ).format()
+                );
+            } else {
+                $(this).val(VND($(this).val()).format());
+            }
+        });
+        $('#retailEditPrice').on('input', function(e) {
+            if (e.originalEvent.inputType === 'deleteContentBackward') {
+                $(this).val(
+                    VND(
+                        Math.floor(VND($(this).val()).value / 10)
+                    ).format()
+                );
+            } else {
+                $(this).val(VND($(this).val()).format());
+            }
+        });
+    });
+</script>

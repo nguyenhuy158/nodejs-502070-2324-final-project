@@ -1,3 +1,5 @@
+
+const currency = require('currency.js');
 const Customer = require('../models/customer');
 const Cart = require('../models/customer');
 const Order = require('../models/order');
@@ -19,7 +21,7 @@ exports.checkout = async (req, res) => {
             await customer.save();
         }
 
-        const totalAmount = await cart.calculateTotalPrice();
+        const subtotalAmount = await cart.calculateTotalPrice();
 
         const order = new Order({
             customer: customer._id,
@@ -27,12 +29,15 @@ exports.checkout = async (req, res) => {
                 return {
                     product: p.product._id,
                     quantity: p.quantity,
-                    unitPrice: p.product.retailPrice,
+                    salePrice: p.product.retailPrice,
                 };
             }),
-            totalAmount,
+            totalAmount: subtotalAmount,
             givenAmount,
-            changeAmount: totalAmount - givenAmount,
+            discount: 0,
+            subtotalAmount,
+            changeAmount: subtotalAmount - givenAmount,
+            seller: req.user._id,
         });
 
 
@@ -53,7 +58,8 @@ exports.getCheckoutPage = async (req, res, next) => {
         return res.render('pages/checkouts/home', {
             carts,
             sideLink: process.env.SIDEBAR_CHECKOUT,
-            pageTitle: 'Checkout - Tech Hut'
+            pageTitle: 'Checkout - Tech Hut',
+            
         });
     } catch (error) {
         logger.error(error);
@@ -81,10 +87,10 @@ exports.getCustomer = async (req, res) => {
 };
 
 exports.checkAndParseObjectId = async (req, res, next) => {
-    const { id } = req.params;
+    const id = req.params[0];
     if (!id) return res.status(400).json({ error: true, message: 'Missing id' });
     try {
-        const order = await Order.findById(id);
+        const order = await Order.findById(id).populate('products.product').populate('customer');
 
         if (order) {
             req.order = order;
@@ -100,4 +106,32 @@ exports.checkAndParseObjectId = async (req, res, next) => {
 exports.getOrderById = (req, res) => {
     const order = req.order;
     res.json({ error: false, order });
-};  
+};
+
+exports.getRecipe = async (req, res) => {
+    const order = req.order;
+    const fullAddress = await order.customer.getFullAddress();
+    order.customer.fullAddress = fullAddress;
+    return res.render('pages/checkouts/recipe', {
+        order,
+        sideLink: process.env.SIDEBAR_CHECKOUT,
+        pageTitle: 'Recipe - Tech Hut',
+        layout: 'pages/layout-none',
+    });
+
+    // const { id } = req.query;
+    // if (!id) return res.status(400).json({ error: true, message: 'Missing id' });
+    // try {
+    //     const order = await Order.findById(id);
+    //     if (order) {
+    //         return res.render('pages/checkouts/recipe', {
+    //             order,
+    //             sideLink: process.env.SIDEBAR_CHECKOUT,
+    //             pageTitle: 'Recipe - Tech Hut'
+    //         });
+    //     }
+    //     return res.status(400).json({ error: true, message: 'Invalid id' });
+    // } catch (error) {
+    //     return res.status(400).json({ error: true, message: 'Invalid id' });
+    // }
+};

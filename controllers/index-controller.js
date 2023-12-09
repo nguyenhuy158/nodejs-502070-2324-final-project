@@ -1,6 +1,10 @@
 
+const currency = require('currency.js');
+const moment = require('moment');
+
 const ProductCategory = require("../models/product-category");
 const Product = require("../models/product");
+const User = require("../models/user");
 const Order = require("../models/order");
 const Customer = require("../models/customer");
 
@@ -22,12 +26,124 @@ exports.checkFirstLogin = (req, res, next) => {
     next();
 };
 
+async function getBestSellingProduct() {
+    const product = await Product.find();
+
+    const salesByProduct = {};
+    const orders = await Order.find().populate("products.product");
+
+    orders.forEach(order => {
+        order.products.forEach(product => {
+            const productId = product.product._id;
+            if (salesByProduct[productId]) {
+                salesByProduct[productId] += product.quantity;
+            } else {
+                salesByProduct[productId] = product.quantity;
+            }
+        });
+    });
+
+    const totalAmountByProduct = {};
+    orders.forEach(order => {
+        order.products.forEach(product => {
+            const productId = product.product._id;
+            if (totalAmountByProduct[productId]) {
+                totalAmountByProduct[productId] += product.salePrice * product.quantity;
+            } else {
+                totalAmountByProduct[productId] = product.salePrice * product.quantity;
+            }
+        });
+    });
+
+    const sortedProducts = Object.keys(salesByProduct).sort((a, b) =>
+        salesByProduct[b] - salesByProduct[a] || totalAmountByProduct[b] - totalAmountByProduct[a]);
+
+    const top3Products = sortedProducts.slice(0, 3);
+
+    return top3Products.map((productId) => ({
+        productId,
+        productName: product.find(p => p._id == productId).productName,
+        imageUrl: product.find(p => p._id == productId).imageUrls[0],
+        salesQuantity: salesByProduct[productId],
+        salePrice: totalAmountByProduct[productId]
+    }));
+}
+
+async function getTopSeller() {
+    const currentMonthStart = moment().startOf('month');
+    const currentMonthEnd = moment().endOf('month');
+
+    const user = await User.find();
+
+    const orders = await Order.find({
+        createdAt: { $gte: currentMonthStart, $lte: currentMonthEnd }
+    }).populate("products.product");
+
+    // get top 3 seller in current month
+    const salesBySeller = {};
+    orders.forEach(order => {
+        const sellerId = order.seller;
+        if (salesBySeller[sellerId]) {
+            salesBySeller[sellerId] += order.totalAmount;
+        } else {
+            salesBySeller[sellerId] = order.totalAmount;
+        }
+    });
+
+    const sortedSellers = Object.keys(salesBySeller).sort((a, b) =>
+        salesBySeller[b] - salesBySeller[a]);
+
+    const top3Sellers = sortedSellers.slice(0, 3);
+
+    const topSeller = top3Sellers.map((sellerId) => ({
+        sellerId,
+        sellerName: user.find(u => u._id == sellerId).fullName,
+        salesAmount: salesBySeller[sellerId],
+    }));
+
+    return topSeller;
+}
+
 exports.getDashboardPage = async (req, res) => {
+    const response = {};
+    response.totalOrderOfDay = await Order.find({
+        createdAt: {
+            $gte: moment().startOf("day"),
+            $lte: moment().endOf("day")
+        }
+    }).countDocuments();
+
+    response.revenueOfDay = (await Order.find({
+        createdAt: {
+            $gte: moment().startOf("day"),
+            $lte: moment().endOf("day")
+        }
+    })).reduce((total, order) => total + order.totalAmount, 0);
+
+    response.revenueOfMonth = (await Order.find({
+        createdAt: {
+            $gte: moment().startOf("month"),
+            $lte: moment().endOf("month")
+        }
+    })).reduce((total, order) => total + order.totalAmount, 0);
+
+    response.totalQuantityOfDay = (await Order.find({
+        createdAt: {
+            $gte: moment().startOf("day"),
+            $lte: moment().endOf("day")
+        }
+    })).reduce((total, order) => total + order.products.reduce((total, product) => total + product.quantity, 0), 0);
+
+    response.bestSellerOfDay = await getBestSellingProduct();
+
+    response.topSeller = await getTopSeller();
+
     res.render("pages/dashboard", {
         pageTitle: "Dashboard - Tech Hut",
         app_name: process.env.APP_NAME,
         products: await Product.find({}).limit(3),
-        sideLink: process.env.SIDEBAR_HOME
+        sideLink: process.env.SIDEBAR_HOME,
+        ...response
     });
 };
 
@@ -171,9 +287,19 @@ exports.setLocalCategories = async (req, res, next) => {
     try {
         req.app.locals.categories = await categories();
     } catch (error) {
-        console.log(`🚀 🚀 file: indexController.js:10 🚀 exports.setLocalCategories= 🚀 error`, error);
+        // console.log(`🚀 🚀 file: indexController.js:10 🚀 exports.setLocalCategories= 🚀 error`, error);
         req.app.locals.categories = [];
     }
+    next();
+};
+
+exports.setVNDFormat = (req, res, next) => {
+    req.app.locals.VND = (value) => currency(value, {
+        symbol: '₫',
+        precision: 0,
+        separator: ',',
+        pattern: `# !`,
+    });
     next();
 };
 

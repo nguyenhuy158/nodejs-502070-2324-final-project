@@ -1,0 +1,161 @@
+<%- include('../../partials/nav') %>
+
+<% sideLink = '' %>
+
+<div class="container my-3">
+
+    <h1>
+        <a class="text-decoration-none text-dark" href="/users">
+            <i class='bx bx-arrow-back'></i>
+        </a>
+        <%= user.fullName %> Information
+    </h1>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <a class="image-popup" href="<%= user.profilePicture %>" title="<%= user.fullName %>">
+                        <img style="width: 150px;" class="rounded-circle img-fluid w-100 lazy rounded" data-src="<%= user.profilePicture ? user.profilePicture : 'https://placehold.co/200?text=Empty&font=roboto' %>" alt="Profile Picture" onerror="this.src='https://placehold.co/200?text=Not+available&font=roboto'" />
+                    </a>
+                    <h5 class="my-3"><%= user.fullName %></h5>
+                    <p class="text-muted mb-1"><%= user.role %></p>
+                    <p class="text-muted mb-4"></p>
+                    <div class="d-flex justify-content-center mb-2">
+                        <!-- <button type="button" class="btn btn-outline-primary">Follow</button>
+                        <button type="button" class="btn btn-outline-primary ms-1">Message</button> -->
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4 mb-lg-0">
+                <div class="card-body p-0">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Full Name</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0"><%= user.fullName %></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0"><%= user.email %></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Gender</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0"><%= user.gender %></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Role</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0"><%= user.role %></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Username</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0"><%= user.username %></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Account has been activated</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">
+                                <% if (user.isFirstLogin) { %>
+                                <i class='h2 fw-bolder text-danger bx bx-x'></i>
+                                <% } else { %>
+                                <i class='h2 fw-bolder text-success bx bx-check'></i>
+                                <% } %>
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Lock/Unlock</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">
+                                <% if (user.lockedStatus) { %>
+                                <i class='h2 fw-bolder text-success bx bx-wifi'></i>
+                                <% } else { %>
+                                <i class='h2 fw-bolder text-danger bx bx-wifi-off'></i>
+                                <% } %>
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Online/Offline</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">
+                                <% if (user.inactivateStatus) { %>
+                                <i class='h2 fw-bolder text-danger bx bx-lock-alt'></i>
+                                <% } else { %>
+                                <i class='h2 fw-bolder text-success bx bx-lock-open-alt'></i>
+                                <% } %>
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Created at</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">
+                                <%= moment(user.createAt).format('DD/MM/YYYY HH:mm') %>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4 mb-md-0">
+                        <div class="card-body text-center">
+                            <button class="btn btn-sm btn-outline-primary">Unlock</button>
+                            <button class="btn btn-sm btn-outline-primary">Lock</button>
+                            <button class="btn btn-sm btn-outline-primary">Resent mail</button>
+                            <button class="btn btn-sm btn-outline-primary">Delete</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4 mb-md-0">
+                        <!-- <div class="card-body"> </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,30 @@
+<% function pagination(url, current, count, perPage, q) { %>
+    <% q = q || ''; %>
+    <ul class="justify-content-center pagination">
+        <!-- First -->
+        <li class="page-item <%= current === 1 ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= current === 1 ? '#' : `${url}?q=${q}&page=1&perPage=${perPage}` %>">First</a>
+        </li>
+
+        <% let prevPage = parseInt(current) - 1; %>
+        <% let nextPage = parseInt(current) + 1; %>
+        <% const totalPages = Math.ceil(count / perPage); %>
+
+        <!-- Back -->
+        <li class="page-item <%= prevPage <= 0 ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= prevPage <= 0 ? '#' : `${url}?q=${q}&page=${prevPage}&perPage=${perPage}` %>">Back</a>
+        </li>
+
+        <!-- Next -->
+        <li class="page-item <%= nextPage > totalPages ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= nextPage > totalPages ? '#' : `${url}?q=${q}&page=${nextPage}&perPage=${perPage}` %>">Next</a>
+        </li>
+
+        <!-- Last -->
+        <% console.log("=>(pagination.ejs:22) totalPages", totalPages); %>
+        <% console.log("=>(pagination.ejs:22) current", current); %>
+        <li class="page-item <%= current === totalPages || totalPages === 0 ? 'disabled' : '' %>">
+            <a class="page-link" href="<%= current === totalPages ? '#' : `${url}?q=${q}&page=${totalPages}&perPage=${perPage}` %>">Last</a>
+        </li>
+    </ul>
+<% } %>

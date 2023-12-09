@@ -101,7 +101,8 @@ exports.checkQuantity = async (req, res, next) => {
 exports.checkCurrentLoginUser = async (req, res, next) => {
     const userId = req.user._id;
     try {
-        const cart = await Cart.findOne({ user: userId }).populate('products.product');
+        const cart = await Cart.findOne({ user: userId }).populate('products.product')
+            .populate('products.product.category');
         req.apiCart = cart;
         next();
     } catch (error) {

@@ -10,6 +10,7 @@ const authRoutes = require("./auth");
 const userRouter = require("./user");
 const orderRouter = require("./order");
 const errorRouter = require("./error");
+const reportRouter = require("./report");
 const productRouter = require("./product");
 const checkoutRouter = require("./checkout");
 const customerRouter = require("./customer");
@@ -29,6 +30,7 @@ const { autoViews } = require("../middlewares/auto-views");
 const { updateCurrentUser } = require("../middlewares/auth");
 const { checkFirstLogin } = require("../controllers/index-controller");
 const { setLocalCategories } = require("../controllers/index-controller");
+const { setVNDFormat } = require("../controllers/index-controller");
 const { ensureAuthenticated } = require("../controllers/auth-controller");
 const { validationChangePassword, validateSearch } = require('../middlewares/validation');
 
@@ -43,27 +45,25 @@ router
     .use(authRoutes)
     .use(ensureAuthenticated)
     .get("/change-password", authController.getChangePassword)
-    .post("/change-password",
-        validationChangePassword,
-        authController.postChangePassword)
+    .post("/change-password", validationChangePassword, authController.postChangePassword)
     // other middleware and server
     .use(checkFirstLogin)
     .use(autoViews)
     .use(setLocalCategories)
+    .use(setVNDFormat)
     .get("/", indexController.getDashboardPage)
     .get("/profile", userController.viewProfile)
     .post("/upload-profile-pic", upload.single("profilePic"), userController.changeProfilePicture)
-    .get("/search",
-        validateSearch,
-        searchController.searchResults)
+    .get("/search", validateSearch, searchController.searchResults)
     .post("/api/setting", userController.postApiSetting)
     .get("/api/setting", userController.getApiSetting)
 
     // main router
     .use("/users", requireRole(process.env.ROLE_ADMIN), userRouter)
-    .use("/products", requireRole(process.env.ROLE_ADMIN), productRouter)
+    .use("/products", productRouter)
     .use("/customers", customerRouter)
     .use("/orders", orderRouter)
+    .use("/reports", reportRouter)
     .use("/checkout", checkoutRouter)
 
     // api router
