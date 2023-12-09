@@ -23,7 +23,9 @@ exports.checkOrderIdAndParseObjectId = async (req, res, next) => {
     try {
         req.order = await Order.findById(id)
             .populate('products.product')
-            .populate('products.product.category');
+            .populate('products.product.category')
+            .populate('customer')
+            .populate('seller')
 
         next();
     } catch (error) {

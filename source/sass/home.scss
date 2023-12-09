@@ -36,7 +36,7 @@ html {
 
 body.dark {
     --light: #181a1e;
-    --grey: #25252c;
+    --grey: #505050;
     --dark: #fbfbfb;
 }
 
@@ -44,6 +44,7 @@ body {
     background: var(--grey);
     overflow-x: hidden;
 }
+
 
 .sidebar {
     position: fixed;

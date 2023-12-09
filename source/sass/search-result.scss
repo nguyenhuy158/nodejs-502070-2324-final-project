@@ -50,7 +50,7 @@
 
 .select {
     position: relative;
-    min-width: 125px;
+    min-width: 120px;
 
     svg {
         position: absolute;
@@ -107,7 +107,18 @@
     }
 }
 
-.container .search-result .col button{
+@media (max-width: 768px) {
+    .select {
+        min-width: 100px;
+    }
+
+    select {
+        padding: 7px 30px 7px 12px;
+        font-size: 14px;
+    }
+}
+
+.container .search-result .col button {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -116,11 +127,11 @@
 }
 
 .sprites {
-	position: absolute;
-	width: 0;
-	height: 0;
-	pointer-events: none;
-	user-select: none;
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    user-select: none;
 }
 
 .container .col-md-9 ol .list-group-item {
@@ -136,6 +147,31 @@
 
 .container .col-md-9 ol .list-group-item .row .col {
     display: grid;
-    font-size: 18px;
+    font-size: 16px;
     align-items: center;
+}
+
+.container .col-md-9 ol .list-group-item .row .col span{
+    padding: 5px 18px;
+}
+
+body.dark {
+    .container {
+        background-color: #999;
+    }
+
+    .container .search-result .col button {
+        background: rgb(164, 206, 255) !important;
+        color: #000;
+        border-color: transparent;
+    }
+
+    .container .search-result .col button:hover {
+        background: #388e3c !important;
+        color: #fff;
+    }
+
+    .search-result {
+        color: #fff;
+    }
 }

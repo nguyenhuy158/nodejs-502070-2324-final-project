@@ -1,8 +1,8 @@
 <%- include('../../partials/nav') %>
 
 <% sideLink = '' %>
-
-<div class="container my-3">
+<link rel="stylesheet" href="/css/salePeopleDetail.css" />
+<div class="container py-3 px-3">
 
     <h1>
         <a class="text-decoration-none text-dark" href="/users">
@@ -27,65 +27,77 @@
                     </div>
                 </div>
             </div>
-            <div class="card mb-4 mb-lg-0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card mb-4 mb-md-0">
+                        <div class="card-body text-center">
+                            <button class="btn btn-sm btn-outline-primary">Unlock</button>
+                            <button class="btn btn-sm btn-outline-primary">Lock</button>
+                            <button class="btn btn-sm btn-outline-primary">Resent mail</button>
+                            <button class="btn btn-sm btn-outline-primary">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="card mb-4 mb-lg-0">
                 <div class="card-body p-0">
 
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="col-lg-8">
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <p class="mb-0">Full Name</p>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <p class="text-muted mb-0"><%= user.fullName %></p>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <p class="mb-0">Email</p>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <p class="text-muted mb-0"><%= user.email %></p>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <p class="mb-0">Gender</p>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <p class="text-muted mb-0"><%= user.gender %></p>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <p class="mb-0">Role</p>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <p class="text-muted mb-0"><%= user.role %></p>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <p class="mb-0">Username</p>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <p class="text-muted mb-0"><%= user.username %></p>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <p class="mb-0">Account has been activated</p>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <p class="text-muted mb-0">
                                 <% if (user.isFirstLogin) { %>
                                 <i class='h2 fw-bolder text-danger bx bx-x'></i>
@@ -97,10 +109,10 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <p class="mb-0">Lock/Unlock</p>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <p class="text-muted mb-0">
                                 <% if (user.lockedStatus) { %>
                                 <i class='h2 fw-bolder text-success bx bx-wifi'></i>
@@ -112,10 +124,10 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <p class="mb-0">Online/Offline</p>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <p class="text-muted mb-0">
                                 <% if (user.inactivateStatus) { %>
                                 <i class='h2 fw-bolder text-danger bx bx-lock-alt'></i>
@@ -127,10 +139,10 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <p class="mb-0">Created at</p>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <p class="text-muted mb-0">
                                 <%= moment(user.createAt).format('DD/MM/YYYY HH:mm') %>
                             </p>
@@ -138,23 +150,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card mb-4 mb-md-0">
-                        <div class="card-body text-center">
-                            <button class="btn btn-sm btn-outline-primary">Unlock</button>
-                            <button class="btn btn-sm btn-outline-primary">Lock</button>
-                            <button class="btn btn-sm btn-outline-primary">Resent mail</button>
-                            <button class="btn btn-sm btn-outline-primary">Delete</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card mb-4 mb-md-0">
-                        <!-- <div class="card-body"> </div> -->
-                    </div>
-                </div>
-            </div>
+            
         </div>
     </div>
 

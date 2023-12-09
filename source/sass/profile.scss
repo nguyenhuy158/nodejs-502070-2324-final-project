@@ -58,3 +58,42 @@
 .list-group-item {
     margin-bottom: 5px;
 }
+
+body.dark {
+    background-color: #181a1e;
+    color: #fff;
+
+    .main-body {
+        background-color: #505050;
+    }
+
+    .card button {
+        background: rgb(164, 206, 255) !important;
+        color: #000;
+        border-color: transparent;
+    }
+
+    .card button:hover {
+        background: #388e3c !important;
+        color: #fff;
+    }
+
+    .card-body,
+    .list-group-item {
+        background-color: #999;
+        color: #fff;
+    }
+
+    .list-group {
+        background-color: #505050;
+    }
+
+    span {
+        color: #fff !important;
+    }
+
+    .card-body .col-sm-9 {
+        color: #f1f1f1 !important;
+    }
+
+}

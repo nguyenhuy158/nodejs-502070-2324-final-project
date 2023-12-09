@@ -1,0 +1,28 @@
+body.dark {
+    color: #fff;
+    background-color: #181a1e;
+
+    i {
+        color: #fff;
+    }
+
+    .card-body {
+        background-color: #999;
+        color: #fff;
+
+        p {
+            color: #fff !important;
+        }
+    }
+
+    .card-body button {
+        background: rgb(164, 206, 255) !important;
+        color: #000;
+        border-color: transparent;
+    }
+
+    .card-body button:hover {
+        background: #388e3c !important;
+            color: #fff;
+    }
+}

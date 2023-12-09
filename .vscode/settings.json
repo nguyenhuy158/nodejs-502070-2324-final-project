@@ -1,4 +1,7 @@
 {
+    "emmet.includeLanguages": {
+        "ejs": "html",
+    },
     "eslint.validate": [
         "javascript",
         "javascriptreact",
@@ -189,7 +192,6 @@
     "html.format.enable": true,
     "html.format.indentHandlebars": true,
     "html.format.indentInnerHtml": true,
-    "html.format.wrapAttributes": "auto",
     "javascript.format.semicolons": "insert",
     "javascript.preferences.quoteStyle": "single",
     "javascript.suggest.paths": false,
@@ -217,7 +219,7 @@
     "scm.experimental.showSyncView": true,
     "scm.inputFontFamily": "Cascadia Code, Fira Code, Hasklig, VictorMono, Monoid, Consolas, 'Courier New', monospace",
     "screencastMode.fontSize": 56,
-    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
     "terminal.integrated.enableImages": true,
     "terminal.integrated.fontFamily": "Cascadia Code, Fira Code, Hasklig, VictorMono, Monoid, Consolas, 'Courier New', monospace",
     "terminal.integrated.fontSize": 12,

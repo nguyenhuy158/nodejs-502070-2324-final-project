@@ -1,0 +1,31 @@
+body.dark {
+    color: #fff;
+    background-color: #999;
+
+    h2 svg {
+        color: #fff;
+    }
+
+    button {
+        background: rgb(164, 206, 255) !important;
+        color: #000;
+    }
+
+    button:hover {
+        background: #388e3c !important;
+        color: #fff;
+    }
+}
+
+.fotorama-container img {
+    border-radius: 10px !important;
+    margin-bottom: 10px;
+}
+
+.fotorama__nav-wrap{
+    margin-top: 7px;
+}
+
+.fotorama__nav__frame{
+    margin: 0 2px;
+}
