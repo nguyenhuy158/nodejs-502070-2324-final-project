@@ -27,8 +27,12 @@
                     <p><b>By category</b></p>
                     <% for(let category of categories) { %>
                     <div class="form-check d-flex align-items-center">
-                        <input class="form-check-input align-self-center" type="checkbox" value=""
-                            id="<%= 'ct' + category.name %>" />
+                        <input
+                            class="form-check-input align-self-center"
+                            type="checkbox"
+                            value=""
+                            id="<%= 'ct' + category.name %>"
+                        />
                         <label class="form-check-label ms-2" for="<%= 'ct' + category.name %>">
                             <%= category.name %>
                         </label>
@@ -41,20 +45,26 @@
                     From
                     <div class="input-group mb-3">
                         <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
-                        <input class="form-control" type="date" data-date-format="dd-mm-yyyy"
-                            value="<%= new Date().toISOString().split('T')[0] %>" />
+                        <input
+                            class="form-control"
+                            type="date"
+                            data-date-format="dd-mm-yyyy"
+                            value="<%= new Date().toISOString().split('T')[0] %>"
+                        />
                     </div>
                     To
                     <div class="input-group mb-3">
                         <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
-                        <input class="form-control" type="date" data-date-format="dd-mm-yyyy"
-                            value="<%= new Date().toISOString().split('T')[0] %>" />
+                        <input
+                            class="form-control"
+                            type="date"
+                            data-date-format="dd-mm-yyyy"
+                            value="<%= new Date().toISOString().split('T')[0] %>"
+                        />
                     </div>
                     <!-- END FILTER BY DATE -->
 
-
                     <div class="p-3"></div>
-
 
                     <!-- BEGIN FILTER BY PRICE -->
                     <p><b>By price</b></p>
@@ -125,40 +135,55 @@
                     <ul class="justify-content-center pagination">
                         <!-- First -->
                         <li class="page-item <%= current === 1 ? 'disabled' : '' %>">
-                            <a class="page-link"
-                                href="<%= current === 1 ? '#' : `${url}?q=${q}&page=1&perPage=${perPage}` %>">First</a>
+                            <a
+                                class="page-link"
+                                href="<%= current === 1 ? '#' : `${url}?q=${q}&page=1&perPage=${perPage}` %>"
+                            >
+                                First
+                            </a>
                         </li>
 
-                        <% let prevPage = parseInt(current) - 1; %>
-                        <% let nextPage = parseInt(current) + 1; %>
-                        <% const totalPages = Math.ceil(count / perPage); %>
+                        <% let prevPage = parseInt(current) - 1; %> <% let nextPage = parseInt(current) + 1; %> <% const
+                        totalPages = Math.ceil(count / perPage); %>
 
                         <!-- Back -->
                         <li class="page-item <%= prevPage <= 0 ? 'disabled' : '' %>">
-                            <a class="page-link"
-                                href="<%= prevPage <= 0 ? '#' : `${url}?q=${q}&page=${prevPage}&perPage=${perPage}` %>">Back</a>
+                            <a
+                                class="page-link"
+                                href="<%= prevPage <= 0 ? '#' : `${url}?q=${q}&page=${prevPage}&perPage=${perPage}` %>"
+                            >
+                                Back
+                            </a>
                         </li>
 
                         <!-- Next -->
                         <li class="page-item <%= nextPage > totalPages ? 'disabled' : '' %>">
-                            <a class="page-link"
-                                href="<%= nextPage > totalPages ? '#' : `${url}?q=${q}&page=${nextPage}&perPage=${perPage}` %>">Next</a>
+                            <a
+                                class="page-link"
+                                href="<%= nextPage > totalPages ? '#' : `${url}?q=${q}&page=${nextPage}&perPage=${perPage}` %>"
+                            >
+                                Next
+                            </a>
                         </li>
 
                         <!-- Last -->
-                        <% console.log("=>(pagination.ejs:22) totalPages", totalPages); %>
-                        <% console.log("=>(pagination.ejs:22) current", current); %>
+                        <% console.log("=>(pagination.ejs:22) totalPages", totalPages); %> <%
+                        console.log("=>(pagination.ejs:22) current", current); %>
                         <li class="page-item <%= current === totalPages || totalPages === 0 ? 'disabled' : '' %>">
-                            <a class="page-link"
-                                href="<%= current === totalPages ? '#' : `${url}?q=${q}&page=${totalPages}&perPage=${perPage}` %>">Last</a>
+                            <a
+                                class="page-link"
+                                href="<%= current === totalPages ? '#' : `${url}?q=${q}&page=${totalPages}&perPage=${perPage}` %>"
+                            >
+                                Last
+                            </a>
                         </li>
                     </ul>
                     <!-- END PAGINATION -->
 
                     <!-- Display the message -->
                     <span>
-                        Display <%= Math.min((current - 1) * perPage + 1, count) %> to <%= Math.min(current
-                        * perPage, count) %> of <%= count %> data
+                        Display <%= Math.min((current - 1) * perPage + 1, count) %> to <%= Math.min(current * perPage,
+                        count) %> of <%= count %> data
                     </span>
 
                     <ol class="list-group list-group-numbered mt-3">
@@ -167,8 +192,12 @@
                             <div class="row">
                                 <% if(product.imageUrls.length > 0) { %>
                                 <div class="col-2">
-                                    <img src="<%= product.imageUrls[0] %>" alt="<%= product.productName %>" width="100"
-                                        height="100" />
+                                    <img
+                                        src="<%= product.imageUrls[0] %>"
+                                        alt="<%= product.productName %>"
+                                        width="100"
+                                        height="100"
+                                    />
                                 </div>
                                 <% } %>
                                 <div class="col-6">
@@ -193,20 +222,21 @@
                                 <div class="col">
                                     <div class="row mb-1">
                                         <span
-                                            class="badge bg-warning w-auto text-wrap lh-sm p-1 overflow-hidden text-truncate">
+                                            class="badge bg-warning w-auto text-wrap lh-sm p-1 overflow-hidden text-truncate"
+                                        >
                                             <%= product.category.name %>
                                         </span>
                                     </div>
                                     <% if(user.isAdmin()) { %>
                                     <div class="row mb-1">
                                         <span class="badge bg-info rounded-pill w-auto">
-                                            <%= product.importPrice %>
+                                            <%= VND(product.importPrice).format() %>
                                         </span>
                                     </div>
                                     <% } %>
                                     <div class="row mb-1">
                                         <span class="badge bg-primary rounded-pill w-auto">
-                                            <%= product.retailPrice %>
+                                            <%= VND(product.retailPrice).format() %>
                                         </span>
                                     </div>
                                 </div>
@@ -221,6 +251,10 @@
 </div>
 <script src="/js/custom/search-result.js"></script>
 <script>
+    const query = "<%= q %>";
+    $('#autoComplete').val(query)
+
+    
     $('#view-list').on('click', () => {
         $('#view-table').toggleClass('disabled')
         $('#view-list').toggleClass('disabled')

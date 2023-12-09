@@ -1,6 +1,6 @@
 <%- include('../partials/nav') %>
 
-<main>
+<main class="container">
     <div class="header">
         <div class="left">
             <h1>Dashboard</h1>
@@ -104,16 +104,19 @@
                 <!-- <i class="bx bx-filter"></i>
                 <i class="bx bx-plus"></i> -->
             </div>
-            <!--  -->
             <ul class="task-list">
-                <% for( let index = 0; index < topSeller.length; index++ ) { %> <% let item = topSeller[index] %>
-                <li class="<%= ['completed', 'not-completed'][index % 2] %> d-flex align-items-center">
-                    <input type="hidden" name="" value="<%= item.sellerId %>" />
-                    <i class="bx bx-check-circle"></i>
-                    <span><%= item.sellerName %></span>
-                    <span><%= VND(item.salesAmount).format() %></>
-                    <i class="bx bx-dots-vertical-rounded"></i>
-                </li>
+                <% for( let index = 0; index < topSeller.length; index++ ) { %>
+                <!--  -->
+                <% let item = topSeller[index] %>
+                <a href="/users/<%= item.sellerId %>">
+                    <li class="<%= ['completed', 'not-completed'][index % 2] %> d-flex align-items-center">
+                        <input type="hidden" name="" value="<%= item.sellerId %>" />
+                        <i class="bx bx-check-circle"></i>
+                        <span><%= item.sellerName %></span>
+                        <span><%= VND(item.salesAmount).format() %></span>
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                    </li>
+                </a>
                 <% } %>
             </ul>
         </div>

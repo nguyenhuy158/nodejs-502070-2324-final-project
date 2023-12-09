@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-// profit chart
+
 $(() => {
-    // date range picker config
+    const autocolors = window['chartjs-plugin-autocolors'];
+    Chart.register(autocolors);
+
     $('input[name="dates"]').daterangepicker({
         startDate: moment(),
         endDate: moment().add(1, 'days'),
@@ -17,10 +19,9 @@ $(() => {
             'Last Year': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
         },
     }, function (start, end, label) {
-        // console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+
     });
 
-    // handle show chart 
     $('#daterange').on('apply.daterangepicker', function (ev, picker) {
         const startDate = picker.startDate.format('YYYY-MM-DD');
         const endDate = picker.endDate.format('YYYY-MM-DD');
@@ -29,67 +30,37 @@ $(() => {
         customerChart(startDate, endDate);
         profitChart(startDate, endDate, type);
         salesChart(startDate, endDate);
+        sellerChart(startDate, endDate);
     });
     customerChart(moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD'));
     profitChart(moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD'), $('#type').val());
     salesChart(moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD'));
+    sellerChart(moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD'));
 
-    const options = {
-        responsive: true,
-        scales: {
-            x: {
-                type: 'category',
-            },
-            y: {
-                beginAtZero: true
-            }
-        },
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Profit Chart'
-            },
-            colors: {
-                enabled: false,
-                forceOverride: true
-            },
-        }
-    };
 
-    function customerChart(startDate, endDate) {
-        const ajaxResponse = fetch(`/reports/customer?from=${startDate}&to=${endDate}&type=${type}`)
+    function sellerChart(startDate, endDate) {
+        const ajaxResponse = fetch(`/reports/seller?from=${startDate}&to=${endDate}&type=${type}`)
             .then(response => response.json())
             .then(ajaxResponse => {
 
-                // Extract relevant data for the chart
-                const labels = ajaxResponse.data.map(entry => entry.purchaseDate);
-                const data = ajaxResponse.data.map(entry => entry.totalAmount);
+                const labels = ajaxResponse.data.map(entry => entry.seller.fullName);
+                const data = ajaxResponse.data.map(entry => entry.totalAmountSold);
 
-                // Render the chart
-                const ctx1 = document.getElementById('customerChart').getContext('2d');
+                const ctx1 = document.getElementById('sellerChart').getContext('2d');
 
-                // Get the existing chart instance
                 const existingChart = Chart.getChart(ctx1);
 
-                // If there's an existing chart, destroy it
                 if (existingChart) {
                     existingChart.destroy();
                 }
 
                 const salesChart = new Chart(ctx1, {
-                    type: 'bubble',
+                    type: 'pie',
                     data: {
                         labels: labels,
                         datasets: [{
                             label: 'Customer',
                             data: data,
-                            // backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            // borderColor: 'rgba(75, 192, 192, 1)',
-                            // borderWidth: 1
-                            borderRadius: Number.MAX_VALUE,
                             borderWidth: 2,
                             borderSkipped: false,
                             pointStyle: 'circle',
@@ -97,7 +68,122 @@ $(() => {
                             pointHoverRadius: 15
                         }]
                     },
-                    options: options
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                type: 'category',
+                            },
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                text: 'Salespeople Income Chart',
+                                display: true,
+                            },
+                            colors: {
+                                enabled: false,
+                                forceOverride: true
+                            },
+                            autocolors: {
+                                repeat: 2,
+                                offset: 5
+                            },
+                            crosshair: {
+                                sync: {
+                                    enabled: false,
+                                    suppressTooltips: false
+                                },
+                                zoom: {
+                                    enabled: true,
+                                    zoomboxBackgroundColor: 'rgba(66,133,244,0.2)',
+                                    zoomboxBorderColor: '#48F',
+                                    zoomButtonText: 'Reset Zoom',
+                                    zoomButtonClass: 'reset-zoom btn btn-sm btn-outline-info',
+                                },
+                            }
+                        }
+                    }
+                });
+            });
+    }
+
+    function customerChart(startDate, endDate) {
+        const ajaxResponse = fetch(`/reports/customer?from=${startDate}&to=${endDate}&type=${type}`)
+            .then(response => response.json())
+            .then(ajaxResponse => {
+
+                const labels = ajaxResponse.data.map(entry => entry.customer.fullName);
+                const data = ajaxResponse.data.map(entry => entry.totalAmountSpent);
+
+                const ctx1 = document.getElementById('customerChart').getContext('2d');
+
+                const existingChart = Chart.getChart(ctx1);
+
+                if (existingChart) {
+                    existingChart.destroy();
+                }
+
+                const salesChart = new Chart(ctx1, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Customer',
+                            data: data,
+                            borderWidth: 2,
+                            borderSkipped: false,
+                            pointStyle: 'circle',
+                            pointRadius: 10,
+                            pointHoverRadius: 15
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                type: 'category',
+                            },
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                text: 'Payment customer Chart',
+                                display: true,
+                            },
+                            colors: {
+                                enabled: false,
+                                forceOverride: true
+                            },
+                            autocolors: {
+                                repeat: 2,
+                                offset: 5
+                            },
+                            crosshair: {
+                                sync: {
+                                    enabled: false,
+                                    suppressTooltips: false
+                                },
+                                zoom: {
+                                    enabled: true,
+                                    zoomboxBackgroundColor: 'rgba(66,133,244,0.2)',
+                                    zoomboxBorderColor: '#48F',
+                                    zoomButtonText: 'Reset Zoom',
+                                    zoomButtonClass: 'reset-zoom btn btn-sm btn-outline-info',
+                                },
+                            }
+                        }
+                    }
                 });
             });
     }
@@ -107,17 +193,13 @@ $(() => {
             .then(response => response.json())
             .then(ajaxResponse => {
 
-                // Extract relevant data for the chart
                 const labels = ajaxResponse.data.map(entry => entry.purchaseDate);
                 const data = ajaxResponse.data.map(entry => entry.totalAmount);
 
-                // Render the chart
                 const ctx1 = document.getElementById('profitChart').getContext('2d');
 
-                // Get the existing chart instance
                 const existingChart = Chart.getChart(ctx1);
 
-                // If there's an existing chart, destroy it
                 if (existingChart) {
                     existingChart.destroy();
                 }
@@ -129,9 +211,8 @@ $(() => {
                         datasets: [{
                             label: 'Profit',
                             data: data,
-                            // backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            // borderColor: 'rgba(75, 192, 192, 1)',
-                            // borderWidth: 1
+
+
                             borderRadius: Number.MAX_VALUE,
                             borderWidth: 2,
                             borderSkipped: false,
@@ -140,7 +221,47 @@ $(() => {
                             pointHoverRadius: 15
                         }]
                     },
-                    options: options
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                type: 'category',
+                            },
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                text: 'Revenue Chart',
+                                display: true,
+                            },
+                            colors: {
+                                enabled: false,
+                                forceOverride: true
+                            },
+                            autocolors: {
+                                repeat: 2,
+                                offset: 5
+                            },
+                            crosshair: {
+                                sync: {
+                                    enabled: false,
+                                    suppressTooltips: false
+                                },
+                                zoom: {
+                                    enabled: true,
+                                    zoomboxBackgroundColor: 'rgba(66,133,244,0.2)',
+                                    zoomboxBorderColor: '#48F',
+                                    zoomButtonText: 'Reset Zoom',
+                                    zoomButtonClass: 'reset-zoom btn btn-sm btn-outline-info',
+                                },
+                            }
+                        }
+                    }
                 });
             });
     }
@@ -150,17 +271,13 @@ $(() => {
             .then(response => response.json())
             .then(ajaxResponse => {
 
-                // Extract relevant data for the chart
                 const labels = ajaxResponse.data.map(entry => entry.purchaseDate);
                 const data = ajaxResponse.data.map(entry => entry.totalAmount);
 
-                // Render the chart
                 const ctx1 = document.getElementById('salesChart').getContext('2d');
 
-                // Get the existing chart instance
                 const existingChart = Chart.getChart(ctx1);
 
-                // If there's an existing chart, destroy it
                 if (existingChart) {
                     existingChart.destroy();
                 }
@@ -172,15 +289,54 @@ $(() => {
                         datasets: [{
                             label: 'Order',
                             data: data,
-                            // backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            // borderColor: 'rgba(75, 192, 192, 1)',
-                            // borderWidth: 1
+
+
                             borderRadius: Number.MAX_VALUE,
                             borderWidth: 2,
                             borderSkipped: false,
                         }]
                     },
-                    options: options
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                type: 'category',
+                            },
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                text: 'Order history chart',
+                                display: true,
+                            },
+                            colors: {
+                                enabled: false,
+                                forceOverride: true
+                            },
+                            autocolors: {
+                                repeat: 2,
+                                offset: 5
+                            },
+                            crosshair: {
+                                sync: {
+                                    enabled: false,
+                                    suppressTooltips: false
+                                },
+                                zoom: {
+                                    enabled: true,
+                                    zoomboxBackgroundColor: 'rgba(66,133,244,0.2)',
+                                    zoomboxBorderColor: '#48F',
+                                    zoomButtonText: 'Reset Zoom',
+                                    zoomButtonClass: 'reset-zoom btn btn-sm btn-outline-info',
+                                },
+                            }
+                        }
+                    }
                 });
             });
     }

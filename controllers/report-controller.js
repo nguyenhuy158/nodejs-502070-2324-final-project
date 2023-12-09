@@ -125,17 +125,118 @@ exports.getProfitPage = async (req, res) => {
 
 exports.getCustomerStatist = async (req, res) => {
     // get id customer from query
-    const id = req.query.id;
+    let data = [];
+    const fromDate = req.fromDate;
+    const toDate = req.toDate;
+
     try {
         // get all orders by customer ID from the database
-        const orders = await Order.find({ customer: id });
-        // handle the retrieved orders
-        // ...
+        const customerStats = await Order.aggregate([
+            {
+                $match: {
+                    purchaseDate: {
+                        $gte: new Date(fromDate),
+                        $lte: new Date(toDate),
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: '$customer',
+                    totalAmountSpent: { $sum: '$totalAmount' },
+                },
+            },
+            {
+                $lookup: {
+                    from: 'customers',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'customerInfo',
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    customer: {
+                        $arrayElemAt: ['$customerInfo', 0],
+                    },
+                    totalAmountSpent: 1,
+                },
+            },
+        ]);
+
+
+        console.log(`🚀 customerStats`, customerStats);
+        let response = {
+            data: customerStats,
+            fromDate,
+            toDate,
+            message: "Get data successfully"
+        };
+        return res.json(response);
+
     } catch (error) {
         // handle the error
         return res.status(400).json({
             error: true,
             message: "Internal server error" + error
+        });
+    }
+};
+
+exports.getSellerStatist = async (req, res) => {
+    const fromDate = req.fromDate;
+    const toDate = req.toDate;
+
+    try {
+        // Aggregate totalAmount sold by each seller
+        const sellerStats = await Order.aggregate([
+            {
+                $match: {
+                    purchaseDate: {
+                        $gte: new Date(fromDate),
+                        $lte: new Date(toDate),
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: '$seller',
+                    totalAmountSold: { $sum: '$totalAmount' },
+                },
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'sellerInfo',
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    seller: {
+                        $arrayElemAt: ['$sellerInfo', 0],
+                    },
+                    totalAmountSold: 1,
+                },
+            },
+        ]);
+
+        let response = {
+            data: sellerStats,
+            fromDate,
+            toDate,
+            message: 'Get data successfully',
+        };
+        return res.json(response);
+
+    } catch (error) {
+        console.error('Error:', error);
+        return res.status(500).json({
+            error: true,
+            message: 'Internal server error',
         });
     }
 };

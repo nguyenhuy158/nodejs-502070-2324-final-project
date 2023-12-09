@@ -6,19 +6,23 @@
     <h2>Product List</h2>
     <div id="button-container" class="mb-3"></div>
 
-    <table id="product-table" class="table table-responsive table-striped table-bordered table-rounded rounded align-middle" style="width: 100%">
+    <table
+        id="product-table"
+        class="table table-responsive table-striped table-bordered table-rounded rounded align-middle"
+        style="width: 100%"
+    >
         <thead class="align-middle">
             <tr>
                 <th>STT</th>
                 <th>Barcode</th>
                 <th data-priority="1">Product Name</th>
+                <% if (user.role === 'admin') { %>
                 <th>Import Price</th>
+                <% } %>
                 <th data-priority="1">Retail Price</th>
                 <th>Category</th>
                 <th data-priority="1">Thumbnail</th>
-                <% if (user.role === 'admin') { %>
                 <th data-priority="1">Handle</th>
-                <% } %>
             </tr>
         </thead>
         <tbody>
@@ -27,9 +31,8 @@
     </table>
 
     <!-- Confirm modal -->
-    <%- include('../../partials/confirm-delete-modal') %>
-    <%- include('../../partials/product-edit-modal') %>
-    <%- include('../../partials/product-add-modal') %>
+    <%- include('../../partials/confirm-delete-modal') %> <%- include('../../partials/product-edit-modal') %> <%-
+    include('../../partials/product-add-modal') %>
 </div>
 
 <!-- Script for confirming -->

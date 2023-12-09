@@ -36,14 +36,11 @@ const { validationChangePassword, validateSearch } = require('../middlewares/val
 
 router
     .use(limiter)
-    .get("/search/address", searchController.searchAddress)
-    .use(updateCurrentUser)
-    .get("/error", (req, res, next) => {
-        next(new Error("This is a 500 error."));
-    })
     // auth router
     .use(authRoutes)
     .use(ensureAuthenticated)
+    .get("/search/address", searchController.searchAddress)
+    .use(updateCurrentUser)
     .get("/change-password", authController.getChangePassword)
     .post("/change-password", validationChangePassword, authController.postChangePassword)
     // other middleware and server

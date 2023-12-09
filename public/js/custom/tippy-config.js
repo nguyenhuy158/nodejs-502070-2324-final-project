@@ -80,6 +80,11 @@ $(() => {
             content: "View product detail",
         });
     });
+    $(document).on('mouseenter', '.add-to-cart-btn', function () {
+        tippy(this, {
+            content: "Add product to cart",
+        });
+    });
     $(document).on('mouseenter', '.edit-product-btn', function () {
         tippy(this, {
             content: "Edit product",

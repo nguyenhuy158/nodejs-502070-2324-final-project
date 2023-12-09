@@ -6,6 +6,7 @@ router
     .get("/", reportController.getReportPage)
     .get("/statistical", reportController.extractQueryParams, reportController.getStatisticalPage)
     .get("/profit", reportController.extractQueryParams, reportController.getProfitPage)
-    .get("/customer", reportController.getCustomerStatist)
+    .get("/customer", reportController.extractQueryParams, reportController.getCustomerStatist)
+    .get("/seller", reportController.extractQueryParams, reportController.getSellerStatist)
 
 module.exports = router;

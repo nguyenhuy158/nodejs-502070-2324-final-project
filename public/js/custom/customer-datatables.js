@@ -105,19 +105,20 @@ $(() => {
                 {
                     data: null,
                     render: function (data, type, row, meta) {
-                        const viewBtn = `<a class="my-1 btn btn-sm btn-outline-primary view-customer-btn" href="/customers/${row._id}">
-                                    <i class='bx bx-detail'></i>
-								</a>`;
+                        // const viewBtn = `<a class="my-1 btn btn-sm btn-outline-primary view-customer-btn" href="/customers/${row._id}">
+                        //             <i class='bx bx-detail'></i>
+						// 		</a>`;
 
                         const updateBtn = `<button class="my-1 btn btn-sm btn-outline-success edit-btn update-customer-btn">
                                     <i class='bx bx-edit'></i>
 								</button>`;
 
-                        const purchaseHistoryBtn = `<a class="my-1 btn btn-sm btn-outline-success history-customer-btn" href="/customers/${row._id}/purchase">
+                        const purchaseHistoryBtn = `<a class="my-1 btn btn-sm btn-outline-primary history-customer-btn" href="/customers/${row._id}/purchase">
                                     <i class='bx bx-history'></i>
 								</a>`;
 
-                        return `${viewBtn} ${updateBtn} ${purchaseHistoryBtn}`;
+                        // return `${viewBtn} ${updateBtn} ${purchaseHistoryBtn}`;
+                        return `${updateBtn} ${purchaseHistoryBtn}`;
                     }
                 },
             ]

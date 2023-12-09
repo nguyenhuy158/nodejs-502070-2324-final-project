@@ -116,7 +116,7 @@ exports.checkCurrentLoginUser = async (req, res, next) => {
 exports.getApiCartByCurrentLoginUser = async (req, res) => {
     try {
         const cart = req.apiCart;
-        if (!cart) return res.json({ error: false, message: 'Cart empty.', cart });
+        if (!cart) return res.status(400).json({ error: false, message: 'Cart empty.', cart });
         return res.json({ error: false, message: 'Get cart successfully.', cart });
     } catch (error) {
         res.status(500).json({ error: true, message: 'Could not gets the cart' + error });

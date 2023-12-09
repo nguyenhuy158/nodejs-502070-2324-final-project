@@ -107,7 +107,7 @@ exports.addProductToCart = async (req, res) => {
     try {
         const product = req.apiProduct;
         const cart = await getOrCreateCart(req.user._id);
-        console.log(`🚀 🚀 file: productApiController.js:106 🚀 exports.addProductToCart= 🚀 cart`, cart);
+        // console.log(`🚀 🚀 file: productApiController.js:106 🚀 exports.addProductToCart= 🚀 cart`, cart);
         cart.addProduct(product._id);
         await cart.save();
 
@@ -117,6 +117,9 @@ exports.addProductToCart = async (req, res) => {
             message: "Add product successfully"
         });
     } catch (error) {
-        res.status(500).json({ error: true, message: 'Could not add product to cart' + error });
+        res.status(500).json({
+            error: true,
+            message: 'Could not add product to cart' + error
+        });
     }
 };

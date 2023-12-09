@@ -1,55 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <%- include('../partials/head') %>
+    </head>
 
-<head>
+    <body>
+        <!-- assign variable is admin -->
+        <% isAdmin = user.role === 'admin' %>
+        <script>
+            const isAdmin = <%= user.role === 'admin' %>
+        </script>
 
-    <%- include('../partials/head') %>
-    
-</head>
+        <%- include('../partials/fn') %>
+        <!--  -->
+        <%- include('../partials/pagination') %>
+        <!--  -->
+        <%- include('../partials/sidebar') %>
 
-<body>
-    <%- include('../partials/fn') %>
-    <!--  -->
-    <%- include('../partials/pagination') %>
-    <!--  -->
-    <%- include('../partials/sidebar') %>
+        <!-- body -->
+        <main class="content"><%- body %></main>
 
-    <main class="content"><%- body %></main>
+        <!-- script -->
+        <script src="/js/custom/home.js"></script>
 
-    <!-- assign variable is admin -->
-    <script>
-        const isAdmin = <%= user.role === 'admin' %>
-    </script>
+        <!-- Auto remove flash message - KEEP IT -->
+        <script>
+            setTimeout(() => {
+                $('.toast').each((index, value) => {
+                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(value)
+                    toastBootstrap.show()
+                })
+            }, 1000)
+        </script>
 
-    <script src="/js/custom/home.js"></script>
-
-    <!-- Auto remove flash message - KEEP IT -->
-    <script>
-        setTimeout(() => {
-            $('.toast').each((index, value) => {
-                const toastBootstrap = bootstrap.Toast.getOrCreateInstance(value)
-                toastBootstrap.show()
+        <script>
+            $(document).ready(function () {
+                $('img').on('error', function () {
+                    $(this).attr('src', 'https://placehold.co/200?text=Not+available&font=roboto')
+                })
             })
-        }, 1000)
-    </script>
+        </script>
 
-    <script>
-        $(document).ready(function() {
-            $('img').on('error', function() {
-                $(this).attr('src', 'https://placehold.co/200?text=Not+available&font=roboto')
+        <script src="/js/custom/lazy-image-loading.js"></script>
+        <script src="/js/custom/magnific-popup-config.js"></script>
+
+        <script>
+            $(() => {
+                lazyImageLoading()
+                magnificPopup()
             })
-        })
-    </script>
-
-    <script src="/js/custom/lazy-image-loading.js"></script>
-    <script src="/js/custom/magnific-popup-config.js"></script>
-
-    <script>
-        $(() => {
-            lazyImageLoading()
-            magnificPopup()
-        })
-    </script>
-</body>
-
+        </script>
+    </body>
 </html>
