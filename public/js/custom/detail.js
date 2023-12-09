@@ -13,12 +13,13 @@ $(function () {
             },
             success: function (response) {
                 toastr.success(response.message || 'Change main thumbnail successfully');
-                $('#change-thumbnail-modal').modal('hide');
                 reloadThumbnail();
             },
             error: function (response) {
                 toastr.error(response.responseJSON?.message || 'Error change thumbnail');
             },
+        }).always(() => {
+            $('#change-thumbnail-modal').modal('hide');
         });
     });
 
@@ -38,12 +39,13 @@ $(function () {
             contentType: false,
             success: function (response) {
                 toastr.success(response.message || 'Add thumbnail successfully');
-                $('#add-thumbnail-modal').modal('hide');
                 reloadThumbnail();
             },
             error: function (response) {
                 toastr.error(response.responseJSON?.message || 'Error add thumbnail');
             },
+        }).always(() => {
+            $('#add-thumbnail-modal').modal('hide');
         });
     });
 
@@ -59,14 +61,13 @@ $(function () {
             },
             success: function (response) {
                 toastr.success(response.message || 'Remove thumbnail successfully');
-                $('#remove-thumbnail-modal').modal('hide');
                 reloadThumbnail();
             },
             error: function (response) {
                 toastr.error(response.responseJSON?.message || 'Error remove thumbnail');
             },
         }).always(() => {
-            $('#change-thumbnail-modal').modal('hide');
+            $('#remove-thumbnail-modal').modal('hide');
         });
 
     });
@@ -94,12 +95,14 @@ $(function () {
             url: `/api/products/${productId}`,
             type: 'GET',
             success: (response) => {
-                console.log(response);
+                // console.log(response);
+
                 const data = response.imageUrls.map((imageUrl) => ({
                     img: imageUrl,
                     thumb: imageUrl,
                 }));
-                console.log(`🚀 🚀 file: detail.js:101 🚀 data 🚀 data`, data);
+                // console.log(`🚀 🚀 file: detail.js:101 🚀 data 🚀 data`, data);
+
                 $('.fotorama').remove();
                 $('.fotorama-container').append('<div class="fotorama" data-width="90%" data-nav="thumbs" data-ratio="800/700" data-allowfullscreen="true" data-loop="true" data-keyboard="true"></div>');
                 $('.fotorama').fotorama({

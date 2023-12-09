@@ -115,7 +115,7 @@ function assignDeleteEvent() {
         modalTitle.text('Delete confirm');
         confirmButton.text('Delete');
 
-        confirmModalBody.html(`Are you sure you want to delete<strong>${fullname}</strong>?`);
+        confirmModalBody.html(`Are you sure you want to delete <strong>${fullname}</strong>?`);
 
         $('#modalDelete').modal('show');
 

@@ -18,11 +18,11 @@ exports.changeProfilePicture = async (req, res, next) => {
         const { path: pathFile } = req.file;
 
         await sharp(pathFile)
-            .resize(200, 200, {
+            .resize(600, 600, {
                 fit: sharp.fit.cover,
                 withoutEnlargement: true
             })
-            .webp({ quality: 80 })
+            .webp({ quality: 90 })
             .toFile(path.join(__dirname, "..", "public", `uploads/${user._id}-profile.webp`));
 
         user.profilePicture = await uploadImage(`public/uploads/${user._id}-profile.webp`);

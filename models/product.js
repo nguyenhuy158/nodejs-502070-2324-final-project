@@ -25,7 +25,11 @@ const productSchema = new Schema({
     imageUrls: {
         type: [String],
     },
-    desc: { type: String },
+    desc: {
+        type: String,
+        trim: true,
+        default: ""
+    },
     category: {
         type: Schema.Types.ObjectId,
         ref: "ProductCategory"

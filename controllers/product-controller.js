@@ -214,7 +214,7 @@ exports.getProductDetail = async function (req, res, next) {
         } else {
             res.render("pages/products/detail", {
                 product,
-                pageTitle: product.productName + "Product Detail - Tech Hut",
+                pageTitle: product.productName + " Product Detail - Tech Hut",
             });
         }
     } catch (error) {
@@ -352,11 +352,11 @@ function processImageUrlsBeforeStore(files) {
             const newFilePath = path.join(__dirname, "..", "public", `uploads/${fileNameWithoutExtension}.webp`);
 
             await sharp(file)
-                .resize(200, 200, {
+                .resize(600, 600, {
                     fit: sharp.fit.cover,
                     withoutEnlargement: true
                 })
-                .webp({ quality: 80 })
+                .webp({ quality: 90 })
                 .toFile(newFilePath);
             try {
                 await fs.promises.access(newFilePath);

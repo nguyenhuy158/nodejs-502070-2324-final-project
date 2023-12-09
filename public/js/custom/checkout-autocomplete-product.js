@@ -97,10 +97,10 @@ const autoCompleteProductCheckout = new autoComplete({
 
                 const productData = event.detail.selection.value;
                 productData.quantity = 1;
-                $("#products-container").createProductCardAndAppend(productData);
-
                 const isExits = $('#products-container').find(`[data-id="${productData._id}"]`).length !== 0;
+
                 if (!isExits) {
+                    $("#products-container").createProductCardAndAppend(productData);
                     addProductToCartById(productData._id);
                     updateCart();
                 }
