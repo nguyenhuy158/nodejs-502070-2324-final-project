@@ -88,7 +88,7 @@ $(() => {
                 $('#modal-product-add').modal('show');
             }
         });
-        columnsConfig.splice(2, 0, {
+        columnsConfig.splice(1, 0, {
             data: 'importPrice',
             render: function (data) {
                 return VND(data).format();
