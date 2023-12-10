@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const Product = require("../models/product");
+const Order = require("../models/order");
+const Cart = require("../models/cart");
+
 const { processImageUrlsBeforeStore } = require('./product-controller');
 
 const { getOrCreateCart } = require('./api-cart-controller');
@@ -92,7 +95,25 @@ exports.putApiProduct = async (req, res) => {
 exports.deleteApiProductById = async (req, res) => {
     try {
         const id = req.id;
+
+        const orderWithProduct = await Order.findOne({ 'products.product': id });
+        if (orderWithProduct) {
+            return res.status(400).json({
+                error: true,
+                message: "Product cannot be deleted as it is associated with an order"
+            });
+        }
+
+        const productInCarts = await Cart.findOne({ 'products.product': id });
+        if (productInCarts) {
+            return res.status(400).json({
+                error: true,
+                message: "Product cannot be deleted as it is in a cart"
+            });
+        }
+
         const product = await Product.findByIdAndDelete(id);
+
         return res.json({
             error: false,
             product,

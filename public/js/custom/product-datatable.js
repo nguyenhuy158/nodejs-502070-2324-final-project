@@ -191,7 +191,7 @@ $(() => {
             success: function (data) {
                 toastr.success(data.message);
             }, error: function (err) {
-                toastr.error(err.JSONresponseText?.message);
+                toastr.error(err.responseJSON?.message);
             }
         });
     });

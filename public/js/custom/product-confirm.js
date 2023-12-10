@@ -90,7 +90,7 @@ function assignDeleteEvent() {
                         reloadTable();
                     },
                     error: (error) => {
-                        toastr.error("Delete fail! please try again!");
+                        toastr.error(error.responseJSON?.message);
                     }
                 }
             );
