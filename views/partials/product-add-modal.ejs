@@ -106,6 +106,7 @@
                     console.log('Response:', response);
                     toastr.success(response.message);
                     $('#add-product').trigger('reset');
+                    reloadTable();
                 },
                 error: function(response) {
                     console.log('Error:', response)

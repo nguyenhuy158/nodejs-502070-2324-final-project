@@ -1,36 +1,50 @@
 <title>Redirecting ...</title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.1/sweetalert2.min.css" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.1/sweetalert2.min.js"></script>
 
 <script>
-    const currentUrl = window.location.search;
+    const currentUrl = window.location.search
 
     // Create a URLSearchParams object from the URL
-    const urlParams = new URLSearchParams(currentUrl);
+    const urlParams = new URLSearchParams(currentUrl)
 
     // Get the value of the 'token' parameter from the URL
-    const token = urlParams.get('token');
+    const token = urlParams.get('token')
 
     // send the token to the server using ajax
     $.ajax({
         url: '/email-confirm',
         method: 'POST',
         data: {
-            token
+            token,
         },
         success: (res) => {
-            console.log(`🚀 🚀 file: email-confirm.ejs:30 🚀 res`, res);
-            // redirect to the home page
-            toastr.success(res.message);
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: res.message,
+                timer: 2000,
+                showConfirmButton: false,
+            })
+
+            // Redirect to the home page
             setTimeout(() => {
-                window.location.href = '/';
-            }, 2000);
+                window.location.href = '/'
+            }, 2000)
         },
         error: (err) => {
-            console.log(`🚀 🚀 file: email-confirm.ejs:38 🚀 err`, err);
-            // redirect to the login page
-            toastr.error(err.responseJSON?.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: err.responseJSON?.message,
+                timer: 2000,
+                showConfirmButton: false,
+            })
+
+            // Redirect to the login page
             setTimeout(() => {
-                window.location.href = '/login';
-            }, 2000);
-        }
-    });
+                window.location.href = '/login'
+            }, 2000)
+        },
+    })
 </script>
