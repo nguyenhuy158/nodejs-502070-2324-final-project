@@ -7,38 +7,38 @@
         </div>
     </a>
     <ul class="side-menu">
-        <li class="<%= sideLink === 'Home' ? 'active' : '' %>">
+        <li class="<%= sideLink === 'Home' ? 'active' : '' %> side-dashboard-btn">
             <a href="/">
                 <i class="bx bxs-dashboard"></i>
                 Dashboard
             </a>
         </li>
-        <li class="<%= sideLink === 'Product' ? 'active' : '' %>">
+        <li class="<%= sideLink === 'Product' ? 'active' : '' %> side-product-btn">
             <a href="/products">
                 <i class="bx bx-store-alt"></i>
                 Product
             </a>
         </li>
-        <li class="<%= sideLink === 'Checkout' ? 'active' : '' %>">
+        <li class="<%= sideLink === 'Checkout' ? 'active' : '' %> side-checkout-btn">
             <a href="/checkout">
                 <i class="bx bx-analyse"></i>
                 Checkout
             </a>
         </li>
-        <li class="<%= sideLink === 'Order' ? 'active' : '' %>">
+        <li class="<%= sideLink === 'Order' ? 'active' : '' %> side-order-btn">
             <a href="/orders">
                 <i class="bx bx-money"></i>
                 Orders
             </a>
         </li>
-        <li class="<%= sideLink === 'Customer' ? 'active' : '' %>">
+        <li class="<%= sideLink === 'Customer' ? 'active' : '' %> side-customer-btn">
             <a href="/customers">
                 <i class="bx bx-group"></i>
                 Customer
             </a>
         </li>
         <% if (isAdmin) { %>
-        <li class="<%= sideLink === 'User' ? 'active' : '' %>">
+        <li class="<%= sideLink === 'User' ? 'active' : '' %> side-sale-btn">
             <a href="/users">
                 <i class="bx bx-id-card"></i>
                 Salepeoples
@@ -46,7 +46,7 @@
         </li>
         <% } %>
 
-        <li class="<%= sideLink === 'Report' ? 'active' : '' %>">
+        <li class="<%= sideLink === 'Report' ? 'active' : '' %> side-report-btn">
             <a href="/reports">
                 <i class="bx bxs-report"></i>
                 Reports
@@ -55,7 +55,7 @@
     </ul>
     <ul class="side-menu">
         <li>
-            <a class="logout" href="/logout#">
+            <a class="logout side-lockout-btn" href="/logout#">
                 <i class="bx bx-log-out-circle"></i>
                 Logout
             </a>

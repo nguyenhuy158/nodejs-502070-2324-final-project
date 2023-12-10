@@ -1,45 +1,39 @@
 /* eslint-disable no-undef */
 $(() => {
-    tippy("button:has(.bx.bx-search)", {
-        content: "Search products",
-    });
-    tippy("a:has(.bx.bxs-dashboard)", {
+    tippy(".side-dashboard-btn", {
         content: "Dashboard",
         placement: 'right',
     });
-    tippy("a:has(.bx.bx-store-alt)", {
+
+    tippy(".side-product-btn", {
         content: "Manager products",
         placement: 'right',
     });
-    tippy("a:has(.bx.bx-analyse)", {
+    tippy(".side-checkout-btn", {
         content: "Checkouts",
         placement: 'right',
     });
-    tippy("a:has(.bx.bx-money)", {
+    tippy(".side-order-btn", {
         content: "Manager orders",
         placement: 'right',
     });
-    tippy("a:has(.bx.bx-group)", {
+    tippy(".side-customer-btn", {
         content: "Manager customers",
         placement: 'right',
     });
-    tippy("a:has(.bx.bx-id-card)", {
+    tippy(".side-sale-btn", {
         content: "Manager salespeople",
         placement: 'right',
     });
-    tippy("a:has(.bx.bx-message-square-dots)", {
-        content: "Manager tickets",
-        placement: 'right',
-    });
-    tippy("a:has(.bx.bx-cog)", {
-        content: "Settings",
+    tippy(".side-report-btn", {
+        content: "Report",
         placement: 'right',
     });
     tippy(".profile", {
         content: "Profiles",
         placement: 'bottom',
     });
-    tippy(".logout", {
+    tippy(".side-lockout-btn", {
         content: "Logout",
     });
     tippy(".theme-toggle", {
