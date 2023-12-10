@@ -17,15 +17,21 @@
 <div class="container my-3">
     <h2>Reports</h2>
 
-    <!-- input type format -->
-    <select class="form-control" name=" type" id="type">
-        <option value="DD-MM-YYYY">By Days</option>
-        <option value="MM-YYYY">By Months</option>
-        <option value="YYYY">By Years</option>
-    </select>
-
-    <!-- input date ranger -->
-    <input id="daterange" name="dates" type="text" class="form-control pull-right" />
+    <div class="row">
+        <div class="col">
+            <!-- input type format -->
+            Type:
+            <select class="form-control" name=" type" id="type">
+                <option value="DD-MM-YYYY">By Days</option>
+                <option value="MM-YYYY">By Months</option>
+                <option value="YYYY">By Years</option>
+            </select>
+        </div>
+        <div class="col">
+            <!-- input date ranger -->
+            Date range: <input id="daterange" name="dates" type="text" class="form-control pull-right" />
+        </div>
+    </div>
 
     <!-- charts -->
     <div class="container-fluid">
@@ -34,12 +40,12 @@
             <!-- First Column -->
             <div class="col-6 position-relative" style="border: 1px solid #ddd">
                 <!-- Content for the first cell -->
-                    <canvas id="salesChart"></canvas>
+                <canvas id="salesChart"></canvas>
             </div>
             <!-- Second Column -->
             <div class="col-6 position-relative" style="border: 1px solid #ddd">
                 <!-- Content for the second cell -->
-                    <canvas id="profitChart"></canvas>
+                <canvas id="profitChart"></canvas>
             </div>
         </div>
 
@@ -53,7 +59,7 @@
             <!-- Fourth Column -->
             <div class="col-6 position-relative" style="border: 1px solid #ddd">
                 <!-- Content for the third cell -->
-                    <canvas id="customerChart"></canvas>
+                <canvas id="customerChart"></canvas>
             </div>
         </div>
     </div>
