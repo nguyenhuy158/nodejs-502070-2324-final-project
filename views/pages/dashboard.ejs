@@ -110,7 +110,7 @@
                 <!--  -->
                 <% let item = topSeller[index] %>
                 <a href="/users/<%= item.sellerId %>">
-                    <li class="<%= ['completed', 'not-completed'][index % 2] %> d-flex align-items-center">
+                    <li class="<%= ['completed', 'not-completed'][index % 2] %> d-flex align-items-center mb-3">
                         <input type="hidden" name="" value="<%= item.sellerId %>" />
                         <i class="bx bx-check-circle"></i>
                         <span><%= item.sellerName %></span>

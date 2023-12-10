@@ -187,7 +187,7 @@ $(() => {
 
         $.ajax({
             url: `/api/products/add-cart/${productId}`,
-            type: 'POST',
+            type: 'PUT',
             success: function (data) {
                 toastr.success(data.message);
             }, error: function (err) {
